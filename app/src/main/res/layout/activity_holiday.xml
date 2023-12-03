@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E8F1F0"
+    tools:context=".home">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="-90dp"
+        android:src="@drawable/header"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="-130dp"
+        android:padding="27dp"
+        android:src="@drawable/splashtxt"/>
+
+    <ImageSwitcher
+        android:id="@+id/imageSwitcher"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/borderred"
+        android:layout_height="150dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/holidayRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+
+
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E8F1F0"
+    tools:context=".home">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="-90dp"
+        android:src="@drawable/header"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="-130dp"
+        android:padding="27dp"
+        android:src="@drawable/splashtxt"/>
+
+    <com.denzcoskun.imageslider.ImageSlider
+        app:iss_placeholder="@drawable/back"
+        app:iss_selected_dot="@drawable/border"
+        android:layout_margin="2dp"
+        android:id="@+id/eclipseimageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        app:iss_auto_cycle="true"
+        app:iss_period="2000"
+        app:iss_delay="1000"
+        app:iss_text_align="CENTER"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/eclipseRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+
+
+
+
+
+
+</LinearLayout>

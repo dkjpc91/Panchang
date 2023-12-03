@@ -1,8 +1,12 @@
 package com.mithilakshar.mithilapanchang;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +34,14 @@ public class calendarfragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    String[] data = {"1", "2", " 3", " 4", " 5", " 6"};
+    private RecyclerView calendarRecycler;
+    private ArrayList<calendardatamodel> dataqueue;
+
+
+
+    String[] gridItemText = {"1", "2", " 3", " 4", " 5", " 6","7", "8", " 9", " 10", " 11", " 12",
+            "13", "14", " 15", "16", "17", "18","19", "20", "21", " 22", " 23", " 24","25", "26",
+            "27", " 28", " 29", " 30","31", " 32", " 33", " 34","35"};
 
     public calendarfragment() {
         // Required empty public constructor
@@ -75,11 +86,56 @@ public class calendarfragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_calendarfragment, container, false);
-        GridView gridView = view.findViewById(R.id.gridView);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, data);
-        gridView.setAdapter(adapter);
+        dataqueue=new ArrayList<>();
+
+        dataqueue.add(new calendardatamodel("3"));
+        dataqueue.add(new calendardatamodel("4"));
+        dataqueue.add(new calendardatamodel("5"));
+        dataqueue.add(new calendardatamodel(" 6"));
+        dataqueue.add(new calendardatamodel("7"));
+        dataqueue.add(new calendardatamodel("8"));
+        dataqueue.add(new calendardatamodel("3"));
+        dataqueue.add(new calendardatamodel("7"));
+        dataqueue.add(new calendardatamodel("8"));
+        dataqueue.add(new calendardatamodel("9"));
+        dataqueue.add(new calendardatamodel("4"));
+        dataqueue.add(new calendardatamodel("5"));
+        dataqueue.add(new calendardatamodel(" 6"));
+        dataqueue.add(new calendardatamodel("9"));
+        dataqueue.add(new calendardatamodel("51"));
+        dataqueue.add(new calendardatamodel(" 12"));
+        dataqueue.add(new calendardatamodel("23"));
+        dataqueue.add(new calendardatamodel(" 1"));
+        dataqueue.add(new calendardatamodel("2"));
+        dataqueue.add(new calendardatamodel("3"));
+        dataqueue.add(new calendardatamodel("7"));
+        dataqueue.add(new calendardatamodel("8"));
+        dataqueue.add(new calendardatamodel("9"));
+        dataqueue.add(new calendardatamodel("4"));
+        dataqueue.add(new calendardatamodel("5"));
+        dataqueue.add(new calendardatamodel(" 6"));
+        dataqueue.add(new calendardatamodel("7"));
+        dataqueue.add(new calendardatamodel("8"));
+        dataqueue.add(new calendardatamodel("9"));
+        dataqueue.add(new calendardatamodel("51"));
+        dataqueue.add(new calendardatamodel("34"));
+        dataqueue.add(new calendardatamodel("45"));
+        dataqueue.add(new calendardatamodel("56"));
+        dataqueue.add(new calendardatamodel("49"));
+        dataqueue.add(new calendardatamodel("52"));
+
+        calendarRecycler=view.findViewById(R.id.calendarRecycler);
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),5);
+
+        calendarRecycler.setLayoutManager(gridLayoutManager);
+
+        calendaradapter adapter=new calendaradapter(dataqueue);
+        calendarRecycler.setAdapter(adapter);
 
         return view;
+
     }
+
+
 }

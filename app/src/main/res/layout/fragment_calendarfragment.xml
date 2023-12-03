@@ -13,33 +13,29 @@
             android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:background="#E8F1F0"
+                    android:background="@drawable/borderred"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                         <GridLayout
-                            android:background="@drawable/borderred"
                             android:layout_width="0dp"
-                            android:layout_weight="1.6"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginLeft="2dp"
-                            android:padding="5dp"
+                            android:layout_weight="1.1"
                             android:layout_height="wrap_content"
                             android:columnCount="1">
 
                                 <androidx.cardview.widget.CardView
-
-                                    app:cardCornerRadius="30dp"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginLeft="2dp"
+                                    app:cardCornerRadius="20dp"
                                     android:layout_height="110dp"
-                                    android:elevation="30dp"
+                                    android:elevation="40dp"
 
                                     android:layout_width="0dp"
-                                    android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_columnWeight="1.6">
                                         <LinearLayout
+                                            android:background="#4EF317"
 
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
@@ -49,31 +45,35 @@
                                                     android:alpha="1"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="3.5"
+                                                    android:layout_weight="3.1"
                                                     android:src="@drawable/mon"
                                                     android:scaleType="fitXY"/>
+
                                                 <TextView
+                                                    android:layout_marginTop="-4dp"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="1"
-                                                    android:text="सोमवार"
-                                                    android:gravity="center"
-                                                    android:textColor="@color/black"
                                                     android:layout_gravity="center"
-                                                    android:textSize="20sp" />
+                                                    android:layout_weight="1"
+                                                    android:gravity="center"
+                                                    android:text="सोम"
+                                                    android:textColor="@color/red"
+                                                    android:textSize="23sp"
+                                                    android:textStyle="bold" />
 
                                         </LinearLayout>
 
                                 </androidx.cardview.widget.CardView>
                                 <androidx.cardview.widget.CardView
-                                    android:elevation="30dp"
-                                    app:cardCornerRadius="30dp"
+                                    android:layout_marginTop="2dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:elevation="40dp"
+                                    app:cardCornerRadius="20dp"
                                     android:layout_height="110dp"
-                                    android:backgroundTint="@color/white"
                                     android:layout_width="0dp"
-                                    android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_columnWeight="1.6">
                                         <LinearLayout
+                                            android:background="#E1230A"
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent">
@@ -82,31 +82,34 @@
                                                     android:alpha="1"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="3.5"
+                                                    android:layout_weight="3"
                                                     android:src="@drawable/tue"
                                                     android:scaleType="fitXY"/>
                                                 <TextView
+                                                    android:layout_marginTop="-4dp"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
                                                     android:layout_weight="1"
-                                                    android:text="मंगलवार"
+                                                    android:text="मंगल"
+                                                    android:textStyle="bold"
                                                     android:gravity="center"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="#FFE710"
                                                     android:layout_gravity="center"
-                                                    android:textSize="20sp" />
+                                                    android:textSize="23sp" />
 
                                         </LinearLayout>
 
                                 </androidx.cardview.widget.CardView>
                                 <androidx.cardview.widget.CardView
-                                    android:elevation="30dp"
-                                    app:cardCornerRadius="30dp"
+                                    android:elevation="40dp"
+                                    android:layout_marginLeft="2dp"
+                                    app:cardCornerRadius="20dp"
                                     android:layout_height="110dp"
-                                    android:backgroundTint="@color/white"
                                     android:layout_width="0dp"
                                     android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_marginTop="2dp">
                                         <LinearLayout
+                                            android:background="#FFE925"
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent">
@@ -115,30 +118,35 @@
                                                     android:alpha="1"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="3.5"
+                                                    android:layout_weight="3"
                                                     android:src="@drawable/wed"
                                                     android:scaleType="fitXY"/>
                                                 <TextView
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
                                                     android:layout_weight="1"
-                                                    android:text="बुधवार"
+                                                    android:text="बुध"
+                                                    android:layout_marginTop="-10dp"
+                                                    android:textStyle="bold"
                                                     android:gravity="center"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="#F10C0C"
                                                     android:layout_gravity="center"
-                                                    android:textSize="20sp" />
+                                                    android:textSize="19sp" />
 
                                         </LinearLayout>
 
                                 </androidx.cardview.widget.CardView>
                                 <androidx.cardview.widget.CardView
-                                    app:cardCornerRadius="30dp"
+                                    app:cardCornerRadius="20dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:elevation="40dp"
                                     android:layout_height="110dp"
                                     android:backgroundTint="@color/white"
                                     android:layout_width="0dp"
                                     android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_marginTop="2dp">
                                         <LinearLayout
+                                            android:background="#F68C0A"
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent">
@@ -147,16 +155,18 @@
                                                     android:alpha="1"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="3.5"
+                                                    android:layout_weight="2.8"
                                                     android:src="@drawable/thu"
                                                     android:scaleType="fitXY"/>
                                                 <TextView
+                                                    android:layout_marginTop="-4dp"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
                                                     android:layout_weight="1"
-                                                    android:text="गुरुवार"
+                                                    android:text="गुरु"
+                                                    android:textStyle="bold"
                                                     android:gravity="center"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="#F81504"
                                                     android:layout_gravity="center"
                                                     android:textSize="20sp" />
 
@@ -164,13 +174,15 @@
 
                                 </androidx.cardview.widget.CardView>
                                 <androidx.cardview.widget.CardView
-                                    app:cardCornerRadius="30dp"
+                                    app:cardCornerRadius="20dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:elevation="40dp"
                                     android:layout_height="110dp"
-                                    android:backgroundTint="@color/white"
                                     android:layout_width="0dp"
                                     android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_marginTop="2dp">
                                         <LinearLayout
+                                            android:background="#ffd700"
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent">
@@ -179,16 +191,18 @@
                                                     android:alpha="1"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="3.5"
+                                                    android:layout_weight="3"
                                                     android:src="@drawable/fri"
                                                     android:scaleType="fitXY"/>
                                                 <TextView
+                                                    android:layout_marginTop="-4dp"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
                                                     android:layout_weight="1"
-                                                    android:text="शुक्रवार"
+                                                    android:text="शुक्र"
+                                                    android:textStyle="bold"
                                                     android:gravity="center"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="@color/red"
                                                     android:layout_gravity="center"
                                                     android:textSize="20sp" />
 
@@ -196,13 +210,15 @@
 
                                 </androidx.cardview.widget.CardView>
                                 <androidx.cardview.widget.CardView
-                                    app:cardCornerRadius="30dp"
+                                    app:cardCornerRadius="20dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:elevation="40dp"
                                     android:layout_height="110dp"
-                                    android:backgroundTint="@color/white"
                                     android:layout_width="0dp"
                                     android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_marginTop="2dp">
                                         <LinearLayout
+                                            android:background="#75454141"
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent">
@@ -215,26 +231,31 @@
                                                     android:src="@drawable/sat"
                                                     android:scaleType="fitXY"/>
                                                 <TextView
+                                                    android:layout_marginTop="-5dp"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
                                                     android:layout_weight="1"
-                                                    android:text="शनिवार"
+                                                    android:text="शनि"
+                                                    android:textStyle="bold"
                                                     android:gravity="center"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="#F40C0C"
                                                     android:layout_gravity="center"
-                                                    android:textSize="20sp" />
+                                                    android:textSize="22sp" />
 
                                         </LinearLayout>
 
                                 </androidx.cardview.widget.CardView>
                                 <androidx.cardview.widget.CardView
-                                    app:cardCornerRadius="30dp"
+                                    app:cardCornerRadius="20dp"
+                                    android:layout_marginLeft="2dp"
+                                    android:layout_marginBottom="2dp"
+                                    android:elevation="40dp"
                                     android:layout_height="110dp"
-                                    android:backgroundTint="@color/white"
                                     android:layout_width="0dp"
                                     android:layout_columnWeight="1.6"
-                                    android:layout_margin="2dp">
+                                    android:layout_marginTop="2dp">
                                         <LinearLayout
+                                            android:background="#ff0000"
                                             android:orientation="vertical"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent">
@@ -243,18 +264,20 @@
                                                     android:alpha="1"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
-                                                    android:layout_weight="3.5"
+                                                    android:layout_weight="3.2"
                                                     android:src="@drawable/sun"
                                                     android:scaleType="fitXY"/>
                                                 <TextView
+                                                    android:layout_marginTop="-4dp"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="0dp"
                                                     android:layout_weight="1"
-                                                    android:text="रविवार"
+                                                    android:textStyle="bold"
+                                                    android:text="रवि"
                                                     android:gravity="center"
-                                                    android:textColor="@color/black"
+                                                    android:textColor="#FFEB3B"
                                                     android:layout_gravity="center"
-                                                    android:textSize="20sp" />
+                                                    android:textSize="22sp" />
 
                                         </LinearLayout>
 
@@ -264,21 +287,21 @@
 
 
 
+
                         </GridLayout>
 
-
-                        <GridView
-                            android:background="@drawable/borderred"
-                            android:id="@+id/gridView"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_margin="2dp"
+                            android:id="@+id/calendarRecycler"
                             android:layout_width="0dp"
-                            android:layout_weight="5"
-                            android:layout_marginTop="2dp"
-                            android:layout_height="match_parent"
-                            android:numColumns="5"
-                            android:horizontalSpacing="8dp"
-                            android:verticalSpacing="8dp"
-                            android:padding="16dp"
-                            android:gravity="center"/>
+                            android:layout_weight="5.3"
+                            android:layout_height="match_parent">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
 
 
                 </LinearLayout>

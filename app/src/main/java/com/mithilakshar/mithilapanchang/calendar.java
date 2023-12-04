@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,11 +35,13 @@ public class calendar extends AppCompatActivity {
 
     ImageSlider calendarimageSlider;
     TextView monthName;
+    ImageView backfragment,forwardfragment;
 
     ArrayList<SlideModel> calurl;
     FirebaseFirestore db;
 
-
+    String[] fragmentindex={"January","February","March","April","May","June","July","August","September","October","November","December"};
+    int fragmentindexnumber;
 
 
 
@@ -50,9 +53,14 @@ public class calendar extends AppCompatActivity {
 
         calendarimageSlider=findViewById(R.id.calendarimageSlider);
         monthName=findViewById(R.id.monthName);
+        forwardfragment=findViewById(R.id.forwardfragment);
+        backfragment=findViewById(R.id.backfragment);
 
         Intent intent = getIntent();
-        String hindiMonth = intent.getStringExtra("month");
+        String currentMonth = intent.getStringExtra("currentMonth");
+        String currentDate = intent.getStringExtra("currentDate");
+        String hindiMonth = translateToHindi(currentMonth);
+
         monthName.setText(hindiMonth);
 
         calurl=new ArrayList<>();
@@ -71,19 +79,54 @@ public class calendar extends AppCompatActivity {
         });
 
 
+        loadfragment(currentMonth);
 
-        // Create a FragmentManager to manage fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
-        // Begin a new FragmentTransaction
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        for (int i = 0; i < fragmentindex.length; i++) {
+            if (fragmentindex[i].indexOf(currentMonth) != -1) {
+                fragmentindexnumber=i;
+                break;
+            }
+        }
 
-        // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
-        calendarfragment cf=new calendarfragment();
-        fragmentTransaction.replace(R.id.fragmentContainer,cf);
+        backfragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        // Commit the transaction
-        fragmentTransaction.commit();
+                if(fragmentindexnumber==0){
+                    fragmentindexnumber=fragmentindex.length-1;
+                    loadfragment(fragmentindex[fragmentindexnumber]);
+                    String hindiMonth = translateToHindi(fragmentindex[fragmentindexnumber]);
+                    monthName.setText(hindiMonth);
+
+                }
+                else {
+                    fragmentindexnumber=fragmentindexnumber-1;
+                    loadfragment(fragmentindex[fragmentindexnumber]);
+                    String hindiMonth = translateToHindi(fragmentindex[fragmentindexnumber]);
+                    monthName.setText(hindiMonth);
+
+                }
+
+
+            }
+        });
+
+        forwardfragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                fragmentindexnumber=(fragmentindexnumber+1)%fragmentindex.length;
+                loadfragment(fragmentindex[fragmentindexnumber]);
+                String hindiMonth = translateToHindi(fragmentindex[fragmentindexnumber]);
+                monthName.setText(hindiMonth);
+
+            }
+        });
+
+
+
+
 
 
 
@@ -91,6 +134,121 @@ public class calendar extends AppCompatActivity {
     }
 
 
+
+        private String translateToHindi(String currentMonth) {
+            // Manually create a mapping for English to Hindi month names
+            Map<String, String> monthTranslation = new HashMap<>();
+            monthTranslation.put("January", "जनवरी");
+            monthTranslation.put("February", "फ़रवरी");
+            monthTranslation.put("March", "मार्च");
+            monthTranslation.put("April", "अप्रैल");
+            monthTranslation.put("May", "मई");
+            monthTranslation.put("June", "जून");
+            monthTranslation.put("July", "जुलाई");
+            monthTranslation.put("August", "अगस्त");
+            monthTranslation.put("September", "सितंबर");
+            monthTranslation.put("October", "अक्टूबर");
+            monthTranslation.put("November", "नवंबर");
+            monthTranslation.put("December", "दिसंबर");
+            // Return the translated month name
+            return monthTranslation.get(currentMonth);
+        }
+
+
+    private void loadfragment(String currentMonth) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // Begin a new FragmentTransaction
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+
+
+        switch (currentMonth){
+
+            case "December":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                Decemberfragment df=new Decemberfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,df);
+                fragmentTransaction.commit();
+                break;
+            case "January":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+               Januaryfragment jf=new Januaryfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,jf);
+                fragmentTransaction.commit();
+                break;
+
+            case "February":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                februaryfragment ff=new februaryfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,ff);
+                fragmentTransaction.commit();
+                break;
+            case "March":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                marchfragment mf=new marchfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,mf);
+                fragmentTransaction.commit();
+                break;
+            case "April":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                aprilfragment af=new aprilfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,af);
+                fragmentTransaction.commit();
+                break;
+            case "May":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                mayfragment myf=new mayfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,myf);
+                fragmentTransaction.commit();
+                break;
+
+
+            case "June":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                junefragment jef=new junefragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,jef);
+                fragmentTransaction.commit();
+                break;
+            case "July":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                julyfragment jyf=new julyfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,jyf);
+                fragmentTransaction.commit();
+                break;
+
+            case "August":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                augustfragment atf=new augustfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,atf);
+                fragmentTransaction.commit();
+                break;
+            case "September":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                septemberfragment sf=new septemberfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,sf);
+                fragmentTransaction.commit();
+                break;
+            case "October":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                octoberfragment of=new octoberfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,of);
+                fragmentTransaction.commit();
+                break;
+            case "November":
+                // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
+                novemberfragment nf=new novemberfragment();
+                fragmentTransaction.replace(R.id.fragmentContainer,nf);
+                fragmentTransaction.commit();
+                break;
+
+
+
+
+        }
+
+    }
 
 
 }

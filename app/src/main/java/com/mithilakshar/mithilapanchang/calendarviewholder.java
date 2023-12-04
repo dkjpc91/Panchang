@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class calendarviewholder extends RecyclerView.ViewHolder {
 
-    TextView calendarItemText;
+    TextView calendardayText,calendardateText,calendardescText;
 
     public calendarviewholder(@NonNull View itemView) {
 
         super(itemView);
 
-        calendarItemText=itemView.findViewById(R.id.calendarItemText);
+        calendardayText=itemView.findViewById(R.id.calendardayText);
+        calendardateText=itemView.findViewById(R.id.calendardateText);
+        calendardescText=itemView.findViewById(R.id.calendardescText);
 
 
     }

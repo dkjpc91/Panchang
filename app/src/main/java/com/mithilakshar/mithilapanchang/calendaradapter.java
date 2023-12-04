@@ -29,7 +29,9 @@ public class calendaradapter extends RecyclerView.Adapter<calendarviewholder> {
     @Override
     public void onBindViewHolder(@NonNull calendarviewholder holder, int position) {
 
-        holder.calendarItemText.setText(datalist.get(position).getDate());
+        holder.calendardescText.setText(datalist.get(position).getDesc());
+        holder.calendardateText.setText(datalist.get(position).getDate());
+        holder.calendardayText.setText(datalist.get(position).getDay());
 
     }
 

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -39,16 +40,17 @@ import java.util.Stack;
 
 public class home extends AppCompatActivity {
 
-    ImageSlider imageSlider;
+
     CardView calendar,holiday,eclipse,mantra,katha;
-    TextView textViewMonth,textViewDate,textViewDay;
+    TextView textViewMonth,textViewDate,textViewDay,homedesc;
 
     FirebaseFirestore db;
 
 
 
-
+    ImageSlider imageSlider;
     ArrayList<SlideModel> urllist;
+    String homedsc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class home extends AppCompatActivity {
         textViewMonth=findViewById(R.id.textViewMonth);
         textViewDate=findViewById(R.id.textViewDate);
         textViewDay=findViewById(R.id.textViewDay);
+        homedesc=findViewById(R.id.homedesc);
 
         urllist=new ArrayList<>();
 
@@ -92,13 +95,43 @@ public class home extends AppCompatActivity {
 
 
 
+
+
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM");
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEE");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
 
+
         String currentMonth = monthFormat.format(new Date());
         String currentDay = dayFormat.format(new Date());
         String currentDate = dateFormat.format(new Date());
+
+
+
+
+
+        CollectionReference collectionRef = db.collection(currentMonth);
+        Query query = collectionRef.whereEqualTo("date", currentDate);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc: task.getResult()){
+                        String documentId = doc.getId();
+                        String date=doc.getString("date");
+                        String day=doc.getString("day");
+                        String desc=doc.getString("desc");
+
+                       homedesc.setText(date+"   "+day+"\n"+desc);
+
+
+                    }
+                }
+
+            }
+        });
+
+
 
 
         String hindiMonth = translateToHindi(currentMonth);
@@ -112,7 +145,8 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(getApplicationContext(),calendar.class);
-                i.putExtra("month", hindiMonth);
+                i.putExtra("currentMonth", currentMonth);
+                i.putExtra("currentDate", currentDate);
                 startActivity(i);
             }
         });

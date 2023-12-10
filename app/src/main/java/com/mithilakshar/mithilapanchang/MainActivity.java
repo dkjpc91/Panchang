@@ -1,5 +1,6 @@
 package com.mithilakshar.mithilapanchang;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,6 +9,10 @@ import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
     ImageView splashTxt,logo;
@@ -36,5 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         },3000);
+
+
     }
 }

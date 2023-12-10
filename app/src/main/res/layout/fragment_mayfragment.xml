@@ -20,6 +20,7 @@
             android:orientation="horizontal">
 
             <GridLayout
+                android:layout_marginLeft="2dp"
                 android:layout_width="0dp"
                 android:layout_weight="1.2"
                 android:layout_height="wrap_content"

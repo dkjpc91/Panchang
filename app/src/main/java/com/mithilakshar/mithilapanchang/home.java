@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -41,59 +42,61 @@ import java.util.Stack;
 public class home extends AppCompatActivity {
 
 
-    CardView calendar,holiday,eclipse,mantra,katha;
-    TextView textViewMonth,textViewDate,textViewDay,homedesc;
+    CardView calendar, holiday, eclipse, mantra, katha;
+    TextView textViewMonth, textViewDate, textViewDay, homedesc;
 
     FirebaseFirestore db;
-
+    FirebaseMessaging firebaseMessaging;
 
 
     ImageSlider imageSlider;
     ArrayList<SlideModel> urllist;
-    String homedsc;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        imageSlider=findViewById(R.id.imageSlider);
-        calendar=findViewById(R.id.calendar);
-        holiday=findViewById(R.id.holiday);
-        eclipse=findViewById(R.id.eclipse);
-        katha=findViewById(R.id.katha);
-        mantra=findViewById(R.id.mantra);
-        textViewMonth=findViewById(R.id.textViewMonth);
-        textViewDate=findViewById(R.id.textViewDate);
-        textViewDay=findViewById(R.id.textViewDay);
-        homedesc=findViewById(R.id.homedesc);
+        imageSlider = findViewById(R.id.imageSlider);
+        calendar = findViewById(R.id.calendar);
+        holiday = findViewById(R.id.holiday);
+        eclipse = findViewById(R.id.eclipse);
+        katha = findViewById(R.id.katha);
+        mantra = findViewById(R.id.mantra);
+        textViewMonth = findViewById(R.id.textViewMonth);
+        textViewDate = findViewById(R.id.textViewDate);
+        textViewDay = findViewById(R.id.textViewDay);
+        homedesc = findViewById(R.id.homedesc);
 
-        urllist=new ArrayList<>();
+        urllist = new ArrayList<>();
 
 
-
-        db=FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         db.collection("banner").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                         urllist.add(new SlideModel(queryDocumentSnapshot.getString("url"), ScaleTypes.CENTER_INSIDE));
-                        imageSlider.setImageList(urllist,ScaleTypes.CENTER_INSIDE);
+                        imageSlider.setImageList(urllist, ScaleTypes.CENTER_INSIDE);
                     }
                 }
             }
         });
 
 
+        //firebase message
 
-
-
-
-
-
-
+        firebaseMessaging.getInstance().subscribeToTopic("notification").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                String msg = "Subscribed";
+                if (!task.isSuccessful()) {
+                    msg = "Subscribe failed";}
+            }
+        });
 
 
 
@@ -107,22 +110,19 @@ public class home extends AppCompatActivity {
         String currentDate = dateFormat.format(new Date());
 
 
-
-
-
         CollectionReference collectionRef = db.collection(currentMonth);
         Query query = collectionRef.whereEqualTo("date", currentDate);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc: task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         String documentId = doc.getId();
-                        String date=doc.getString("date");
-                        String day=doc.getString("day");
-                        String desc=doc.getString("desc");
+                        String date = doc.getString("date");
+                        String day = doc.getString("day");
+                        String desc = doc.getString("desc");
 
-                       homedesc.setText(date+"   "+day+"\n"+desc);
+                        homedesc.setText(date + "   " + day + "\n\n" + desc);
 
 
                     }
@@ -132,10 +132,8 @@ public class home extends AppCompatActivity {
         });
 
 
-
-
         String hindiMonth = translateToHindi(currentMonth);
-        String  hindiDay = translateToHindiday(currentDay);
+        String hindiDay = translateToHindiday(currentDay);
 
         textViewMonth.setText(hindiMonth);
         textViewDate.setText(currentDate);
@@ -144,7 +142,7 @@ public class home extends AppCompatActivity {
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),calendar.class);
+                Intent i = new Intent(getApplicationContext(), calendar.class);
                 i.putExtra("currentMonth", currentMonth);
                 i.putExtra("currentDate", currentDate);
                 startActivity(i);
@@ -154,7 +152,7 @@ public class home extends AppCompatActivity {
         holiday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(getApplicationContext(),holiday.class);
+                Intent i = new Intent(getApplicationContext(), holiday.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
             }
@@ -164,7 +162,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i=new Intent(getApplicationContext(),eclipse.class);
+                Intent i = new Intent(getApplicationContext(), eclipse.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
 
@@ -174,7 +172,7 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i=new Intent(getApplicationContext(),mantra.class);
+                Intent i = new Intent(getApplicationContext(), mantra.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
 
@@ -184,16 +182,15 @@ public class home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i=new Intent(getApplicationContext(),katha.class);
+                Intent i = new Intent(getApplicationContext(), katha.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
 
             }
         });
 
+
     }
-
-
 
 
     private String translateToHindi(String currentMonth) {
@@ -230,15 +227,4 @@ public class home extends AppCompatActivity {
     }
 
 
-   /* private void startImageSlide() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                index=(index+1)% urllist.length;
-                ImageView iv= (ImageView) imageSwitcher.getCurrentView();
-                Picasso.get().load(urllist[index]).into(iv);
-                startImageSlide();
-            }
-        }, 2500);
-    }*/
 }

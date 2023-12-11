@@ -105,7 +105,13 @@ public class aprilfragment extends Fragment {
         calendarRecycler.setLayoutManager(layoutManager);
 
 
+
         calendarRecycler.setAdapter(adapter);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        screenWidth=screenWidth-293;
+        int itemWidth = screenWidth / 5; // Number of columns is 5
+        adapter.setItemWidth(itemWidth);
+
 
         return view;
     }

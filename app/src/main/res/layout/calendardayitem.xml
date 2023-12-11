@@ -27,7 +27,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:textColor="@color/blue"
-                    android:text="1"
+
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:gravity="center" />
@@ -58,7 +58,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:textColor="#E413A9"
-                    android:text="1"
+
                     android:textStyle="bold"
                     android:textSize="10sp"
                     android:gravity="center" />

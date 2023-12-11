@@ -10,12 +10,15 @@ import androidx.annotation.Nullable;
 
 public class calendardialog extends Dialog {
 
-    private TextView calendartext;
+    private TextView calendartext,calendartext1,calendartext2;
     public calendardialog(@NonNull Context context) {
         super(context);
         requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
         setContentView(R.layout.calendardialog);
-         calendartext=findViewById(R.id.calendardialogtext);
+        calendartext=findViewById(R.id.calendardialogtext);
+        calendartext1=findViewById(R.id.calendardialogtext1);
+        calendartext2=findViewById(R.id.calendardialogtext2);
+
 
     }
 
@@ -29,5 +32,11 @@ public class calendardialog extends Dialog {
 
     public void setcalendardialogtext(String text){
         calendartext.setText(text);
+    }
+    public void setcalendardialogtext1(String text){
+        calendartext1.setText(text);
+    }
+    public void setcalendardialogtext2(String text){
+        calendartext2.setText(text);
     }
 }

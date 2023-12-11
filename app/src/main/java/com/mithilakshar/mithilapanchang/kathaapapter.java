@@ -1,5 +1,6 @@
 package com.mithilakshar.mithilapanchang;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,17 @@ public class kathaapapter extends RecyclerView.Adapter<kathaviewholder> {
         holder.kathaName.setText(datalist.get(position).kathaName);
         holder.kathaStory.setText(datalist.get(position).kathaStory);
         Picasso.get().load(datalist.get(position).kathaUrl).into(holder.kathaImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(view.getContext(), kathadesc.class);
+                i.putExtra("kathaName", datalist.get(position).kathaName);
+                i.putExtra("kathaStory", datalist.get(position).kathaStory);
+                i.putExtra("kathaUrl", datalist.get(position).kathaUrl);
+                view.getContext().startActivity(i);
+            }
+        });
 
     }
 

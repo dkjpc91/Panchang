@@ -107,6 +107,10 @@ public class junefragment extends Fragment {
 
 
         calendarRecycler.setAdapter(adapter);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        screenWidth=screenWidth-293;
+        int itemWidth = screenWidth / 5; // Number of columns is 5
+        adapter.setItemWidth(itemWidth);
 
         return view;
     }

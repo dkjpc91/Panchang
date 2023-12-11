@@ -33,10 +33,16 @@
         app:iss_delay="1000"
         app:iss_text_align="CENTER"/>
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mantraRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+
+
+
 
 
 

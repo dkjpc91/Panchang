@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,12 +101,23 @@ public class Decemberfragment extends Fragment {
 
         calendarRecycler=view.findViewById(R.id.calendarRecycler);
 
-        RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getContext(),7, LinearLayoutManager.HORIZONTAL,false);
 
+
+
+
+
+        RecyclerView.LayoutManager layoutManager=new GridLayoutManager(getContext(),7, LinearLayoutManager.HORIZONTAL,false);
         calendarRecycler.setLayoutManager(layoutManager);
 
 
         calendarRecycler.setAdapter(adapter);
+
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        screenWidth=screenWidth-293;
+        int itemWidth = screenWidth / 5; // Number of columns is 5
+        adapter.setItemWidth(itemWidth);
+
+
 
         return view;
 

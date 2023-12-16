@@ -120,9 +120,10 @@ public class home extends AppCompatActivity implements TextToSpeech.OnInitListen
 
         String hindiMonth = translateToHindi(currentMonth);
         String hindiDay = translateToHindiday(currentDay);
+        String hindidate= translateToHindidate(currentDate);
 
         textViewMonth.setText(hindiMonth);
-        textViewDate.setText(currentDate);
+        textViewDate.setText(hindidate);
         textViewDay.setText(hindiDay);
 
 
@@ -140,7 +141,7 @@ public class home extends AppCompatActivity implements TextToSpeech.OnInitListen
                         String desc = doc.getString("desc");
                         String daydesc = doc.getString("speak");
 
-                        homedesc.setText(date+" "+hindiMonth+ ", " + day);
+                        homedesc.setText(hindidate+" "+hindiMonth+ " २०२४, " + day);
                         homedesc2.setText(desc);
 
                         speak=daydesc;
@@ -250,6 +251,49 @@ public class home extends AppCompatActivity implements TextToSpeech.OnInitListen
         // Return the translated month name
         return monthTranslation.get(currentDay);
     }
+
+    private String translateToHindidate(String date) {
+        // Manually create a mapping for English to Hindi month names
+        Map<String, String> nmap = new HashMap<>();
+
+        nmap.put("0", "०");
+        nmap.put("1", "१");
+        nmap.put("2", "२");
+        nmap.put("3", "३");
+        nmap.put("4", "४");
+        nmap.put("5", "५");
+        nmap.put("6", "६");
+        nmap.put("7", "७");
+        nmap.put("8", "८");
+        nmap.put("9", "९");
+        nmap.put("10", "१०");
+        nmap.put("11", "११");
+        nmap.put("12", "१२");
+        nmap.put("13", "१३");
+        nmap.put("14", "१४");
+        nmap.put("15", "१५");
+        nmap.put("16", "१६");
+        nmap.put("17", "१७");
+        nmap.put("18", "१८");
+        nmap.put("19", "१९");
+        nmap.put("20", "२०");
+        nmap.put("21", "२१");
+        nmap.put("22", "२२");
+        nmap.put("23", "२३");
+        nmap.put("24", "२४");
+        nmap.put("25", "२५");
+        nmap.put("26", "२६");
+        nmap.put("27", "२७");
+        nmap.put("28", "२८");
+        nmap.put("29", "२९");
+        nmap.put("30", "३०");
+        nmap.put("31", "३१");
+        // Return the translated month name
+        return nmap.get(date);
+    }
+
+
+
 
 
     public void onInit(int i) {

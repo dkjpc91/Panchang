@@ -46,7 +46,7 @@
                 android:textColor="@color/red"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:textSize="33sp"/>
+                android:textSize="30sp"/>
             <ScrollView
                 android:background="@drawable/borderred"
                 android:layout_margin="3dp"

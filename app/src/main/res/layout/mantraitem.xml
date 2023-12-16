@@ -42,7 +42,7 @@
 
                 android:textStyle="bold"
                 android:textSize="30sp"
-                android:gravity="center" />
+                android:gravity="left" />
 
 
 

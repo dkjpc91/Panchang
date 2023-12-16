@@ -7,10 +7,11 @@ public class mantradatamodel {
     public mantradatamodel() {
 
     }
-    public mantradatamodel(String mantraDesc, String mantraName, String mantraImage) {
+
+    public mantradatamodel(String mantraDesc, String mantraName, String mantraImageurl) {
         this.mantraDesc = mantraDesc;
         this.mantraName = mantraName;
-        this.mantraImageurl = mantraImage;
+        this.mantraImageurl = mantraImageurl;
     }
 
     public String getMantraDesc() {
@@ -29,11 +30,11 @@ public class mantradatamodel {
         this.mantraName = mantraName;
     }
 
-    public String getMantraImage() {
+    public String getMantraImageurl() {
         return mantraImageurl;
     }
 
-    public void setMantraImage(String mantraImage) {
-        this.mantraImageurl = mantraImage;
+    public void setMantraImageurl(String mantraImageurl) {
+        this.mantraImageurl = mantraImageurl;
     }
 }

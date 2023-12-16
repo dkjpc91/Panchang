@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class mantraadapter extends RecyclerView.Adapter<mantraviewholder> {
 
     ArrayList<mantradatamodel> datalist;
-    FragmentManager fm;
+
 
     public mantraadapter(ArrayList<mantradatamodel> datalist) {
         this.datalist = datalist;
@@ -38,7 +38,8 @@ public class mantraadapter extends RecyclerView.Adapter<mantraviewholder> {
 
         holder.mantraName.setText(datalist.get(position).mantraName);
         holder.mantraDesc.setText(datalist.get(position).mantraName);
-        Picasso.get().load(datalist.get(position).getMantraImage()).into(holder.mantraImage);
+        Picasso.get().load(datalist.get(position).getMantraImageurl()).into(holder.mantraImage);
+
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +49,6 @@ public class mantraadapter extends RecyclerView.Adapter<mantraviewholder> {
                 calendardialog calendardialog=new calendardialog(view.getContext());
                 calendardialog.setcalendardialogtext(datalist.get(position).mantraName);
                 calendardialog.setcalendardialogtext1(datalist.get(position).mantraDesc);
-                calendardialog.setcalendardialogtext2(datalist.get(position).mantraDesc);
                 calendardialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 calendardialog.show();
             }

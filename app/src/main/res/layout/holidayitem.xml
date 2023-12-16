@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="95dp"
     android:backgroundTint="@color/red"
     android:layout_margin="4dp"
 
@@ -43,17 +43,18 @@
                 android:textColor="@color/red"
 
                 android:textStyle="bold"
-                android:textSize="30sp"
+                android:textSize="28sp"
                 android:gravity="left" />
 
             <TextView
                 android:id="@+id/holidayDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:gravity="left"
                 android:textColor="#2196F3"
-                android:textStyle="bold"
-                android:textSize="17dp"
-                android:gravity="left" />
+                android:textSize="23dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

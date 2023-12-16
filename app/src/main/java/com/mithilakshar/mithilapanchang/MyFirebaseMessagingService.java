@@ -19,7 +19,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         getfirebasemessage(message.getNotification().getTitle(), message.getNotification().getBody());
 
     }
-
     public void getfirebasemessage(String title, String msg) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "notification").setSmallIcon(R.drawable.mp)
                 .setContentTitle(title)

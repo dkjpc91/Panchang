@@ -8,38 +8,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
+
 import android.view.View;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
+
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
+
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.squareup.picasso.Picasso;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Stack;
+
 
 public class home extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -135,7 +132,6 @@ public class home extends AppCompatActivity implements TextToSpeech.OnInitListen
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        String documentId = doc.getId();
                         String date = doc.getString("date");
                         String day = doc.getString("day");
                         String desc = doc.getString("desc");

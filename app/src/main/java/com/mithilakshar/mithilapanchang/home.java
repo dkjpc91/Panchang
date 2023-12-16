@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageSwitcher;
@@ -35,15 +36,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Stack;
 
-public class home extends AppCompatActivity {
+public class home extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
 
     CardView calendar, holiday, eclipse, mantra, katha;
-    TextView textViewMonth, textViewDate, textViewDay, homedesc;
+    TextView textViewMonth, textViewDate, textViewDay, homedesc,homedesc2;
 
     FirebaseFirestore db;
     FirebaseMessaging firebaseMessaging;
@@ -51,6 +53,12 @@ public class home extends AppCompatActivity {
 
     ImageSlider imageSlider;
     ArrayList<SlideModel> urllist;
+    private TextToSpeech textToSpeech;
+
+    String speak;
+    int counter=0;
+
+    private Handler handler = new Handler();
 
 
     @Override
@@ -68,6 +76,7 @@ public class home extends AppCompatActivity {
         textViewDate = findViewById(R.id.textViewDate);
         textViewDay = findViewById(R.id.textViewDay);
         homedesc = findViewById(R.id.homedesc);
+        homedesc2 = findViewById(R.id.homedesc2);
 
         urllist = new ArrayList<>();
 
@@ -109,6 +118,14 @@ public class home extends AppCompatActivity {
         String currentDay = dayFormat.format(new Date());
         String currentDate = dateFormat.format(new Date());
 
+        String hindiMonth = translateToHindi(currentMonth);
+        String hindiDay = translateToHindiday(currentDay);
+
+        textViewMonth.setText(hindiMonth);
+        textViewDate.setText(currentDate);
+        textViewDay.setText(hindiDay);
+
+
 
         CollectionReference collectionRef = db.collection(currentMonth);
         Query query = collectionRef.whereEqualTo("date", currentDate);
@@ -121,9 +138,12 @@ public class home extends AppCompatActivity {
                         String date = doc.getString("date");
                         String day = doc.getString("day");
                         String desc = doc.getString("desc");
+                        String daydesc = doc.getString("speak");
 
-                        homedesc.setText(date + "   " + day + "\n\n" + desc);
+                        homedesc.setText(date+" "+hindiMonth+ ", " + day);
+                        homedesc2.setText(desc);
 
+                        speak=daydesc;
 
                     }
                 }
@@ -132,12 +152,10 @@ public class home extends AppCompatActivity {
         });
 
 
-        String hindiMonth = translateToHindi(currentMonth);
-        String hindiDay = translateToHindiday(currentDay);
 
-        textViewMonth.setText(hindiMonth);
-        textViewDate.setText(currentDate);
-        textViewDay.setText(hindiDay);
+
+
+
 
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +164,7 @@ public class home extends AppCompatActivity {
                 i.putExtra("currentMonth", currentMonth);
                 i.putExtra("currentDate", currentDate);
                 startActivity(i);
+                counter++;
             }
         });
 
@@ -155,6 +174,7 @@ public class home extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), holiday.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
+                counter++;
             }
         });
 
@@ -165,6 +185,7 @@ public class home extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), eclipse.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
+                counter++;
 
             }
         });
@@ -175,6 +196,7 @@ public class home extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), mantra.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
+                counter++;
 
             }
         });
@@ -185,9 +207,12 @@ public class home extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), katha.class);
                 i.putExtra("month", hindiMonth);
                 startActivity(i);
+                counter++;
 
             }
         });
+
+        textToSpeech = new TextToSpeech(this, this);
 
 
     }
@@ -224,6 +249,72 @@ public class home extends AppCompatActivity {
         monthTranslation.put("Sun", "रविवार");
         // Return the translated month name
         return monthTranslation.get(currentDay);
+    }
+
+
+    public void onInit(int i) {
+
+        if (i == TextToSpeech.SUCCESS) {
+
+
+            // Set language
+            delayedTask(0000);
+
+
+
+            // Speak text
+
+        } else {
+            // Handle error
+
+        }
+
+    }
+
+
+    protected void onDestroy() {
+        super.onDestroy();
+        // Shutdown TextToSpeech engine
+
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        delayedTask(1000);
+
+    }
+
+    private void delayedTask(int delayMillis) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Your code to be executed after the delay
+                textToSpeech.setLanguage(Locale.forLanguageTag("hi"));
+
+                // Speak text
+                textToSpeech.setPitch(1f);
+                textToSpeech.setSpeechRate(0.6f);
+                textToSpeech.speak(speak, TextToSpeech.QUEUE_FLUSH, null, null);
+
+            }
+        }, delayMillis);
     }
 
 

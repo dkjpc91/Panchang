@@ -7,43 +7,42 @@
     android:background="#E8F1F0"
     tools:context=".home">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="-90dp"
-        android:src="@drawable/header"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_marginTop="-130dp"
-        android:padding="27dp"
-        android:src="@drawable/splashtxt"/>
-
-    <com.denzcoskun.imageslider.ImageSlider
-        android:id="@+id/kathaimageSlider"
-        app:iss_placeholder="@drawable/om"
-
-        app:iss_no_dots="true"
-        android:layout_marginTop="-4dp"
-        android:layout_marginBottom="-7dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        app:iss_auto_cycle="true"
-        app:iss_period="2000"
-        app:iss_delay="1000"
-        app:iss_text_align="CENTER"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/kathaRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="-90dp"
+            android:src="@drawable/header"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginTop="-130dp"
+            android:padding="27dp"
+            android:src="@drawable/splashtxt"/>
+
+        <com.denzcoskun.imageslider.ImageSlider
+            android:id="@+id/kathaimageSlider"
+            app:iss_placeholder="@drawable/om"
+
+            app:iss_no_dots="true"
+            android:layout_marginTop="-4dp"
+            android:layout_marginBottom="-7dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:iss_auto_cycle="true"
+            app:iss_period="2000"
+            app:iss_delay="1000"
+            app:iss_text_align="CENTER"/>
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/kathaRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
 

@@ -68,7 +68,7 @@ public class katha extends AppCompatActivity {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
                         urllist.add(new SlideModel(queryDocumentSnapshot.getString("url"), ScaleTypes.CENTER_INSIDE));
-                        kathaimageSlider.setImageList(urllist,ScaleTypes.CENTER_INSIDE);
+                        kathaimageSlider.setImageList(urllist,ScaleTypes.FIT);
                     }
                 }
             }

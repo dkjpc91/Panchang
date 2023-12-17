@@ -68,7 +68,7 @@ public class mantra extends AppCompatActivity {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
                         urllist.add(new SlideModel(queryDocumentSnapshot.getString("url"), ScaleTypes.CENTER_INSIDE));
-                        mantraimageSlider.setImageList(urllist,ScaleTypes.CENTER_INSIDE);
+                        mantraimageSlider.setImageList(urllist,ScaleTypes.FIT);
                     }
                 }
             }

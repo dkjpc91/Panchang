@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         logo=findViewById(R.id.logo);
 
         Animation animation= AnimationUtils.loadAnimation(this,R.anim.fade);
-        animation.setDuration(3000);
+        animation.setDuration(2500);
         logo.startAnimation(animation);
         splashTxt.startAnimation(animation);
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        },3000);
+        },2500);
 
 
     }

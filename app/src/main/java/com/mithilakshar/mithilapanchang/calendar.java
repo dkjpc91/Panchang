@@ -74,7 +74,7 @@ public class calendar extends AppCompatActivity {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
                         calurl.add(new SlideModel(queryDocumentSnapshot.getString("url"), ScaleTypes.CENTER_INSIDE));
-                        calendarimageSlider.setImageList(calurl,ScaleTypes.CENTER_INSIDE);
+                        calendarimageSlider.setImageList(calurl,ScaleTypes.FIT);
                     }
                 }
             }

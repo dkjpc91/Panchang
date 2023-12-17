@@ -45,7 +45,6 @@ public class mantraadapter extends RecyclerView.Adapter<mantraviewholder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "ddf", Toast.LENGTH_LONG).show();
                 calendardialog calendardialog=new calendardialog(view.getContext());
                 calendardialog.setcalendardialogtext(datalist.get(position).mantraName);
                 calendardialog.setcalendardialogtext1(datalist.get(position).mantraDesc);

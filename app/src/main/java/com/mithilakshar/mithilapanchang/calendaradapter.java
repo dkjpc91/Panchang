@@ -55,7 +55,7 @@ public class calendaradapter extends RecyclerView.Adapter<calendarviewholder> {
         }else {
 
             holder.calendardescText.setText(datalist.get(position).getDesc());
-            holder.calendardateText.setText(datalist.get(position).getDate());
+            holder.calendardateText.setText(translateToHindidate(datalist.get(position).getDate()));
             holder.calendardayText.setText(datalist.get(position).getDay());
 
         }
@@ -88,7 +88,6 @@ public class calendaradapter extends RecyclerView.Adapter<calendarviewholder> {
                 calendardialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 calendardialog.show();
 
-                Toast.makeText(view.getContext(), "मिथिला पंचांग", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -141,16 +140,15 @@ public class calendaradapter extends RecyclerView.Adapter<calendarviewholder> {
         // Manually create a mapping for English to Hindi month names
         Map<String, String> nmap = new HashMap<>();
 
-        nmap.put("0", "०");
-        nmap.put("1", "१");
-        nmap.put("2", "२");
-        nmap.put("3", "३");
-        nmap.put("4", "४");
-        nmap.put("5", "५");
-        nmap.put("6", "६");
-        nmap.put("7", "७");
-        nmap.put("8", "८");
-        nmap.put("9", "९");
+        nmap.put("01", "१");
+        nmap.put("02", "२");
+        nmap.put("03", "३");
+        nmap.put("04", "४");
+        nmap.put("05", "५");
+        nmap.put("06", "६");
+        nmap.put("07", "७");
+        nmap.put("08", "८");
+        nmap.put("09", "९");
         nmap.put("10", "१०");
         nmap.put("11", "११");
         nmap.put("12", "१२");

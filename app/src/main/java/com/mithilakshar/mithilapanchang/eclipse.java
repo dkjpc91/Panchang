@@ -70,7 +70,7 @@ public class eclipse extends AppCompatActivity {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
                         eclurl.add(new SlideModel(queryDocumentSnapshot.getString("url"), ScaleTypes.CENTER_INSIDE));
-                        eclipseimageSlider.setImageList(eclurl,ScaleTypes.CENTER_INSIDE);
+                        eclipseimageSlider.setImageList(eclurl,ScaleTypes.FIT);
                     }
                 }
             }

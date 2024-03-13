@@ -66,15 +66,16 @@
             android:layout_height="55dp"
             android:layout_marginRight="5dp"/>
     </LinearLayout>
-        
-    <FrameLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragmentContainer"
-        android:layout_margin="5dp"/>
 
 
+
+
+        <FrameLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragmentContainer"
+            android:layout_margin="5dp"/>
 
 
 

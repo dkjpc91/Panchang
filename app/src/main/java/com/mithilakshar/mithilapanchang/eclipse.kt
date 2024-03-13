@@ -20,11 +20,11 @@ class eclipse : AppCompatActivity() {
         setContentView(R.layout.activity_eclipse)
         eclipseimageSlider = findViewById(R.id.eclipseimageSlider)
         eclipseRecyclerView = findViewById(R.id.eclipseRecyclerView)
-        eclipseRecyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
+
         data = ArrayList()
         eclurl = ArrayList()
         val eclipseadapter = eclipseadapter(data!!)
-        eclipseRecyclerView.setAdapter(eclipseadapter)
+
         db = FirebaseFirestore.getInstance()
         db!!.collection("eclipse").get().addOnSuccessListener { queryDocumentSnapshots ->
             val list = queryDocumentSnapshots.documents
@@ -43,7 +43,7 @@ class eclipse : AppCompatActivity() {
                             ScaleTypes.CENTER_INSIDE
                         )
                     )
-                    eclipseimageSlider.setImageList(eclurl!!, ScaleTypes.FIT)
+
                 }
             }
         }

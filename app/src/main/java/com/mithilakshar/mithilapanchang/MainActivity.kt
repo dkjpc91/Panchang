@@ -17,8 +17,7 @@ class MainActivity : AppCompatActivity() {
         logo = findViewById(R.id.logo)
         val animation = AnimationUtils.loadAnimation(this, R.anim.fade)
         animation.duration = 2500
-        logo.startAnimation(animation)
-        splashTxt.startAnimation(animation)
+
         Handler().postDelayed({
             val i = Intent(applicationContext, home::class.java)
             startActivity(i)

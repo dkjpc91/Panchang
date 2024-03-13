@@ -17,7 +17,7 @@ class mantraadapter(var datalist: ArrayList<mantradatamodel?>) :
     override fun onBindViewHolder(holder: mantraviewholder, position: Int) {
         holder.mantraName.text = datalist[position]!!.mantraName
         holder.mantraDesc.text = datalist[position]!!.mantraName
-        Picasso.get().load(datalist[position].getMantraImageurl()).into(holder.mantraImage)
+
         holder.itemView.setOnClickListener { view ->
             val calendardialog = calendardialog(view.context)
             calendardialog.setcalendardialogtext(datalist[position]!!.mantraName)

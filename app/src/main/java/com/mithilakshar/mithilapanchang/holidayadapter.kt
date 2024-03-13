@@ -13,9 +13,8 @@ class holidayadapter(var datalist: ArrayList<holidaydatamodel?>) :
     }
 
     override fun onBindViewHolder(holder: holidayviewholder, position: Int) {
-        holder.holidayName.text = datalist[position].getHolidayName()
-        holder.holidayDesc.text = datalist[position].getHolidayDesc()
-        Picasso.get().load(datalist[position].getImageUrl()).into(holder.holidayImage)
+
+
     }
 
     override fun getItemCount(): Int {

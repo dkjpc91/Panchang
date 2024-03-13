@@ -62,7 +62,7 @@ class home : AppCompatActivity(), OnInitListener {
                             ScaleTypes.CENTER_INSIDE
                         )
                     )
-                    imageSlider.setImageList(urllist!!, ScaleTypes.FIT)
+
                 }
             }
         }
@@ -85,9 +85,7 @@ class home : AppCompatActivity(), OnInitListener {
         val hindiMonth = translateToHindi(currentMonth)
         val hindiDay = translateToHindiday(currentDay)
         val hindidate = translateToHindidate(currentDate)
-        textViewMonth.setText(hindiMonth)
-        textViewDate.setText(hindidate)
-        textViewDay.setText(hindiDay)
+
         val collectionRef = db!!.collection(currentMonth)
         val query = collectionRef.whereEqualTo("date", currentDate)
         query.get().addOnCompleteListener { task ->
@@ -97,43 +95,12 @@ class home : AppCompatActivity(), OnInitListener {
                     val day = doc.getString("day")
                     val desc = doc.getString("desc")
                     val daydesc = doc.getString("speak")
-                    homedesc.setText("$hindidate $hindiMonth २०२४, $day")
-                    homedesc2.setText(desc)
+
                     speak = daydesc
                 }
             }
         }
-        calendar.setOnClickListener(View.OnClickListener {
-            val i = Intent(applicationContext, calendar::class.java)
-            i.putExtra("currentMonth", currentMonth)
-            i.putExtra("currentDate", currentDate)
-            startActivity(i)
-            counter++
-        })
-        holiday.setOnClickListener(View.OnClickListener {
-            val i = Intent(applicationContext, holiday::class.java)
-            i.putExtra("month", hindiMonth)
-            startActivity(i)
-            counter++
-        })
-        eclipse.setOnClickListener(View.OnClickListener {
-            val i = Intent(applicationContext, eclipse::class.java)
-            i.putExtra("month", hindiMonth)
-            startActivity(i)
-            counter++
-        })
-        mantra.setOnClickListener(View.OnClickListener {
-            val i = Intent(applicationContext, mantra::class.java)
-            i.putExtra("month", hindiMonth)
-            startActivity(i)
-            counter++
-        })
-        katha.setOnClickListener(View.OnClickListener {
-            val i = Intent(applicationContext, katha::class.java)
-            i.putExtra("month", hindiMonth)
-            startActivity(i)
-            counter++
-        })
+
         textToSpeech = TextToSpeech(this, this)
     }
 

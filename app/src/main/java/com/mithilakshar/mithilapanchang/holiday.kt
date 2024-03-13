@@ -21,10 +21,10 @@ class holiday : AppCompatActivity() {
         holidayimageSlider = findViewById(R.id.holidayimageSlider)
         urllist = ArrayList()
         holidayRecyclerView = findViewById(R.id.holidayRecyclerView)
-        holidayRecyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
+
         dataList = ArrayList()
         val adapter = holidayadapter(dataList!!)
-        holidayRecyclerView.setAdapter(adapter)
+
         db = FirebaseFirestore.getInstance()
         db!!.collection("holiday").get().addOnSuccessListener { queryDocumentSnapshots ->
             val list = queryDocumentSnapshots.documents
@@ -44,7 +44,7 @@ class holiday : AppCompatActivity() {
                             ScaleTypes.CENTER_INSIDE
                         )
                     )
-                    holidayimageSlider.setImageList(urllist!!, ScaleTypes.FIT)
+
                 }
             }
         }

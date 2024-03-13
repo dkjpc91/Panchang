@@ -33,8 +33,7 @@ class kathadesc : AppCompatActivity(), OnInitListener {
         val kathaT = intent.getStringExtra("kathaName")
         kathaD = intent.getStringExtra("kathaStory")
         val kathaI = intent.getStringExtra("kathaUrl")
-        kathaTitle.setText(kathaT)
-        kathaDesc.setText(kathaD)
+
         Picasso.get().load(kathaI).into(kathaImg)
         textToSpeech = TextToSpeech(this, this)
         switchFabColor(fab)

@@ -22,9 +22,9 @@ class katha : AppCompatActivity() {
         kathaRecyclerView = findViewById(R.id.kathaRecyclerView)
         urllist = ArrayList()
         dataList = ArrayList()
-        kathaRecyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
+
         val adapter = kathaapapter(dataList!!)
-        kathaRecyclerView.setAdapter(adapter)
+
         db = FirebaseFirestore.getInstance()
         db!!.collection("katha").get().addOnSuccessListener { queryDocumentSnapshots ->
             val list = queryDocumentSnapshots.documents
@@ -43,7 +43,7 @@ class katha : AppCompatActivity() {
                             ScaleTypes.CENTER_INSIDE
                         )
                     )
-                    kathaimageSlider.setImageList(urllist!!, ScaleTypes.FIT)
+
                 }
             }
         }

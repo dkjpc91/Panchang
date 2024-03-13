@@ -50,8 +50,7 @@ class septemberfragment : Fragment() {
         calendarRecycler = view.findViewById(R.id.calendarRecycler)
         val layoutManager: RecyclerView.LayoutManager =
             GridLayoutManager(context, 7, LinearLayoutManager.HORIZONTAL, false)
-        calendarRecycler.setLayoutManager(layoutManager)
-        calendarRecycler.setAdapter(adapter)
+
         var screenWidth = resources.displayMetrics.widthPixels
         screenWidth = screenWidth - 293
         val itemWidth = screenWidth / 5 // Number of columns is 5

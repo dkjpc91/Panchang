@@ -22,9 +22,9 @@ class mantra : AppCompatActivity() {
         mantraRecyclerView = findViewById(R.id.mantraRecyclerView)
         urllist = ArrayList()
         data = ArrayList()
-        mantraRecyclerView.setLayoutManager(LinearLayoutManager(applicationContext))
+
         val adapter = mantraadapter(data!!)
-        mantraRecyclerView.setAdapter(adapter)
+
         db = FirebaseFirestore.getInstance()
         db!!.collection("mantra").get().addOnSuccessListener { queryDocumentSnapshots ->
             val list = queryDocumentSnapshots.documents
@@ -43,7 +43,7 @@ class mantra : AppCompatActivity() {
                             ScaleTypes.CENTER_INSIDE
                         )
                     )
-                    mantraimageSlider.setImageList(urllist!!, ScaleTypes.FIT)
+
                 }
             }
         }

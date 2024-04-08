@@ -22,13 +22,7 @@ class Decemberfragment : Fragment() {
     private var calendarRecycler: RecyclerView? = null
     private var dataqueue: ArrayList<calendardatamodel?>? = null
     private var db: FirebaseFirestore? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments!!.getString(ARG_PARAM1)
-            mParam2 = arguments!!.getString(ARG_PARAM2)
-        }
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +30,7 @@ class Decemberfragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_decemberfragment, container, false)
         dataqueue = ArrayList()
-        val adapter = calendaradapter(dataqueue)
+
         db = FirebaseFirestore.getInstance()
         db!!.collection("December").get().addOnSuccessListener { queryDocumentSnapshots ->
             val list = queryDocumentSnapshots.documents
@@ -44,17 +38,16 @@ class Decemberfragment : Fragment() {
                 val obj = d.toObject(calendardatamodel::class.java)
                 dataqueue!!.add(obj)
             }
-            adapter.notifyDataSetChanged()
+
         }
         calendarRecycler = view.findViewById(R.id.calendarRecycler)
         val layoutManager: RecyclerView.LayoutManager =
             GridLayoutManager(context, 7, LinearLayoutManager.HORIZONTAL, false)
-        calendarRecycler.setLayoutManager(layoutManager)
-        calendarRecycler.setAdapter(adapter)
+
         var screenWidth = resources.displayMetrics.widthPixels
         screenWidth = screenWidth - 293
         val itemWidth = screenWidth / 5 // Number of columns is 5
-        adapter.setItemWidth(itemWidth)
+
         return view
     }
 

@@ -16,9 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MithilaPanchang"
         tools:targetApi="31">
-
-
-  
+        <activity
+            android:name=".UI.View.HomeActivity"
+            android:exported="false" />
         <activity
             android:name=".kathadesc"
             android:exported="false" />
@@ -39,11 +39,11 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home"
+            android:name=".UI.View.home"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".UI.View.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -54,7 +54,7 @@
         </activity>
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".Notification.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#E8F1F0"
-    tools:context=".home">
+    tools:context=".UI.View.home">
 
     <ImageView
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:src="@drawable/header"/>
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="131dp"
         android:layout_marginTop="-130dp"
         android:padding="27dp"
         android:src="@drawable/splashtxt"/>

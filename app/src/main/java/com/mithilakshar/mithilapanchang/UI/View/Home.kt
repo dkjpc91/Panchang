@@ -1,11 +1,9 @@
-package com.mithilakshar.mithilapanchang
+package com.mithilakshar.mithilapanchang.UI.View
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.OnInitListener
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -14,68 +12,28 @@ import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.databinding.ActivityHomeBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class home : AppCompatActivity(), OnInitListener {
-    var calendar: CardView? = null
-    var holiday: CardView? = null
-    var eclipse: CardView? = null
-    var mantra: CardView? = null
-    var katha: CardView? = null
-    var textViewMonth: TextView? = null
-    var textViewDate: TextView? = null
-    var textViewDay: TextView? = null
-    var homedesc: TextView? = null
-    var homedesc2: TextView? = null
+
+    lateinit var binding: ActivityHomeBinding
     var db: FirebaseFirestore? = null
     var firebaseMessaging: FirebaseMessaging? = null
-    var imageSlider: ImageSlider? = null
-    var urllist: ArrayList<SlideModel>? = null
+
     private var textToSpeech: TextToSpeech? = null
     var speak: String? = null
     var counter = 0
     private val handler = Handler()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        imageSlider = findViewById(R.id.imageSlider)
-        calendar = findViewById(R.id.calendar)
-        holiday = findViewById(R.id.holiday)
-        eclipse = findViewById(R.id.eclipse)
-        katha = findViewById(R.id.katha)
-        mantra = findViewById(R.id.mantra)
-        textViewMonth = findViewById(R.id.textViewMonth)
-        textViewDate = findViewById(R.id.textViewDate)
-        textViewDay = findViewById(R.id.textViewDay)
-        homedesc = findViewById(R.id.homedesc)
-        homedesc2 = findViewById(R.id.homedesc2)
-        urllist = ArrayList()
-        db = FirebaseFirestore.getInstance()
-        db!!.collection("banner").get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                for (queryDocumentSnapshot in task.result) {
-                    urllist!!.add(
-                        SlideModel(
-                            queryDocumentSnapshot.getString("url"),
-                            ScaleTypes.CENTER_INSIDE
-                        )
-                    )
-
-                }
-            }
-        }
+        binding=ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
 
-        //firebase message
-        FirebaseMessaging.getInstance().subscribeToTopic("notification")
-            .addOnCompleteListener { task ->
-                var msg = "Subscribed"
-                if (!task.isSuccessful) {
-                    msg = "Subscribe failed"
-                }
-            }
         val monthFormat = SimpleDateFormat("MMMM")
         val dayFormat = SimpleDateFormat("EEE")
         val dateFormat = SimpleDateFormat("dd")
@@ -85,6 +43,8 @@ class home : AppCompatActivity(), OnInitListener {
         val hindiMonth = translateToHindi(currentMonth)
         val hindiDay = translateToHindiday(currentDay)
         val hindidate = translateToHindidate(currentDate)
+
+
 
         val collectionRef = db!!.collection(currentMonth)
         val query = collectionRef.whereEqualTo("date", currentDate)

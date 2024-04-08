@@ -9,6 +9,7 @@ import com.denzcoskun.imageslider.ImageSlider
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mithilakshar.mithilapanchang.UI.Fragments.augustfragment
 
 class calendar : AppCompatActivity() {
     var calendarimageSlider: ImageSlider? = null
@@ -43,7 +44,7 @@ class calendar : AppCompatActivity() {
         val currentMonth = intent.getStringExtra("currentMonth")
         val currentDate = intent.getStringExtra("currentDate")
         val hindiMonth = translateToHindi(currentMonth)
-        monthName.setText(hindiMonth)
+
         calurl = ArrayList()
         db = FirebaseFirestore.getInstance()
         db!!.collection("banner").get().addOnCompleteListener { task ->
@@ -55,7 +56,7 @@ class calendar : AppCompatActivity() {
                             ScaleTypes.CENTER_INSIDE
                         )
                     )
-                    calendarimageSlider.setImageList(calurl!!, ScaleTypes.FIT)
+
                 }
             }
         }
@@ -66,25 +67,7 @@ class calendar : AppCompatActivity() {
                 break
             }
         }
-        backfragment.setOnClickListener(View.OnClickListener {
-            if (fragmentindexnumber == 0) {
-                fragmentindexnumber = fragmentindex.size - 1
-                loadfragment(fragmentindex[fragmentindexnumber])
-                val hindiMonth = translateToHindi(fragmentindex[fragmentindexnumber])
-                monthName.setText(hindiMonth)
-            } else {
-                fragmentindexnumber = fragmentindexnumber - 1
-                loadfragment(fragmentindex[fragmentindexnumber])
-                val hindiMonth = translateToHindi(fragmentindex[fragmentindexnumber])
-                monthName.setText(hindiMonth)
-            }
-        })
-        forwardfragment.setOnClickListener(View.OnClickListener {
-            fragmentindexnumber = (fragmentindexnumber + 1) % fragmentindex.size
-            loadfragment(fragmentindex[fragmentindexnumber])
-            val hindiMonth = translateToHindi(fragmentindex[fragmentindexnumber])
-            monthName.setText(hindiMonth)
-        })
+
     }
 
     private fun translateToHindi(currentMonth: String?): String? {
@@ -142,9 +125,9 @@ class calendar : AppCompatActivity() {
 
             "April" -> {
                 // Add the fragment to the container (R.id.fragment_container is assumed to be a FrameLayout in your activity)
-                val af = aprilfragment()
-                fragmentTransaction.replace(R.id.fragmentContainer, af)
-                fragmentTransaction.commit()
+
+
+
             }
 
             "May" -> {

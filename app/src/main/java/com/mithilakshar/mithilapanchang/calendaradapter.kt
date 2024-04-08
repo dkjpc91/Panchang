@@ -20,23 +20,8 @@ class calendaradapter(var datalist: ArrayList<calendardatamodel?>) :
     }
 
     override fun onBindViewHolder(holder: calendarviewholder, position: Int) {
-        if (datalist[position].getDate().isEmpty()) {
-            holder.itemView.visibility = View.INVISIBLE
-        } else {
-            holder.calendardescText.text = datalist[position].getDesc()
-            holder.calendardateText.text = translateToHindidate(datalist[position].getDate())
-            holder.calendardayText.text = datalist[position].getDay()
-        }
-        holder.itemView.setOnClickListener { view ->
-            val calendardialog = calendardialog(view.context)
-            calendardialog.setcalendardialogtext(
-                """ दिनांक :- ${translateToHindidate(datalist[position].getDate())}
-${datalist[position].getDay()}"""
-            )
-            calendardialog.setcalendardialogtext1(datalist[position].getDesc())
-            calendardialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            calendardialog.show()
-        }
+
+
     }
 
     fun setItemWidth(itemWidth: Int) {

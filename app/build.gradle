@@ -42,6 +42,8 @@ android {
 dependencies {
 
 
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
     def room_version = "2.6.1"
 
     def lifecycle_version = "2.7.0"
@@ -68,7 +70,8 @@ dependencies {
 
 
 
-
+    implementation("com.google.android.play:app-update:2.1.0")
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'

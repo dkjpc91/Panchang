@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mithilakshar.mithilapanchang.R
 
-class BhagwatGita : AppCompatActivity() {
+class BhagwatGitaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bhagwat_gita)

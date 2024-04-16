@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/bhagwatGitaHomeFragment"
-        android:name="com.mithilakshar.mithilapanchang.BhagwatGitaHomeFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaHomeFragment"
         android:label="fragment_bhagwat_gita_home"
         tools:layout="@layout/fragment_bhagwat_gita_home" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/bhagwatGitaChapterFragment"
-        android:name="com.mithilakshar.mithilapanchang.BhagwatGitaChapterFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaChapterFragment"
         android:label="fragment_bhagwat_gita_chapter"
         tools:layout="@layout/fragment_bhagwat_gita_chapter" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/bhagwatGitaVerseFragment"
-        android:name="com.mithilakshar.mithilapanchang.BhagwatGitaVerseFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaVerseFragment"
         android:label="fragment_bhagwat_gita_verse"
         tools:layout="@layout/fragment_bhagwat_gita_verse" >
         <action

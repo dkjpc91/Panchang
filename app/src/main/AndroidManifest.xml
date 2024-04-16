@@ -17,10 +17,10 @@
         android:theme="@style/Theme.MithilaPanchang"
         tools:targetApi="31">
         <activity
-            android:name=".UI.View.BoardDetail"
+            android:name=".UI.View.BoardDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".UI.View.BhagwatGita"
+            android:name=".UI.View.BhagwatGitaActivity"
             android:exported="false" />
         <activity
             android:name=".UI.View.HomeActivity"

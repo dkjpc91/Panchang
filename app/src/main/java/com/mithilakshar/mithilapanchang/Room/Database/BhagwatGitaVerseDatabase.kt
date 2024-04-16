@@ -8,10 +8,11 @@ import androidx.room.TypeConverters
 import com.mithilakshar.mithilapanchang.Room.Dao.BhagwatGitaVerseDao
 import com.mithilakshar.mithilapanchang.Room.Entity.BhagwatGitaVerse
 import com.mithilakshar.mithilapanchang.Room.Entity.Converter
+import com.mithilakshar.mithilapanchang.Room.Entity.Converters
 
 
 @Database(entities =[BhagwatGitaVerse::class], version = 1, exportSchema = false)
-@TypeConverters(Converter::class)
+@TypeConverters(Converter::class,Converters::class)
 abstract class BhagwatGitaVerseDatabase : RoomDatabase() {
 
     abstract fun verseDao():BhagwatGitaVerseDao

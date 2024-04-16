@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.mithilakshar.mithilapanchang.Models.BhagwatGitaVerseItem
+import com.mithilakshar.mithilapanchang.Models.bhagwatGitaChapterItem
 import com.mithilakshar.mithilapanchang.Room.Entity.BhagwatGitaVerse
 
 @Dao
@@ -13,9 +15,11 @@ interface BhagwatGitaVerseDao {
 
 
 
-    @Insert
-    suspend fun insertVerse(BhagwatGitaVerse:BhagwatGitaVerse)
+    @Query("SELECT * FROM verse")
+    fun readBhagwatGitaVerse(): LiveData<List<BhagwatGitaVerseItem>>
 
+    @Query("SELECT * FROM verse WHERE id= :ID")
+    suspend fun readBhagwatGitaVersewithId (ID : Int ): List<BhagwatGitaVerseItem>
 
 
 }

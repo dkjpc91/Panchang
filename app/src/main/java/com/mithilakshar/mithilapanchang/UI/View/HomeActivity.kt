@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.speech.tts.TextToSpeech
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Update
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -18,35 +20,30 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
-import com.google.android.play.core.ktx.startUpdateFlowForResult
-import com.mithilakshar.mithilapanchang.Api.BhagwatGitaRetrofitInstance
-import com.mithilakshar.mithilapanchang.BhagwatGitaVerseFragment
-import com.mithilakshar.mithilapanchang.Models.BhagwatGitaVerseItem
-import com.mithilakshar.mithilapanchang.Models.Commentary
-import com.mithilakshar.mithilapanchang.Models.Translation
-import com.mithilakshar.mithilapanchang.Models.bhagwatGitaChapterItem
-import com.mithilakshar.mithilapanchang.Repository.BhagwatGitaApiRepo
 import com.mithilakshar.mithilapanchang.Repository.BhagwatGitaRoomRepo
-import com.mithilakshar.mithilapanchang.Room.Dao.BhagwatGitaChapterDao
-import com.mithilakshar.mithilapanchang.Room.Dao.BhagwatGitaVerseDao
+import com.mithilakshar.mithilapanchang.Repository.FirestoreRepo
 import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaChapterDatabase
 import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaVerseDatabase
-import com.mithilakshar.mithilapanchang.Room.Entity.BhagwatGitaChapter
-import com.mithilakshar.mithilapanchang.Room.Entity.BhagwatGitaVerse
-
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
 import com.mithilakshar.mithilapanchang.databinding.ActivityHomeBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Locale
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateType=AppUpdateType.IMMEDIATE
+
+    private val firestoreRepo=FirestoreRepo()
+
+    private var textToSpeech: TextToSpeech? = null
+    var speak: String? = null
 
     val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -54,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
 
     var bannerImageList: ArrayList<SlideModel> = arrayListOf()
     var bannerurls: ArrayList<String> = arrayListOf()
-    var bhagwatGitaChapterlist: ArrayList<bhagwatGitaChapterItem> = arrayListOf()
+    val handler=Handler(Looper.getMainLooper())
 
 
 
@@ -68,12 +65,18 @@ class HomeActivity : AppCompatActivity() {
         if (updateType==AppUpdateType.FLEXIBLE){
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
+
         checkForAppUpdate()
 
 
 
+
+
+
         var dao=BhagwatGitaChapterDatabase.getdbcopy(this).chapterdao()
-        var bhagwatGitaRoomRepo = BhagwatGitaRoomRepo(dao)
+        var versedao=BhagwatGitaVerseDatabase.getdbcopy(this).verseDao()
+        var bhagwatGitaRoomRepo = BhagwatGitaRoomRepo(dao,versedao)
+        val randomverse=Random.nextInt(1,702)
 
 
         //get Banner
@@ -87,11 +90,14 @@ class HomeActivity : AppCompatActivity() {
         })
 
 
-        bhagwatGitaRoomRepo.readBhagwatGitaChapter().observe(this,{
 
 
-            binding.shlok.text=it[0].name
-        })
+       lifecycleScope.launch {
+
+           binding.bannerVerse.text=bhagwatGitaRoomRepo.readBhagwatgitaversewithid(randomverse)[0].text
+       }
+
+
 
         //date
 
@@ -101,6 +107,23 @@ class HomeActivity : AppCompatActivity() {
         val hindiDay = translateToHindiday (currentDate.dayOfWeek.toString())
         val hindidate = translateToHindidate (currentDate.dayOfMonth.toString())
 
+
+        //text speak
+
+        firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2,'0'),
+            currentDate.month.toString().lowercase(Locale.getDefault())
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }){
+
+            if (it !=null){speak=it
+
+
+            }
+
+        }
+
+        textToSpeech = TextToSpeech(this, this)
+
+
         binding.apply {
 
             textViewDate.text=hindidate
@@ -109,12 +132,15 @@ class HomeActivity : AppCompatActivity() {
 
         }
 
+
+
+
         binding.Gita.setOnClickListener {
-            val i =Intent(this,BhagwatGita::class.java)
+            val i =Intent(this,BhagwatGitaActivity::class.java)
             startActivity(i)
         }
         binding.HomeBoard.setOnClickListener {
-            val i =Intent(this,BoardDetail::class.java)
+            val i =Intent(this,BoardDetailActivity::class.java)
             startActivity(i)
         }
 
@@ -199,11 +225,11 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        super.onResume()
+        delayedTask(1000)
+
 
     }
-
-
-
 
 
     override fun onDestroy() {
@@ -211,6 +237,15 @@ class HomeActivity : AppCompatActivity() {
         if (updateType==AppUpdateType.FLEXIBLE){
             appUpdateManager.unregisterListener(installStateUpdatedListener)
         }
+
+        textToSpeech!!.stop()
+        textToSpeech!!.shutdown()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        textToSpeech!!.stop()
+        textToSpeech!!.shutdown()
     }
 
 
@@ -301,10 +336,26 @@ class HomeActivity : AppCompatActivity() {
         return nmap[date]
     }
 
+    override fun onInit(p0: Int) {
+        if (p0 == TextToSpeech.SUCCESS) {
 
+            // Set language
 
+        } else {
+            // Handle error
+        }
+    }
 
+    private fun delayedTask(delayMillis: Int) {
+        handler.postDelayed({ // Your code to be executed after the delay
+            textToSpeech!!.setLanguage(Locale.forLanguageTag("hi"))
 
+            // Speak text
+            textToSpeech!!.setPitch(1f)
+            textToSpeech!!.setSpeechRate(0.6f)
+            textToSpeech!!.speak(speak, TextToSpeech.QUEUE_FLUSH, null, null)
+        }, delayMillis.toLong())
+    }
 
 
 

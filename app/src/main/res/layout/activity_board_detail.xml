@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/scroll"
     android:orientation="vertical"
-    tools:context=".UI.View.BoardDetail">
+    tools:context=".UI.View.BoardDetailActivity">
 
     <ImageView
         android:layout_width="match_parent"

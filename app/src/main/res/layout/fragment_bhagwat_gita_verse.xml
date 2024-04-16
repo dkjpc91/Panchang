@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/scroll"
     android:orientation="vertical"
-    tools:context=".BhagwatGitaVerseFragment">
+    tools:context=".UI.Fragments.BhagwatGitaVerseFragment">
 
     <ImageView
         android:layout_width="match_parent"
@@ -28,21 +28,8 @@
         android:layout_margin="1dp"
         android:orientation="vertical">
 
-    <com.denzcoskun.imageslider.ImageSlider
-        android:id="@+id/imageSlider"
-        app:iss_placeholder="@drawable/om"
-        app:iss_no_dots="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="-7dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:padding="0dp"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        app:iss_auto_cycle="true"
-        app:iss_period="3000"
-        app:iss_delay="3000"
-        app:iss_text_align="CENTER"/>
+
+
 
     </LinearLayout>
 

@@ -13,19 +13,24 @@ class BhagwatGitaRoomRepo(val dao: BhagwatGitaChapterDao,val verseDao: BhagwatGi
 
 
 
-     fun readBhagwatGitaChapter():LiveData<List<bhagwatGitaChapterItem>> {
+     suspend fun readBhagwatGitaChapter():List<bhagwatGitaChapterItem> {
 
         return dao.readBhagwatGitaChapter()
     }
 
-    fun readBhagwatGitaVerse():LiveData<List<BhagwatGitaVerseItem>> {
+    suspend fun readBhagwatGitaVerse(id:Int):List<BhagwatGitaVerseItem>{
 
-        return verseDao.readBhagwatGitaVerse()
+        return verseDao.readBhagwatGitaVerse(id)
     }
 
     suspend fun readBhagwatgitaversewithid(ID:Int):List<BhagwatGitaVerseItem>{
 
         return verseDao.readBhagwatGitaVersewithId(ID)
+    }
+
+    suspend fun readBhagwatGitaChapter(id:Int): List<bhagwatGitaChapterItem>{
+
+        return dao.readBhagwatGitaChapter(id)
     }
 
 

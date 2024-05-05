@@ -14,7 +14,10 @@ interface BhagwatGitaChapterDao {
 
 
     @Query("SELECT * FROM chapter")
-    fun readBhagwatGitaChapter(): LiveData<List<bhagwatGitaChapterItem>>
+    suspend fun readBhagwatGitaChapter(): List<bhagwatGitaChapterItem>
+
+    @Query("SELECT * FROM chapter WHERE chapter_number= :id")
+    suspend fun readBhagwatGitaChapter(id:Int): List<bhagwatGitaChapterItem>
 
 
 

@@ -17,37 +17,43 @@
         android:theme="@style/Theme.MithilaPanchang"
         tools:targetApi="31">
         <activity
-            android:name=".UI.View.BoardDetailActivity"
-            android:exported="false" />
+            android:name=".UI.View.KathaDescriptionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.View.BhagwatGitaActivity"
-            android:exported="false" />
+            android:name=".UI.View.MantraActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.View.KathaActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.View.HolidayActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.View.EclipseActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.View.CalendarActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.View.GitaActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".UI.View.BoardDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.View.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".kathadesc"
-            android:exported="false" />
-        <activity
-            android:name=".katha"
-            android:exported="false" />
-        <activity
-            android:name=".mantra"
-            android:exported="false" />
-        <activity
-            android:name=".eclipse"
-            android:exported="false" />
-        <activity
-            android:name=".holiday"
-            android:exported="false" />
-        <activity
-            android:name=".calendar"
             android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".UI.View.home"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".UI.View.MainActivity"
             android:exported="true"
@@ -67,9 +73,7 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

@@ -13,10 +13,8 @@ interface BhagwatGitaVerseDao {
 
 
 
-
-
-    @Query("SELECT * FROM verse")
-    fun readBhagwatGitaVerse(): LiveData<List<BhagwatGitaVerseItem>>
+    @Query("SELECT * FROM verse WHERE chapter_number= :id")
+    suspend fun readBhagwatGitaVerse(id:Int): List<BhagwatGitaVerseItem>
 
     @Query("SELECT * FROM verse WHERE id= :ID")
     suspend fun readBhagwatGitaVersewithId (ID : Int ): List<BhagwatGitaVerseItem>

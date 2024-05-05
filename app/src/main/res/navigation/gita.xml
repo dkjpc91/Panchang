@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gita"
+    app:startDestination="@id/bhagwatGitaChapterFragment">
+
+    <fragment
+        android:id="@+id/bhagwatGitaChapterFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaChapterFragment"
+        android:label="fragment_bhagwat_gita_chapter"
+        tools:layout="@layout/fragment_bhagwat_gita_chapter" >
+        <action
+            android:id="@+id/action_bhagwatGitaChapterFragment_to_bhagwatGitaVersesFragment"
+            app:destination="@id/bhagwatGitaVersesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bhagwatGitaVersesFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaVersesFragment"
+        android:label="fragment_bhagwat_gita_verses"
+        tools:layout="@layout/fragment_bhagwat_gita_verses" >
+        <action
+            android:id="@+id/action_bhagwatGitaVersesFragment_to_bhagwatGitaChapterFragment"
+            app:destination="@id/bhagwatGitaChapterFragment" />
+        <argument
+            android:name="chapternumber"
+            app:argType="integer"
+            android:defaultValue="13" />
+        <action
+            android:id="@+id/action_bhagwatGitaVersesFragment_to_bhagwatGitaVerseDetailsFragment"
+            app:destination="@id/bhagwatGitaVerseDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bhagwatGitaVerseDetailsFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaVerseDetailsFragment"
+        android:label="fragment_bhagwat_gita_verse_details"
+        tools:layout="@layout/fragment_bhagwat_gita_verse_details" >
+        <action
+            android:id="@+id/action_bhagwatGitaVerseDetailsFragment_to_bhagwatGitaVersesFragment"
+            app:destination="@id/bhagwatGitaVersesFragment" />
+        <argument
+            android:name="versenumber"
+            app:argType="integer"
+            android:defaultValue="13" />
+    </fragment>
+</navigation>

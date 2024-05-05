@@ -1,16 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    app:cardElevation="10dp"
+    android:backgroundTint="#FFEBE9"
+    app:cardCornerRadius="18dp"
+    android:layout_marginLeft="11dp"
+    android:layout_marginRight="11dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:backgroundTint="#FFEBE9"
+        android:background="@drawable/borderred"
+        android:layout_margin="2dp"
 
-    <TextView
-        android:id="@+id/chaper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+
+            android:drawableTop="@drawable/swastika32"
+            android:textColor="#FF5722"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:textSize="34sp"
+            android:gravity="center"
+            android:id="@+id/ChapterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+        <TextView
+            android:drawableLeft="@drawable/star"
+            android:textSize="22sp"
+            android:textColor="#FF5722"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/chapternumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

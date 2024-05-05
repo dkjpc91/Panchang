@@ -1,17 +1,22 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.denzcoskun.imageslider.models.SlideModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
@@ -20,6 +25,10 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
+import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
+import com.mithilakshar.mithilapanchang.Dialog.calendardialog
+import com.mithilakshar.mithilapanchang.Notification.NetworkManager
+import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.Repository.BhagwatGitaRoomRepo
 import com.mithilakshar.mithilapanchang.Repository.FirestoreRepo
 import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaChapterDatabase
@@ -41,6 +50,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private val updateType=AppUpdateType.IMMEDIATE
 
     private val firestoreRepo=FirestoreRepo()
+
+    private var isFabClicked = false
+    val mediaPlayer = MediaPlayer()
+    var currentPlaybackPosition: Int = 0
+
+
+
 
     private var textToSpeech: TextToSpeech? = null
     var speak: String? = null
@@ -66,7 +82,22 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
 
+
         checkForAppUpdate()
+
+        val networkdialog = Networkdialog(this)
+        val networkManager= NetworkManager(this)
+        networkManager.observe(this, {
+            if (!it){
+                if (!networkdialog.isShowing){networkdialog.show()}
+
+            }else{
+                if (networkdialog.isShowing){networkdialog.dismiss()}
+
+            }
+        })
+
+
 
 
 
@@ -79,8 +110,35 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val randomverse=Random.nextInt(1,702)
 
 
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA) // Set usage type (e.g., music, alarm)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC) // Set content type
+            .build()
+
+        mediaPlayer.setAudioAttributes(audioAttributes)
+
+        binding.fab.setOnClickListener {
+            isFabClicked = !isFabClicked
+            if (isFabClicked) {
+                binding.fab.setImageResource(R.drawable.speaker)
+                switchFabColor(binding.fab)
+
+                stopAudio()
+                playAudio("https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Sevish_-__nbsp_.mp3")
+
+            } else {
+                binding.fab.setImageResource(R.drawable.mutespeaker)
+                switchFabColor(binding.fab)
+                stopAudio()
+
+                binding.fab.visibility= View.INVISIBLE
+
+            }
+        }
+
+
         //get Banner
-        viewModel.getBannerurlList().observe(this, {
+        viewModel.getBannerurlList("home").observe(this, {
             for (i in it) {
                 bannerImageList.add(SlideModel(i))
                 bannerurls.add(i)
@@ -136,20 +194,52 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
         binding.Gita.setOnClickListener {
-            val i =Intent(this,BhagwatGitaActivity::class.java)
+            val i =Intent(this,GitaActivity::class.java)
+           
             startActivity(i)
+            stopAudio()
         }
         binding.HomeBoard.setOnClickListener {
             val i =Intent(this,BoardDetailActivity::class.java)
+            i.putExtra("verseNumber",randomverse)
+
             startActivity(i)
+            stopAudio()
+        }
+        binding.calendar.setOnClickListener {
+            val i =Intent(this,CalendarActivity::class.java)
+
+            startActivity(i)
+            stopAudio()
         }
 
+        binding.holiday .setOnClickListener {
+            val i =Intent(this,HolidayActivity::class.java)
 
+            startActivity(i)
+            stopAudio()
+        }
 
+        binding.eclipse .setOnClickListener {
+            val i =Intent(this,EclipseActivity::class.java)
 
+            startActivity(i)
+            stopAudio()
+        }
 
+        binding.mantra .setOnClickListener {
+            val i =Intent(this,MantraActivity::class.java)
 
+            startActivity(i)
+            stopAudio()
+        }
 
+        binding.katha .setOnClickListener {
+            val i =Intent(this,KathaActivity::class.java)
+
+            startActivity(i)
+            stopAudio()
+        }
 
 
 
@@ -170,6 +260,16 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
+    private fun switchFabColor(fab: FloatingActionButton) {
+        if (isFabClicked) {
+            // Set the original color if it's switched
+            fab.backgroundTintList = ContextCompat.getColorStateList(this, R.color.fabColorOriginal)
+
+        } else {
+            // Set the switched color
+            fab.backgroundTintList = ContextCompat.getColorStateList(this, R.color.fabColorSwitched)
+        }
+    }
 
 
     private val installStateUpdatedListener=InstallStateUpdatedListener{
@@ -228,6 +328,11 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         super.onResume()
         delayedTask(1000)
 
+        if (currentPlaybackPosition > 0) {
+            mediaPlayer.seekTo(currentPlaybackPosition)
+            mediaPlayer.start()
+        }
+
 
     }
 
@@ -240,12 +345,15 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech!!.stop()
         textToSpeech!!.shutdown()
+        stopAudio()
     }
 
     override fun onPause() {
         super.onPause()
         textToSpeech!!.stop()
         textToSpeech!!.shutdown()
+
+        pauseAudio()
     }
 
 
@@ -360,4 +468,63 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
+
+
+
+
+
+
+    fun pauseAudio() {
+        if (mediaPlayer.isPlaying) {
+            currentPlaybackPosition = mediaPlayer.currentPosition
+            mediaPlayer.pause()
+        }
+    }
+
+    fun stopAudio() {
+
+        mediaPlayer.stop()
+
+        mediaPlayer.reset()
+        // Reset the media player before preparing a new audio source // Release resources after stopping playback
+        binding.fab.post {
+            binding.fab.visibility = View.VISIBLE
+        }
+
+
+    }
+
+    fun playAudio(audioURL:String){
+
+
+
+        try {
+            // Set the data source for the MediaPlayer
+            mediaPlayer.setDataSource(audioURL)
+
+            // Prepare the MediaPlayer asynchronously
+            mediaPlayer.prepareAsync()
+
+            // Set a listener to handle when the MediaPlayer is prepared
+            mediaPlayer.setOnPreparedListener {
+                mediaPlayer.start()
+            }
+
+        } catch (e: Exception) {
+            // Handle error (e.g., show a Toast message)
+            e.printStackTrace()
+        }
+
+
+    }
 }
+
+
+
+
+
+
+
+
+
+

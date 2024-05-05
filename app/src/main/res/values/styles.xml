@@ -9,4 +9,10 @@
         <item name="android:background">?android:attr/colorBackground</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
+
+
+    <style name="CurvedCardStyle" >
+        <item name="cardCornerRadius">150dp</item>
+        <item name="android:backgroundTint">#CEF1A3</item>
+    </style>
 </resources>

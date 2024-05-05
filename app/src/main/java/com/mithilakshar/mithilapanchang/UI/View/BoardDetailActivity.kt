@@ -1,12 +1,129 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.mithilakshar.mithilapanchang.Adapters.commentryAdapter
+import com.mithilakshar.mithilapanchang.Adapters.translationAdapter
+import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
+import com.mithilakshar.mithilapanchang.Notification.NetworkManager
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
+import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
+import com.mithilakshar.mithilapanchang.databinding.ActivityBoardDetailBinding
+import kotlinx.coroutines.launch
 
 class BoardDetailActivity : AppCompatActivity() {
+
+    lateinit var binding:ActivityBoardDetailBinding
+
+    val viewModel: BhagwatGitaViewModel by lazy {
+        ViewModelProvider(this).get(BhagwatGitaViewModel::class.java)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_board_detail)
+        binding=ActivityBoardDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val networkdialog = Networkdialog(this)
+        val networkManager= NetworkManager(this)
+        networkManager.observe(this, {
+            if (!it){
+                if (!networkdialog.isShowing){networkdialog.show()}
+
+            }else{
+                if (networkdialog.isShowing){networkdialog.dismiss()}
+
+            }
+        })
+
+        val i = intent
+
+        var versenumber= i.getIntExtra("verseNumber", 13)
+
+
+
+
+
+        lifecycleScope.launch {
+
+            binding.ChapterName.text= viewModel.readBhagwatGitaChaptername(viewModel.readBhagwatgitaversewithid(versenumber)[0].chapter_number)[0].name
+
+            binding.sholktext.text= viewModel
+                .readBhagwatgitaversewithid(versenumber)[0]
+                .text
+
+            binding.shlokNumber.text= viewModel
+                .readBhagwatgitaversewithid(versenumber)[0]
+                .chapter_number.toString()
+
+            binding.shlokNumber.text= "अध्याय : ${translateToHindidate(viewModel
+                .readBhagwatgitaversewithid(versenumber)[0]
+                .chapter_number.toString())} , श्लोक : ${translateToHindidate(viewModel
+                .readBhagwatgitaversewithid(versenumber)[0]
+                .verse_number.toString())} "
+
+            val translationAdapter= translationAdapter(viewModel.readBhagwatgitaversewithid(versenumber)[0].translations)
+
+            binding.Transationrecycler.adapter=translationAdapter
+
+            val commentryadapter= commentryAdapter(viewModel.readBhagwatgitaversewithid(versenumber)[0].commentaries)
+
+            binding.commentryrecycler.adapter=commentryadapter
+
+
+        }
+
+
+
+
+
     }
+
+    private fun translateToHindidate(date: String): String? {
+        // Manually create a mapping for English to Hindi month names
+        val nmap: MutableMap<String, String> = HashMap()
+        nmap["1"] = "१"
+        nmap["2"] = "२"
+        nmap["3"] = "३"
+        nmap["4"] = "४"
+        nmap["5"] = "५"
+        nmap["6"] = "६"
+        nmap["7"] = "७"
+        nmap["8"] = "८"
+        nmap["9"] = "९"
+        nmap["10"] = "१०"
+        nmap["11"] = "११"
+        nmap["12"] = "१२"
+        nmap["13"] = "१३"
+        nmap["14"] = "१४"
+        nmap["15"] = "१५"
+        nmap["16"] = "१६"
+        nmap["17"] = "१७"
+        nmap["18"] = "१८"
+        nmap["19"] = "१९"
+        nmap["20"] = "२०"
+        nmap["21"] = "२१"
+        nmap["22"] = "२२"
+        nmap["23"] = "२३"
+        nmap["24"] = "२४"
+        nmap["25"] = "२५"
+        nmap["26"] = "२६"
+        nmap["27"] = "२७"
+        nmap["28"] = "२८"
+        nmap["29"] = "२९"
+        nmap["30"] = "३०"
+        nmap["31"] = "३१"
+        // Return the translated month name
+        return nmap[date]
+    }
+
+
 }
+
+

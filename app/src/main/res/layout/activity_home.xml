@@ -184,25 +184,12 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/homedesc"
-                                android:layout_marginTop="8dp"
-                                android:layout_width="match_parent"
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/fab"
+                                android:layout_width="380dp"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/blue"
-                                android:gravity="center"
-                                android:textStyle="bold"
-                                android:textSize="19dp"/>
-
-                            <TextView
-
-                                android:id="@+id/homedesc2"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/blue"
-                                android:gravity="center"
-                                android:textStyle="bold"
-                                android:textSize="19dp"/>
+                                android:layout_alignParentRight="true"
+                                app:srcCompat="@drawable/mutespeaker" />
 
                         </LinearLayout>
 

@@ -42,6 +42,10 @@ class HomeViewModel :ViewModel() {
         return FirestoreRepo.getCalendarList(path)
     }
 
+    suspend fun gethomeBroadcast(): String {
+        return FirestoreRepo.gethomeBroadcast()
+    }
+
 
 
 

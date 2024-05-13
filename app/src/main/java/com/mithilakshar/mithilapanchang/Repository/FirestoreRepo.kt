@@ -105,6 +105,14 @@ class FirestoreRepo {
     }
 
 
+    suspend fun gethomeBroadcast(): String {
+        val db = FirebaseFirestore.getInstance()
+        val querySnapshot = db.collection("homeBroadcast").document("homeBroadcast").get().await()
+
+        return querySnapshot.get("speak").toString()
+    }
+
+
 
 
 

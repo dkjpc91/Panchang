@@ -61,6 +61,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var textToSpeech: TextToSpeech? = null
     var speak: String? = null
 
+     var homeBroadcast: String =""
+
     val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
@@ -117,24 +119,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         mediaPlayer.setAudioAttributes(audioAttributes)
 
-        binding.fab.setOnClickListener {
-            isFabClicked = !isFabClicked
-            if (isFabClicked) {
-                binding.fab.setImageResource(R.drawable.speaker)
-                switchFabColor(binding.fab)
 
-                stopAudio()
-                playAudio("https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Sevish_-__nbsp_.mp3")
-
-            } else {
-                binding.fab.setImageResource(R.drawable.mutespeaker)
-                switchFabColor(binding.fab)
-                stopAudio()
-
-                binding.fab.visibility= View.INVISIBLE
-
-            }
-        }
 
 
         //get Banner
@@ -142,7 +127,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             for (i in it) {
                 bannerImageList.add(SlideModel(i))
                 bannerurls.add(i)
-
                 binding.imageSlider.setImageList(bannerImageList)
             }
         })
@@ -153,7 +137,15 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
        lifecycleScope.launch {
 
            binding.bannerVerse.text=bhagwatGitaRoomRepo.readBhagwatgitaversewithid(randomverse)[0].text
+
+           homeBroadcast = viewModel.gethomeBroadcast()
        }
+
+        delayedBroadcast(1000)
+
+
+
+
 
 
 
@@ -172,14 +164,38 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             currentDate.month.toString().lowercase(Locale.getDefault())
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }){
 
-            if (it !=null){speak=it
+            if (it !=null)
 
+            {speak=it
 
             }
 
         }
 
         textToSpeech = TextToSpeech(this, this)
+
+        binding.fab.setOnClickListener {
+            isFabClicked = !isFabClicked
+            if (isFabClicked) {
+
+
+                delayedTask(1000)
+
+
+
+
+
+            } else {
+
+               // stopAudio()
+
+
+            }
+        }
+
+
+
+
 
 
         binding.apply {
@@ -195,7 +211,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding.Gita.setOnClickListener {
             val i =Intent(this,GitaActivity::class.java)
-           
+
             startActivity(i)
             stopAudio()
         }
@@ -326,7 +342,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
         super.onResume()
-        delayedTask(1000)
+
 
         if (currentPlaybackPosition > 0) {
             mediaPlayer.seekTo(currentPlaybackPosition)
@@ -462,6 +478,17 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             textToSpeech!!.setPitch(1f)
             textToSpeech!!.setSpeechRate(0.6f)
             textToSpeech!!.speak(speak, TextToSpeech.QUEUE_FLUSH, null, null)
+        }, delayMillis.toLong())
+    }
+
+
+
+    private fun delayedBroadcast(delayMillis: Int) {
+        handler.postDelayed({ // Your code to be executed after the delay
+
+            stopAudio()
+            playAudio(homeBroadcast)
+
         }, delayMillis.toLong())
     }
 

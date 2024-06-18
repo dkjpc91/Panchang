@@ -8,17 +8,53 @@
     android:background="#E8F1F0"
     tools:context=".UI.View.MainActivity">
 
-    <ImageView
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="-90dp"
-        android:src="@drawable/header"/>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_marginTop="-130dp"
-        android:padding="27dp"
-        android:src="@drawable/splashtxt"/>
+        android:background="@android:color/transparent"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            app:collapsedTitleGravity="center"
+            app:expandedTitleTextColor="#F41505"
+            app:expandedTitleTextAppearance="?attr/actionBarTheme"
+            app:collapsedTitleTextColor="#00BCD4"
+            app:titleCollapseMode="scale"
+            app:contentScrim="@color/white"
+
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            style="?attr/collapsingToolbarLayoutLargeSize"
+            android:layout_height="360dp">
+
+            <ImageView
+                android:id="@+id/homeBanner"
+                android:layout_marginTop="0dp"
+                android:clipToOutline="true"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_collapseMode="parallax"
+                android:scaleType="centerCrop"/>
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:title="@string/app_name"
+                app:subtitle="@string/app_name"
+                app:titleMargin="2dp"
+                android:background="@drawable/customdrawable"
+                app:titleTextAppearance="@drawable/border"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+                app:titleCentered="true"/>
+
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
 
 
     <LinearLayout

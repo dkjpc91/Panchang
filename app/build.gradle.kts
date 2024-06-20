@@ -79,7 +79,7 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("com.google.firebase:firebase-firestore:24.9.1")
     implementation ("com.google.firebase:firebase-messaging:23.4.0")
-    implementation ("androidx.core:core-ktx:+")
+    implementation("androidx.core:core-ktx:1.13.1")
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     implementation ("com.squareup.picasso:picasso:2.8")

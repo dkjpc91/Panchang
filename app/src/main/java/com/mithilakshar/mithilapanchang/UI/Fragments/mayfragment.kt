@@ -75,6 +75,13 @@ class mayfragment : Fragment() {
 
         fragmentindexnumber = fragmentindex.indexOf(currentDate.month.toString())
 
+
+
+        loadfragmentdata(
+            fragmentindex[fragmentindexnumber].toString().lowercase(Locale.getDefault())
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+
+
         binding.backmonth.setOnClickListener {
             if(fragmentindexnumber==0){
 

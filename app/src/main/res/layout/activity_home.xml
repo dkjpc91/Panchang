@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="#E8F1F0"
     tools:context=".UI.View.MainActivity">
-
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,34 +19,54 @@
             app:collapsedTitleGravity="center"
             app:expandedTitleTextColor="#F41505"
             app:expandedTitleTextAppearance="?attr/actionBarTheme"
-            app:collapsedTitleTextColor="#00BCD4"
+            app:collapsedTitleTextColor="#F41505"
+            app:collapsedTitleTextAppearance="@style/CollapsedTitleTextStyle"
             app:titleCollapseMode="scale"
-            app:contentScrim="@color/white"
+            app:contentScrim="#E8F1F0"
 
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             style="?attr/collapsingToolbarLayoutLargeSize"
-            android:layout_height="360dp">
+            android:layout_height="400dp">
 
             <ImageView
                 android:id="@+id/homeBanner"
                 android:layout_marginTop="0dp"
                 android:clipToOutline="true"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="340dp"
                 app:layout_collapseMode="parallax"
                 android:scaleType="centerCrop"/>
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="13dp"
+                android:layout_marginLeft="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:title="@string/app_name"
-                app:subtitle="@string/app_name"
-                app:titleMargin="2dp"
+                android:layout_height="80dp"
+                app:title="@string/app_name_h"
+                app:titleMargin="0dp"
                 android:background="@drawable/customdrawable"
-                app:titleTextAppearance="@drawable/border"
+                app:titleTextAppearance="?attr/actionBarTheme"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
-                app:titleCentered="true"/>
+                app:titleCentered="true">
+
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/swastika"
+                        android:scaleType="centerCrop" />
+                    <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/swastika"
+                    android:scaleType="centerCrop"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="end" />
+
+
+
+            </com.google.android.material.appbar.MaterialToolbar>
 
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -55,8 +74,10 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-
-
+    <androidx.core.widget.NestedScrollView
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,15 +101,7 @@
             app:iss_delay="3000"
             app:iss_text_align="CENTER"/>
 
-        <ScrollView
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="1dp"
-            android:layout_marginTop="2.5dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginBottom="2.5dp"
-            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -245,43 +258,6 @@
                     android:columnCount="2"
                     android:padding="4dp">
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/Gita"
-                        android:layout_width="0dp"
-                        android:layout_height="180dp"
-                        android:layout_columnWeight="1"
-                        android:layout_margin="4dp"
-
-                        app:cardCornerRadius="60dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="5"
-                                android:background="@color/white"
-                                android:padding="5dp"
-                                android:src="@drawable/gita" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_marginTop="1dp"
-                                android:layout_weight="2"
-                                android:background="@drawable/header"
-                                android:gravity="center"
-                                android:text="भगवत गीता"
-                                android:textColor="@color/red"
-                                android:textSize="30dp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/calendar"
@@ -482,13 +458,15 @@
 
 
 
-        </ScrollView>
 
 
 
 
     </LinearLayout>
+</androidx.core.widget.NestedScrollView>
 
 
 
-</LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

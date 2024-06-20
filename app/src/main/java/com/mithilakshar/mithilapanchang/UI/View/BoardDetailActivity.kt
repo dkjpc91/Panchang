@@ -52,29 +52,7 @@ class BoardDetailActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            binding.ChapterName.text= viewModel.readBhagwatGitaChaptername(viewModel.readBhagwatgitaversewithid(versenumber)[0].chapter_number)[0].name
 
-            binding.sholktext.text= viewModel
-                .readBhagwatgitaversewithid(versenumber)[0]
-                .text
-
-            binding.shlokNumber.text= viewModel
-                .readBhagwatgitaversewithid(versenumber)[0]
-                .chapter_number.toString()
-
-            binding.shlokNumber.text= "अध्याय : ${translateToHindidate(viewModel
-                .readBhagwatgitaversewithid(versenumber)[0]
-                .chapter_number.toString())} , श्लोक : ${translateToHindidate(viewModel
-                .readBhagwatgitaversewithid(versenumber)[0]
-                .verse_number.toString())} "
-
-            val translationAdapter= translationAdapter(viewModel.readBhagwatgitaversewithid(versenumber)[0].translations)
-
-            binding.Transationrecycler.adapter=translationAdapter
-
-            val commentryadapter= commentryAdapter(viewModel.readBhagwatgitaversewithid(versenumber)[0].commentaries)
-
-            binding.commentryrecycler.adapter=commentryadapter
 
 
         }

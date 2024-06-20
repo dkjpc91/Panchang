@@ -106,11 +106,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-        var dao=BhagwatGitaChapterDatabase.getdbcopy(this).chapterdao()
-        var versedao=BhagwatGitaVerseDatabase.getdbcopy(this).verseDao()
-        var bhagwatGitaRoomRepo = BhagwatGitaRoomRepo(dao,versedao)
-        val randomverse=Random.nextInt(1,702)
-
 
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA) // Set usage type (e.g., music, alarm)
@@ -136,12 +131,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
        lifecycleScope.launch {
 
-           binding.bannerVerse.text=bhagwatGitaRoomRepo.readBhagwatgitaversewithid(randomverse)[0].text
 
-           homeBroadcast = viewModel.gethomeBroadcast()
        }
 
-        delayedBroadcast(1000)
+        delayedTask(1000)
 
 
 
@@ -179,9 +172,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             if (isFabClicked) {
 
 
-                delayedTask(1000)
 
 
+                delayedBroadcast(1000)
 
 
 
@@ -209,15 +202,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-        binding.Gita.setOnClickListener {
-            val i =Intent(this,GitaActivity::class.java)
 
-            startActivity(i)
-            stopAudio()
-        }
         binding.HomeBoard.setOnClickListener {
             val i =Intent(this,BoardDetailActivity::class.java)
-            i.putExtra("verseNumber",randomverse)
+            //i.putExtra("verseNumber",randomverse)
 
             startActivity(i)
             stopAudio()

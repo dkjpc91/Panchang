@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.view.View
+
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -26,14 +27,17 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
-import com.mithilakshar.mithilapanchang.Dialog.calendardialog
+
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
 import com.mithilakshar.mithilapanchang.R
-import com.mithilakshar.mithilapanchang.Repository.BhagwatGitaRoomRepo
+
 import com.mithilakshar.mithilapanchang.Repository.FirestoreRepo
-import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaChapterDatabase
-import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaVerseDatabase
+
+import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
+import com.mithilakshar.mithilapanchang.Utility.dbHelper
+import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
 import com.mithilakshar.mithilapanchang.databinding.ActivityHomeBinding
 import kotlinx.coroutines.delay
@@ -42,6 +46,22 @@ import java.time.LocalDate
 import java.util.Locale
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
+
+import android.Manifest
+import android.content.ContentValues.TAG
+import android.content.pm.PackageManager
+
+import android.util.Log
+
+import androidx.activity.enableEdgeToEdge
+
+import androidx.core.app.ActivityCompat
+
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+
+import java.io.File
+
 
 
 class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -72,6 +92,18 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
+    private lateinit var fileDownloader: FirebaseFileDownloader
+    private lateinit var dbHelper: dbHelper
+    private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
+
+    private var storagePaths: MutableList<String> = mutableListOf()
+    private var localFileNames: MutableList<String> = mutableListOf()
+    private var actions: MutableList<String> = mutableListOf()
+    companion object {
+        private const val REQUEST_WRITE_STORAGE = 1
+    }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +115,23 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (updateType==AppUpdateType.FLEXIBLE){
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_WRITE_STORAGE
+            )
+        } else {
+            // Permission already granted, proceed with download
+
+        }
+
+
 
 
         checkForAppUpdate()
@@ -98,6 +147,44 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             }
         })
+
+
+        fileDownloader = FirebaseFileDownloader(this)
+        val factory = BhagwatGitaViewModel.factory(fileDownloader)
+        bhagwatgitaviewmodel = ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("SQLdb")
+        collectionRef.get().addOnSuccessListener {
+            if (it != null) {
+                for (document in it) {
+                    val documentId = document.id
+                    val storagePath = "SQLdb/$documentId"
+                    val localFileName = "$documentId.db"
+                    val action = document.getString("action") ?: "delete"
+                    storagePaths.add(storagePath)
+                    localFileNames.add(localFileName)
+                    actions.add(action)
+
+                }
+
+                startFileDownloads()
+
+            } else {
+                Log.d(TAG, "No documents found in collection.")
+            }
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Error getting documents: ", exception)
+        }
+
+        bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
+
+            binding.textViewDay .text = it.toString()
+
+        })
+
+
+
+
 
 
         val audioAttributes = AudioAttributes.Builder()
@@ -118,27 +205,30 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
         //appbar banner
-       lifecycleScope.launch {
+        lifecycleScope.launch {
 
-           appbarbannerurls =viewModel.getappbarImagelist("appbar")
-           homeBroadcast=viewModel.gethomeBroadcast()
+            appbarbannerurls =viewModel.getappbarImagelist("appbar")
+            homeBroadcast=viewModel.gethomeBroadcast()
 
-           if (homeBroadcast.isNullOrEmpty()) {
-               binding.floatingActionButton.visibility=View.GONE
-           } else {
-                   // Perform tasks if homeBroadcast has a value
-               binding.floatingActionButton.visibility=View.VISIBLE
-           }
+            if (homeBroadcast.isNullOrEmpty()) {
+                binding.floatingActionButton.visibility=View.GONE
+            } else {
+                // Perform tasks if homeBroadcast has a value
+                binding.floatingActionButton.visibility=View.VISIBLE
+            }
 
-           if (appbarbannerurls.size != 0){
-               val random = Random.nextInt(appbarbannerurls.size)
-               Glide.with(this@HomeActivity).load(appbarbannerurls.get(random)).into(binding.homeBanner)
-           }
-           //announce auto
-           delayedTask(1000)
+            if (appbarbannerurls.size != 0){
+                val random = Random.nextInt(appbarbannerurls.size)
+                Glide.with(this@HomeActivity).load(appbarbannerurls.get(random)).into(binding.homeBanner)
+            }
+            //announce auto
+            delayedTask(1000)
 
 
-       }
+        }
+
+
+
 
 
 
@@ -189,7 +279,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             } else {
 
-               stopAudio()
+                stopAudio()
                 switchFabColor(binding.floatingActionButton)
 
             }
@@ -346,6 +436,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech!!.stop()
         textToSpeech!!.shutdown()
         stopAudio()
+
+
     }
 
     override fun onPause() {
@@ -354,6 +446,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech!!.shutdown()
 
         pauseAudio()
+
     }
 
 
@@ -528,14 +621,100 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
     }
+
+
+
+    private fun startFileDownloads() {
+        // Start downloading files based on stored paths and filenames
+        for (i in storagePaths.indices) {
+            downloadFile(storagePaths[i],actions[i], localFileNames[i])
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_WRITE_STORAGE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // Permission granted, proceed with download
+                startFileDownloads()
+                Toast.makeText(
+                    this,
+                    "downloading",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                // Permission denied, inform the user
+                Toast.makeText(
+                    this,
+                    "Write permission is required to download files.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun downloadFile(storagePath: String, action: String, localFileName: String) {
+        if (::fileDownloader.isInitialized) {
+            fileDownloader.retrieveURL(storagePath, action, localFileName) { downloadedFile ->
+                if (downloadedFile != null) {
+                    // File downloaded successfully, do something with the file if needed
+                    Log.d(TAG, "File downloaded successfully: $downloadedFile")
+
+                    // Notify UI or perform tasks with downloaded file
+                    handleDownloadedFile(downloadedFile)
+                } else {
+                    // Handle the case where download failed
+                    Log.d(TAG, "Download failed for file: $localFileName")
+                }
+            }
+        } else {
+            Log.e(TAG, "fileDownloader is not initialized.")
+        }
+    }
+
+    private fun handleDownloadedFile(downloadedFile: File) {
+        // Handle the downloaded file here, e.g., update UI, save to database, etc.
+        Toast.makeText(this, "File downloaded: ${downloadedFile.name}", Toast.LENGTH_SHORT).show()
+        // Example: Save to database using dbHelper
+        val dbFolderPath = getExternalFilesDir(null)?.absolutePath + File.separator + "test"
+        val dbFile = File(dbFolderPath, "math.db")
+        if (dbFile.exists()) {
+            val dbHelper = dbHelper(applicationContext, "math.db")
+            val tableNames = dbHelper.getTableNames()
+            val av = dbHelper.getRowCount("Book1")
+            binding.textViewDay .text = "Table Names: ${tableNames?.joinToString(", ")}"
+
+            if (av > 0) {
+                val avt = dbHelper.getRowValues("Book1", Random.nextInt(av))
+                if (avt != null) {
+                    val formattedText = StringBuilder()
+                    for (value in avt) {
+                        formattedText.append(value.toString()).append("\n")
+                    }
+
+
+                }
+            }
+        }
+
+
+
+
+    }
+
+
+
+
+    private fun recreateActivity() {
+        val intent = intent // Get the current intent to pass extras if needed
+
+        finish() // Finish the current activity
+        startActivity(intent) // Start the activity again
+    }
+
+
 }
-
-
-
-
-
-
-
-
-
 

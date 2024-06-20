@@ -1,18 +1,12 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.mithilakshar.mithilapanchang.Adapters.commentryAdapter
-import com.mithilakshar.mithilapanchang.Adapters.translationAdapter
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
-import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
-import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
 import com.mithilakshar.mithilapanchang.databinding.ActivityBoardDetailBinding
 import kotlinx.coroutines.launch
 

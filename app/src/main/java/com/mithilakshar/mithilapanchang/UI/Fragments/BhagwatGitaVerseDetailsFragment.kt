@@ -11,8 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mithilakshar.mithilapanchang.R
 import androidx.activity.addCallback
-import com.mithilakshar.mithilapanchang.Adapters.commentryAdapter
-import com.mithilakshar.mithilapanchang.Adapters.translationAdapter
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import com.mithilakshar.mithilapanchang.databinding.FragmentBhagwatGitaVerseDetailsBinding
 import kotlinx.coroutines.launch
@@ -40,26 +38,7 @@ class BhagwatGitaVerseDetailsFragment : Fragment() {
 
         lifecycleScope.launch {
 
-            binding.ChapterName.text= viewmodel.readBhagwatGitaChaptername(viewmodel.readBhagwatgitaversewithid(versenumber.versenumber)[0].chapter_number)[0].name
 
-            binding.sholktext.text= viewmodel
-                .readBhagwatgitaversewithid(versenumber.versenumber)[0]
-                .text
-
-
-            binding.shlokNumber.text= "अध्याय : ${translateToHindidate(viewmodel
-                .readBhagwatgitaversewithid(versenumber.versenumber)[0]
-                .chapter_number.toString())} , श्लोक : ${translateToHindidate(viewmodel
-                .readBhagwatgitaversewithid(versenumber.versenumber)[0]
-                .verse_number.toString())} "
-
-            val translationAdapter=translationAdapter(viewmodel.readBhagwatgitaversewithid(versenumber.versenumber)[0].translations)
-
-            binding.Transationrecycler.adapter=translationAdapter
-
-            val commentryadapter=commentryAdapter(viewmodel.readBhagwatgitaversewithid(versenumber.versenumber)[0].commentaries)
-
-            binding.commentryrecycler.adapter=commentryadapter
 
 
 

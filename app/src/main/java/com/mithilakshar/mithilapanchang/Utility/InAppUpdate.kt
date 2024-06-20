@@ -1,4 +1,4 @@
-package com.mithilakshar.maithili.Utility
+package com.mithilakshar.mithilapanchang.Utility
 
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.UpdateAvailability

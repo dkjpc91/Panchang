@@ -12,13 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.FirebaseFirestore
+
 import com.mithilakshar.mithilapanchang.Adapters.CalendarAdapter
-import com.mithilakshar.mithilapanchang.Models.calendardatamodel
-import com.mithilakshar.mithilapanchang.R
-import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
+
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
-import com.mithilakshar.mithilapanchang.databinding.FragmentBhagwatGitaChapterBinding
+
 import com.mithilakshar.mithilapanchang.databinding.FragmentMayfragmentBinding
 import kotlinx.coroutines.launch
 import java.time.LocalDate

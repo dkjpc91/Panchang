@@ -1,50 +1,29 @@
 package com.mithilakshar.mithilapanchang.ViewModel
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.mithilakshar.mithilapanchang.Models.BhagwatGitaVerseItem
-import com.mithilakshar.mithilapanchang.Models.bhagwatGitaChapterItem
-import com.mithilakshar.mithilapanchang.Repository.BhagwatGitaRoomRepo
-import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaChapterDatabase
-import com.mithilakshar.mithilapanchang.Room.Database.BhagwatGitaVerseDatabase
-
-class BhagwatGitaViewModel(application: Application): AndroidViewModel(application) {
+import androidx.lifecycle.ViewModelProvider
+import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
 
 
 
 
-    val dao=BhagwatGitaChapterDatabase.getdbcopy(application.applicationContext).chapterdao()
-    val versedao=BhagwatGitaVerseDatabase.getdbcopy(application.applicationContext).verseDao()
+class BhagwatGitaViewModel(private val firebaseFileDownloader: FirebaseFileDownloader): ViewModel() {
 
 
-    val bhagwatGitaRoomRepo= BhagwatGitaRoomRepo(dao,versedao)
 
-    suspend fun getBhagwatGitaChapterDetails():List<bhagwatGitaChapterItem>{
-        return bhagwatGitaRoomRepo.readBhagwatGitaChapter()
+    val downloadProgressLiveData: LiveData<Int> = firebaseFileDownloader.downloadProgressLiveData
+
+    fun retrieveAndDownloadFile(documentPath: String, action: String, urlFieldName: String) {
+        firebaseFileDownloader.retrieveURL(documentPath, action, urlFieldName) { file ->
+            // Handle the downloaded file if needed
+        }
     }
 
-    suspend fun getBhagwatGitaVerseDetails(id: Int):List<BhagwatGitaVerseItem>{
-
-        return bhagwatGitaRoomRepo.readBhagwatGitaVerse(id)
+    class factory(private val firebaseFileDownloader: FirebaseFileDownloader) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return BhagwatGitaViewModel(firebaseFileDownloader) as T
+        }
     }
-
-    suspend fun readBhagwatgitaversewithid(ID:Int):List<BhagwatGitaVerseItem>{
-
-        return bhagwatGitaRoomRepo.readBhagwatgitaversewithid(ID)
-    }
-
-
-    suspend fun readBhagwatGitaChaptername(id:Int): List<bhagwatGitaChapterItem>{
-
-        return dao.readBhagwatGitaChapter(id)
-    }
-
-
-
-
-
 }

@@ -1,23 +1,21 @@
 package com.mithilakshar.mithilapanchang.Dialog
 
-import android.app.Dialog
+
 import android.content.Context
-import android.os.Bundle
-import android.view.WindowManager
+import android.app.AlertDialog
+import android.view.LayoutInflater
+
 import com.mithilakshar.mithilapanchang.R
 
-class Networkdialog (context: Context) : Dialog(context) {
+class Networkdialog (context: Context): AlertDialog(context) {
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.networkdialog)
 
-            // Set the dialog to be non-cancellable on back button press
-            this.setCancelable(false)
+        init {
 
-            // Alternatively, to disable cancelling on touch outside the dialog
-            window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
+            val inflater = LayoutInflater.from(context)
+            val view = inflater.inflate(R.layout.networkdialog, null)
+            setView(view)
+            setCancelable(false)
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
         }
     }

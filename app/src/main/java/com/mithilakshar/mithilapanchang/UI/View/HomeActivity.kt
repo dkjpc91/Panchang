@@ -49,29 +49,28 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateType=AppUpdateType.IMMEDIATE
-    var appbarbannerurls: List<String> = arrayListOf()
+
     private val firestoreRepo=FirestoreRepo()
 
-    private var isFabClicked = false
     val mediaPlayer = MediaPlayer()
     var currentPlaybackPosition: Int = 0
 
+    var appbarbannerurls: List<String> = arrayListOf()
 
+    var bannerurls: ArrayList<String> = arrayListOf()
+    var bannerImageList: ArrayList<SlideModel> = arrayListOf()
 
+    val handler=Handler(Looper.getMainLooper())
+
+    private var isFabClicked = false
 
     private var textToSpeech: TextToSpeech? = null
     var speak: String? = null
-
-     var homeBroadcast: String =""
+    var homeBroadcast: String =""
 
     val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
-
-    var bannerImageList: ArrayList<SlideModel> = arrayListOf()
-    var bannerurls: ArrayList<String> = arrayListOf()
-    val handler=Handler(Looper.getMainLooper())
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -101,13 +100,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         })
 
 
-
-
-
-
-
-
-
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA) // Set usage type (e.g., music, alarm)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC) // Set content type
@@ -115,10 +107,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         mediaPlayer.setAudioAttributes(audioAttributes)
 
-
-
-
-        //get Banner
+        //get Banner for slider
         viewModel.getBannerurlList("home").observe(this, {
             for (i in it) {
                 bannerImageList.add(SlideModel(i))
@@ -128,8 +117,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         })
 
 
-
-
+        //appbar banner
        lifecycleScope.launch {
 
            appbarbannerurls =viewModel.getappbarImagelist("appbar")
@@ -146,7 +134,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                val random = Random.nextInt(appbarbannerurls.size)
                Glide.with(this@HomeActivity).load(appbarbannerurls.get(random)).into(binding.homeBanner)
            }
-           //announce
+           //announce auto
            delayedTask(1000)
 
 
@@ -171,7 +159,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val hindidate = translateToHindidate (currentDate.dayOfMonth.toString())
 
 
-        //text speak
+        //text speak auto data.
 
         firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2,'0'),
             currentDate.month.toString().lowercase(Locale.getDefault())
@@ -187,6 +175,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
+        //text speak broadcast
         binding.floatingActionButton.setOnClickListener {
             isFabClicked = !isFabClicked
             if (isFabClicked) {
@@ -268,16 +257,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-
-
-
-
-
-
-
-
-
-
     }
 
 
@@ -306,9 +285,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
     }
-
-
-
 
 
     private fun checkForAppUpdate(){

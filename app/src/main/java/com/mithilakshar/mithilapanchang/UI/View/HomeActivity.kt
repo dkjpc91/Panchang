@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.denzcoskun.imageslider.models.SlideModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -48,7 +49,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateType=AppUpdateType.IMMEDIATE
-
+    var appbarbannerurls: List<String> = arrayListOf()
     private val firestoreRepo=FirestoreRepo()
 
     private var isFabClicked = false
@@ -131,10 +132,29 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
        lifecycleScope.launch {
 
+           appbarbannerurls =viewModel.getappbarImagelist("appbar")
+           homeBroadcast=viewModel.gethomeBroadcast()
+
+           if (homeBroadcast.isNullOrEmpty()) {
+               binding.floatingActionButton.visibility=View.GONE
+           } else {
+                   // Perform tasks if homeBroadcast has a value
+               binding.floatingActionButton.visibility=View.VISIBLE
+           }
+
+           if (appbarbannerurls.size != 0){
+               val random = Random.nextInt(appbarbannerurls.size)
+               Glide.with(this@HomeActivity).load(appbarbannerurls.get(random)).into(binding.homeBanner)
+           }
+           //announce
+           delayedTask(1000)
+
 
        }
 
-        delayedTask(1000)
+
+
+
 
 
 
@@ -167,21 +187,21 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
-        binding.fab.setOnClickListener {
+        binding.floatingActionButton.setOnClickListener {
             isFabClicked = !isFabClicked
             if (isFabClicked) {
 
 
+                switchFabColor(binding.floatingActionButton)
 
-
-                delayedBroadcast(1000)
+                delayedBroadcast(500)
 
 
 
             } else {
 
-               // stopAudio()
-
+               stopAudio()
+                switchFabColor(binding.floatingActionButton)
 
             }
         }

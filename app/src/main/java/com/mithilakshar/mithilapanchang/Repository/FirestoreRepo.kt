@@ -21,6 +21,17 @@ class FirestoreRepo {
 
     val bannerUrlList = MutableLiveData<ArrayList<String>>()
 
+
+    suspend fun getappbarImagelist(documentId: String): List<String> {
+        val documentSnapshot = db.collection("banner").document(documentId).get().await()
+        return if (documentSnapshot.exists()) {
+            documentSnapshot.data?.values?.map { it.toString() } ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+
+
     fun getBannerurlList(path:String): LiveData<ArrayList<String>> {
 
         db.collection("banner").document(path).get()

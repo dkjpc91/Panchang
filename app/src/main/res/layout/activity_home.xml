@@ -26,16 +26,17 @@
 
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             style="?attr/collapsingToolbarLayoutLargeSize"
-            android:layout_height="400dp">
+            android:layout_height="450dp">
 
             <ImageView
                 android:id="@+id/homeBanner"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="99dp"
                 android:clipToOutline="true"
                 android:layout_width="match_parent"
-                android:layout_height="340dp"
+                android:layout_height="300dp"
+                android:src="@drawable/gita"
                 app:layout_collapseMode="parallax"
-                android:scaleType="centerCrop"/>
+                android:scaleType="center" />
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_marginTop="15dp"
@@ -467,6 +468,16 @@
 
 
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="19dp"
+        android:layout_marginBottom="19dp"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/speaker"
+        app:backgroundTint="#74F150"  />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -46,6 +46,10 @@ class HomeViewModel :ViewModel() {
         return FirestoreRepo.gethomeBroadcast()
     }
 
+    suspend fun getappbarImagelist(path:String): List<String> {
+        return FirestoreRepo.getappbarImagelist(path)
+    }
+
 
 
 

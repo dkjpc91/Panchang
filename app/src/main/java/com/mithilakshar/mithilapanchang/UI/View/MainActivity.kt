@@ -1,5 +1,6 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+
 import android.animation.ArgbEvaluator
 import android.content.Intent
 import android.graphics.Color
@@ -15,6 +16,7 @@ import com.mithilakshar.mithilapanchang.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

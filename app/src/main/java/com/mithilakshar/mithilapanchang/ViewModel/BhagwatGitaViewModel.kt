@@ -15,6 +15,7 @@ class BhagwatGitaViewModel(private val firebaseFileDownloader: FirebaseFileDownl
 
     val downloadProgressLiveData: LiveData<Int> = firebaseFileDownloader.downloadProgressLiveData
 
+
     fun retrieveAndDownloadFile(documentPath: String, action: String, urlFieldName: String) {
         firebaseFileDownloader.retrieveURL(documentPath, action, urlFieldName) { file ->
             // Handle the downloaded file if needed

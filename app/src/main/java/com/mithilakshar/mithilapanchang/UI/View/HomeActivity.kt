@@ -53,12 +53,6 @@ import android.content.pm.PackageManager
 
 import android.util.Log
 
-import androidx.activity.enableEdgeToEdge
-
-import androidx.core.app.ActivityCompat
-
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 import java.io.File
 
@@ -68,9 +62,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
-    private val updateType=AppUpdateType.IMMEDIATE
+    private val updateType = AppUpdateType.IMMEDIATE
 
-    private val firestoreRepo=FirestoreRepo()
+    private val firestoreRepo = FirestoreRepo()
 
     val mediaPlayer = MediaPlayer()
     var currentPlaybackPosition: Int = 0
@@ -80,13 +74,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     var bannerurls: ArrayList<String> = arrayListOf()
     var bannerImageList: ArrayList<SlideModel> = arrayListOf()
 
-    val handler=Handler(Looper.getMainLooper())
+    val handler = Handler(Looper.getMainLooper())
 
     private var isFabClicked = false
 
     private var textToSpeech: TextToSpeech? = null
     var speak: String? = null
-    var homeBroadcast: String =""
+    var homeBroadcast: String = ""
 
     val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -99,10 +93,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var storagePaths: MutableList<String> = mutableListOf()
     private var localFileNames: MutableList<String> = mutableListOf()
     private var actions: MutableList<String> = mutableListOf()
+
     companion object {
         private const val REQUEST_WRITE_STORAGE = 1
     }
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -111,24 +105,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        appUpdateManager=AppUpdateManagerFactory.create(applicationContext)
-        if (updateType==AppUpdateType.FLEXIBLE){
+        appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+        if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.registerListener(installStateUpdatedListener)
-        }
-
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_WRITE_STORAGE
-            )
-        } else {
-            // Permission already granted, proceed with download
-
         }
 
 
@@ -137,13 +116,17 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         checkForAppUpdate()
 
         val networkdialog = Networkdialog(this)
-        val networkManager= NetworkManager(this)
+        val networkManager = NetworkManager(this)
         networkManager.observe(this, {
-            if (!it){
-                if (!networkdialog.isShowing){networkdialog.show()}
+            if (!it) {
+                if (!networkdialog.isShowing) {
+                    networkdialog.show()
+                }
 
-            }else{
-                if (networkdialog.isShowing){networkdialog.dismiss()}
+            } else {
+                if (networkdialog.isShowing) {
+                    networkdialog.dismiss()
+                }
 
             }
         })
@@ -151,7 +134,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         fileDownloader = FirebaseFileDownloader(this)
         val factory = BhagwatGitaViewModel.factory(fileDownloader)
-        bhagwatgitaviewmodel = ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
+        bhagwatgitaviewmodel =
+            ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
         val db = FirebaseFirestore.getInstance()
         val collectionRef = db.collection("SQLdb")
         collectionRef.get().addOnSuccessListener {
@@ -178,11 +162,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
 
-            binding.textViewDay .text = it.toString()
+            binding.textViewDay.text = it.toString()
 
         })
-
-
 
 
 
@@ -204,22 +186,24 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         })
 
 
+
         //appbar banner
         lifecycleScope.launch {
 
-            appbarbannerurls =viewModel.getappbarImagelist("appbar")
-            homeBroadcast=viewModel.gethomeBroadcast()
+            appbarbannerurls = viewModel.getappbarImagelist("appbar")
+            homeBroadcast = viewModel.gethomeBroadcast()
 
             if (homeBroadcast.isNullOrEmpty()) {
-                binding.floatingActionButton.visibility=View.GONE
+                binding.floatingActionButton.visibility = View.GONE
             } else {
                 // Perform tasks if homeBroadcast has a value
-                binding.floatingActionButton.visibility=View.VISIBLE
+                binding.floatingActionButton.visibility = View.VISIBLE
             }
 
-            if (appbarbannerurls.size != 0){
+            if (appbarbannerurls.size != 0) {
                 val random = Random.nextInt(appbarbannerurls.size)
-                Glide.with(this@HomeActivity).load(appbarbannerurls.get(random)).into(binding.homeBanner)
+                Glide.with(this@HomeActivity).load(appbarbannerurls.get(random))
+                    .into(binding.homeBanner)
             }
             //announce auto
             delayedTask(1000)
@@ -228,36 +212,23 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         //date
 
         val currentDate = LocalDate.now()
 
         val hindiMonth = translateToHindi(currentDate.month.toString())
-        val hindiDay = translateToHindiday (currentDate.dayOfWeek.toString())
-        val hindidate = translateToHindidate (currentDate.dayOfMonth.toString())
+        val hindiDay = translateToHindiday(currentDate.dayOfWeek.toString())
+        val hindidate = translateToHindidate(currentDate.dayOfMonth.toString())
 
 
         //text speak auto data.
 
-        firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2,'0'),
+        firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2, '0'),
             currentDate.month.toString().lowercase(Locale.getDefault())
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }){
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }) {
 
-            if (it !=null)
-
-            {speak=it
+            if (it != null) {
+                speak = it
 
             }
 
@@ -276,7 +247,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 delayedBroadcast(500)
 
 
-
             } else {
 
                 stopAudio()
@@ -292,9 +262,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding.apply {
 
-            textViewDate.text=hindidate
-            textViewDay.text=hindiDay
-            textViewMonth.text=  hindiMonth
+            textViewDate.text = hindidate
+            textViewDay.text = hindiDay
+            textViewMonth.text = hindiMonth
 
         }
 
@@ -303,54 +273,49 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
         binding.HomeBoard.setOnClickListener {
-            val i =Intent(this,BoardDetailActivity::class.java)
+            val i = Intent(this, BoardDetailActivity::class.java)
             //i.putExtra("verseNumber",randomverse)
 
             startActivity(i)
             stopAudio()
         }
         binding.calendar.setOnClickListener {
-            val i =Intent(this,CalendarActivity::class.java)
+            val i = Intent(this, CalendarActivity::class.java)
 
             startActivity(i)
             stopAudio()
         }
 
-        binding.holiday .setOnClickListener {
-            val i =Intent(this,HolidayActivity::class.java)
+        binding.holiday.setOnClickListener {
+            val i = Intent(this, HolidayActivity::class.java)
 
             startActivity(i)
             stopAudio()
         }
 
-        binding.eclipse .setOnClickListener {
-            val i =Intent(this,EclipseActivity::class.java)
+        binding.eclipse.setOnClickListener {
+            val i = Intent(this, EclipseActivity::class.java)
 
             startActivity(i)
             stopAudio()
         }
 
-        binding.mantra .setOnClickListener {
-            val i =Intent(this,MantraActivity::class.java)
+        binding.mantra.setOnClickListener {
+            val i = Intent(this, MantraActivity::class.java)
 
             startActivity(i)
             stopAudio()
         }
 
-        binding.katha .setOnClickListener {
-            val i =Intent(this,KathaActivity::class.java)
+        binding.katha.setOnClickListener {
+            val i = Intent(this, KathaActivity::class.java)
 
             startActivity(i)
             stopAudio()
         }
-
-
 
 
     }
-
-
-
 
 
     private fun switchFabColor(fab: FloatingActionButton) {
@@ -365,10 +330,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-    private val installStateUpdatedListener=InstallStateUpdatedListener{
-        if (it.installStatus()==InstallStatus.DOWNLOADED){
+    private val installStateUpdatedListener = InstallStateUpdatedListener {
+        if (it.installStatus() == InstallStatus.DOWNLOADED) {
 
-            Toast.makeText(this,"Download Completed",Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Download Completed", Toast.LENGTH_LONG).show()
             lifecycleScope.launch {
                 delay(5.seconds)
                 appUpdateManager.completeUpdate()
@@ -377,38 +342,41 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-    private fun checkForAppUpdate(){
+    private fun checkForAppUpdate() {
 
         appUpdateManager.appUpdateInfo.addOnSuccessListener {
-            val isUpdateAvailable=it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-            val isUpdateAllowed=when(updateType){
+            val isUpdateAvailable = it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+            val isUpdateAllowed = when (updateType) {
 
-                AppUpdateType.IMMEDIATE->{it.isImmediateUpdateAllowed}
-                AppUpdateType.FLEXIBLE->{it.isFlexibleUpdateAllowed}
-                else->false
+                AppUpdateType.IMMEDIATE -> {
+                    it.isImmediateUpdateAllowed
+                }
+
+                AppUpdateType.FLEXIBLE -> {
+                    it.isFlexibleUpdateAllowed
+                }
+
+                else -> false
 
             }
 
-            if (isUpdateAvailable && isUpdateAllowed){
+            if (isUpdateAvailable && isUpdateAllowed) {
                 appUpdateManager.startUpdateFlowForResult(
-                    it,updateType,this,113
+                    it, updateType, this, 113
                 )
             }
         }
     }
 
 
-
-
     override fun onResume() {
         super.onResume()
 
-        if (updateType==AppUpdateType.IMMEDIATE){
+        if (updateType == AppUpdateType.IMMEDIATE) {
             appUpdateManager.appUpdateInfo.addOnSuccessListener {
-                if (it.updateAvailability()==UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
-                {
+                if (it.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                     appUpdateManager.startUpdateFlowForResult(
-                        it,updateType,this,113
+                        it, updateType, this, 113
                     )
 
                 }
@@ -429,7 +397,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (updateType==AppUpdateType.FLEXIBLE){
+        if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.unregisterListener(installStateUpdatedListener)
         }
 
@@ -450,18 +418,14 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode==113){
-            if (resultCode!= RESULT_OK){
+        if (requestCode == 113) {
+            if (resultCode != RESULT_OK) {
                 println("Something went wrong updating")
             }
         }
     }
-
-
 
 
     private fun translateToHindi(currentMonth: String): String? {
@@ -482,7 +446,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         // Return the translated month name
         return monthTranslation[currentMonth]
     }
-
 
 
     private fun translateToHindiday(currentDay: String): String? {
@@ -559,7 +522,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-
     private fun delayedBroadcast(delayMillis: Int) {
         handler.postDelayed({ // Your code to be executed after the delay
 
@@ -568,14 +530,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         }, delayMillis.toLong())
     }
-
-
-
-
-
-
-
-
 
 
     fun pauseAudio() {
@@ -598,8 +552,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     }
 
-    fun playAudio(audioURL:String){
-
+    fun playAudio(audioURL: String) {
 
 
         try {
@@ -623,13 +576,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-
     private fun startFileDownloads() {
         // Start downloading files based on stored paths and filenames
         for (i in storagePaths.indices) {
-            downloadFile(storagePaths[i],actions[i], localFileNames[i])
+            downloadFile(storagePaths[i], actions[i], localFileNames[i])
         }
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -680,20 +633,22 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         Toast.makeText(this, "File downloaded: ${downloadedFile.name}", Toast.LENGTH_SHORT).show()
         // Example: Save to database using dbHelper
         val dbFolderPath = getExternalFilesDir(null)?.absolutePath + File.separator + "test"
-        val dbFile = File(dbFolderPath, "math.db")
+        val dbFile = File(dbFolderPath, "Gita.db")
         if (dbFile.exists()) {
-            val dbHelper = dbHelper(applicationContext, "math.db")
+            val dbHelper = dbHelper(applicationContext, "Gita.db")
             val tableNames = dbHelper.getTableNames()
-            val av = dbHelper.getRowCount("Book1")
-            binding.textViewDay .text = "Table Names: ${tableNames?.joinToString(", ")}"
+            val av = dbHelper.getRowCount("Gita")
+            binding.textViewDay .text = "Table Names: ${tableNames.joinToString(", ")}"
 
             if (av > 0) {
-                val avt = dbHelper.getRowValues("Book1", Random.nextInt(av))
+                val avt = dbHelper.getRowValues("Gita", Random.nextInt(av))
                 if (avt != null) {
                     val formattedText = StringBuilder()
                     for (value in avt) {
                         formattedText.append(value.toString()).append("\n")
                     }
+
+                    binding.bannerVerse.text=formattedText
 
 
                 }
@@ -701,11 +656,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
 
-
-
     }
-
-
 
 
     private fun recreateActivity() {
@@ -715,6 +666,4 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         startActivity(intent) // Start the activity again
     }
 
-
 }
-

@@ -52,6 +52,7 @@ import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 
 
 import java.io.File
@@ -87,7 +88,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private lateinit var fileDownloader: FirebaseFileDownloader
-    private lateinit var dbHelper: dbHelper
     private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
 
     private var storagePaths: MutableList<String> = mutableListOf()
@@ -98,6 +98,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         private const val REQUEST_WRITE_STORAGE = 1
     }
 
+    var G1 = ""
+    var G2 = ""
+
+    private lateinit var fileExistenceLiveData: LiveData<Boolean>
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -133,6 +137,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
         fileDownloader = FirebaseFileDownloader(this)
+
         val factory = BhagwatGitaViewModel.factory(fileDownloader)
         bhagwatgitaviewmodel =
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
@@ -162,9 +167,14 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
 
-            binding.textViewDay.text = it.toString()
+            if (it >=100){
+
+                binding.HomeBoard.visibility=View.VISIBLE
+            }
 
         })
+
+        observeFileExistence()
 
 
 
@@ -253,6 +263,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 switchFabColor(binding.floatingActionButton)
 
             }
+
         }
 
 
@@ -274,7 +285,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding.HomeBoard.setOnClickListener {
             val i = Intent(this, BoardDetailActivity::class.java)
-            //i.putExtra("verseNumber",randomverse)
+            i.putExtra("g1",G1)
+            i.putExtra("g2",G2)
 
             startActivity(i)
             stopAudio()
@@ -545,9 +557,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         mediaPlayer.reset()
         // Reset the media player before preparing a new audio source // Release resources after stopping playback
-        binding.fab.post {
-            binding.fab.visibility = View.VISIBLE
-        }
 
 
     }
@@ -567,6 +576,11 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 mediaPlayer.start()
             }
 
+            mediaPlayer.setOnCompletionListener {
+                Toast.makeText(this, "audio completed", Toast.LENGTH_SHORT).show()
+                isFabClicked = !isFabClicked
+            }
+
         } catch (e: Exception) {
             // Handle error (e.g., show a Toast message)
             e.printStackTrace()
@@ -583,31 +597,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_WRITE_STORAGE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                // Permission granted, proceed with download
-                startFileDownloads()
-                Toast.makeText(
-                    this,
-                    "downloading",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                // Permission denied, inform the user
-                Toast.makeText(
-                    this,
-                    "Write permission is required to download files.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
 
     private fun downloadFile(storagePath: String, action: String, localFileName: String) {
         if (::fileDownloader.isInitialized) {
@@ -629,33 +618,55 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun handleDownloadedFile(downloadedFile: File) {
-        // Handle the downloaded file here, e.g., update UI, save to database, etc.
-        Toast.makeText(this, "File downloaded: ${downloadedFile.name}", Toast.LENGTH_SHORT).show()
-        // Example: Save to database using dbHelper
-        val dbFolderPath = getExternalFilesDir(null)?.absolutePath + File.separator + "test"
-        val dbFile = File(dbFolderPath, "Gita.db")
-        if (dbFile.exists()) {
-            val dbHelper = dbHelper(applicationContext, "Gita.db")
-            val tableNames = dbHelper.getTableNames()
-            val av = dbHelper.getRowCount("Gita")
-            binding.textViewDay .text = "Table Names: ${tableNames.joinToString(", ")}"
 
-            if (av > 0) {
-                val avt = dbHelper.getRowValues("Gita", Random.nextInt(av))
-                if (avt != null) {
-                    val formattedText = StringBuilder()
-                    for (value in avt) {
-                        formattedText.append(value.toString()).append("\n")
-                    }
+        readFileContent()
 
-                    binding.bannerVerse.text=formattedText
+    }
 
+    private fun observeFileExistence() {
+        fileExistenceLiveData = fileDownloader.checkFileExistence("Gita.db")
 
-                }
+        // Observe changes in file existence
+        fileExistenceLiveData.observe(this) { fileExists ->
+            if (fileExists) {
+                // File exists, proceed with reading its content
+                readFileContent()
+            } else {
+                // File does not exist, handle accordingly
             }
         }
+    }
+
+    private fun readFileContent() {
+        val dbHelper = dbHelper(applicationContext, "Gita.db")
+        val av = dbHelper.getRowCount("Gita")
+
+        if (av > 0) {
+            val avt = dbHelper.getRowValues("Gita", Random.nextInt(av))
+            if (avt != null) {
+
+                 G1 = avt[1].toString()
+                 G2 = avt[2].toString()
 
 
+                if (G1 != null){
+                    val formattedText  = G1
+                    runOnUiThread {
+                        binding.bannerVerse.text = formattedText
+                        binding.bannerVerse.invalidate()
+                    }
+
+                }else{
+
+                    binding.homeBanner.visibility=View.GONE
+                }
+
+            }
+        } else {
+            // Handle case when file exists but is empty (if applicable)
+            binding.homeBanner.visibility=View.GONE
+
+        }
     }
 
 

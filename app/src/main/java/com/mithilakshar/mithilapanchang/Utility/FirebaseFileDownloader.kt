@@ -3,6 +3,7 @@ package com.mithilakshar.mithilapanchang.Utility
 import android.content.Context
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,6 +17,10 @@ class FirebaseFileDownloader(private val context: Context) {
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
     val downloadProgressLiveData: MutableLiveData<Int> = MutableLiveData()
+
+
+
+
 
     fun retrieveURL(documentPath: String,action: String, urlFieldName: String, callback: (File?) -> Unit) {
         // Retrieve the URL from Firestore
@@ -37,6 +42,7 @@ class FirebaseFileDownloader(private val context: Context) {
                         if (localFile.exists()) {
                             if (action == "return") {
                                 // File already exists locally, return it
+                                downloadProgressLiveData.postValue(100)
                                 callback(localFile)
                             } else if (action == "delete") {
                                 // Delete the file and then download it
@@ -93,10 +99,19 @@ class FirebaseFileDownloader(private val context: Context) {
         }
     }
 
+     fun checkFileExistence(fileName: String): LiveData<Boolean> {
+        val fileExistsLiveData = MutableLiveData<Boolean>()
+        val dbFolderPath = context.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
+        val dbFile = File(dbFolderPath, fileName)
+        fileExistsLiveData.value = dbFile.exists()
+        return fileExistsLiveData
+    }
+
     private fun performAnotherTask() {
         // Placeholder for additional tasks after download completion
         Log.d(TAG, "Performing another task after download")
     }
+
 
 
 

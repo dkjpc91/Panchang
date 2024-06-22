@@ -36,9 +36,6 @@ class BoardDetailActivity : AppCompatActivity() {
             }
         })
 
-        val i = intent
-
-        var versenumber= i.getIntExtra("verseNumber", 13)
 
 
 
@@ -46,6 +43,12 @@ class BoardDetailActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
+            val i = intent
+
+            var G1= i.getStringExtra("g1")
+            var G2= i.getStringExtra("g2")
+
+        binding.sholktext.text=G1
 
 
 

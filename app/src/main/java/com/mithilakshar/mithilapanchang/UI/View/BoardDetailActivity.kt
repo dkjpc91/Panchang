@@ -1,19 +1,41 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+import android.content.Context
+import android.media.AudioManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.speech.tts.TextToSpeech
+
+import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
+import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import com.mithilakshar.mithilapanchang.databinding.ActivityBoardDetailBinding
-import kotlinx.coroutines.launch
 
-class BoardDetailActivity : AppCompatActivity() {
+import kotlinx.coroutines.launch
+import java.util.Locale
+
+
+
+class BoardDetailActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     lateinit var binding:ActivityBoardDetailBinding
+    private var textToSpeech: TextToSpeech? = null
+    var G1: String? = ""
+    var G2: String? = ""
+    private var isFabClicked = false
 
+    val handler1 = Handler(Looper.getMainLooper())
     val viewModel: BhagwatGitaViewModel by lazy {
         ViewModelProvider(this).get(BhagwatGitaViewModel::class.java)
     }
@@ -37,18 +59,44 @@ class BoardDetailActivity : AppCompatActivity() {
         })
 
 
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
 
-
-
+        textToSpeech = TextToSpeech(this, this)
 
         lifecycleScope.launch {
 
             val i = intent
 
-            var G1= i.getStringExtra("g1")
-            var G2= i.getStringExtra("g2")
+            G1= i.getStringExtra("g1")
+            G2= i.getStringExtra("g2")
 
         binding.sholktext.text=G1
+            binding.fab.setOnClickListener {
+
+                isFabClicked = !isFabClicked
+                if (isFabClicked) {
+
+
+                    binding.fab.visibility= View.GONE
+
+                    delayedTask(1000)
+                    handler1.postDelayed({ // Your code to be executed after the delay
+
+                        binding.fab.visibility= View.VISIBLE
+                        isFabClicked = !isFabClicked
+
+                    }, 2000)
+
+
+                } else {
+
+                    switchFabColor(binding.fab)
+
+                }
+
+
+            }
 
 
 
@@ -97,6 +145,59 @@ class BoardDetailActivity : AppCompatActivity() {
         // Return the translated month name
         return nmap[date]
     }
+
+            override fun onInit(status: Int) {
+
+                if (status == TextToSpeech.SUCCESS) {
+
+
+                }
+            }
+    
+
+    private fun onSpeechCompleted() {
+
+       binding. fab.backgroundTintList = ContextCompat.getColorStateList(this, R.color.fabColorSwitched)
+    }
+
+    private fun switchFabColor(fab: FloatingActionButton) {
+        if (isFabClicked) {
+            // Set the original color if it's switched
+            fab.backgroundTintList = ContextCompat.getColorStateList(this, R.color.fabColorOriginal)
+
+        } else {
+            // Set the switched color
+            fab.backgroundTintList = ContextCompat.getColorStateList(this, R.color.fabColorSwitched)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        textToSpeech!!.stop()
+        textToSpeech!!.shutdown()
+    }
+    override fun onPause() {
+        super.onPause()
+        textToSpeech!!.stop()
+        textToSpeech!!.shutdown()
+    }
+
+    private fun delayedTask(delayMillis: Int) {
+
+
+
+        // Request audio focus (optional)
+
+        handler1.postDelayed({ // Your code to be executed after the delay
+            textToSpeech!!.setLanguage(Locale.forLanguageTag("hi"))
+
+            // Speak text
+            textToSpeech!!.setPitch(1f)
+            textToSpeech!!.setSpeechRate(0.6f)
+            textToSpeech!!.speak(G2, TextToSpeech.QUEUE_FLUSH, null, null)
+        }, delayMillis.toLong())
+    }
+
 
 
 }

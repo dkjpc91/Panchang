@@ -5,9 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -20,43 +20,44 @@
         android:theme="@style/Theme.MithilaPanchang"
         tools:targetApi="31">
         <activity
+            android:name=".UI.View.AlarmActivity"
+            android:exported="false" />
+        <activity
             android:name=".UI.View.KathaDescriptionActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.MantraActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.KathaActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.HolidayActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.EclipseActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.CalendarActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.GitaActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.BoardDetailActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.HomeActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.MainActivity"
             android:exported="true"
@@ -67,7 +68,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <service
             android:name=".Notification.MyFirebaseMessagingService"
@@ -85,14 +85,13 @@
                 <action android:name="android.intent.action.ALARM" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".Utility.StopAlarmReceiver"
+        <receiver
+            android:name=".Utility.StopAlarmReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="STOP_AUDIO_ACTION" />
             </intent-filter>
         </receiver>
-
-
     </application>
 
 </manifest>

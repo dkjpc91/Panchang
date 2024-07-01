@@ -62,7 +62,6 @@ import java.util.concurrent.TimeUnit
 class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
-    private lateinit var notificationHelper: NotificationHelper
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateType = AppUpdateType.IMMEDIATE
@@ -281,18 +280,12 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         }
 
-         val scheduler = Executors.newSingleThreadScheduledExecutor()
 
-         val updateTask = Runnable {
-            // Update your text view here
-             notificationHelper = NotificationHelper(this)
-             notificationHelper.sendNotification("This is notificaion at ${System.currentTimeMillis()}")
-            binding.bannerVerse.text = "Current time: ${System.currentTimeMillis()}"
-        }
 
-        scheduler.scheduleWithFixedDelay(updateTask, 0, 1, TimeUnit.MINUTES)
 
-        // Initialize MinuteTaskReceiver with the TextView instance
+
+
+
 
 
 
@@ -306,6 +299,14 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             startActivity(i)
             stopAudio()
         }
+
+        binding.alarm.setOnClickListener {
+            val i = Intent(this, AlarmActivity::class.java)
+
+            startActivity(i)
+            stopAudio()
+        }
+
         binding.calendar.setOnClickListener {
             val i = Intent(this, CalendarActivity::class.java)
 

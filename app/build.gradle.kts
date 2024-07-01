@@ -57,6 +57,8 @@ dependencies {
     implementation ("com.google.firebase:firebase-firestore:24.9.1")
     implementation ("com.google.firebase:firebase-messaging:23.4.0")
     implementation("androidx.media3:media3-common:1.3.1")
+    implementation("androidx.activity:activity:1.9.0")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
 
     kapt ("androidx.room:room-compiler:2.6.1")
 

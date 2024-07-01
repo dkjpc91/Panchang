@@ -17,8 +17,8 @@ android {
         applicationId = "com.mithilakshar.mithilapanchang"
         minSdk = 24
         targetSdk = 34
-        versionCode=  1
-        versionName = "1.0"
+        versionCode=  7
+        versionName = "7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -56,6 +56,7 @@ dependencies {
 
     implementation ("com.google.firebase:firebase-firestore:24.9.1")
     implementation ("com.google.firebase:firebase-messaging:23.4.0")
+    implementation("androidx.media3:media3-common:1.3.1")
 
     kapt ("androidx.room:room-compiler:2.6.1")
 
@@ -70,7 +71,9 @@ dependencies {
 
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
 
+    implementation ("com.squareup.okio:okio:3.0.0")
 
 
     implementation("com.google.android.play:app-update:2.1.0")

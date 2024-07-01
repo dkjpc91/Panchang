@@ -1,5 +1,6 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -47,20 +48,21 @@ import java.util.Locale
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
-import android.Manifest
 import android.content.ContentValues.TAG
-import android.content.pm.PackageManager
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 
 
 import java.io.File
-
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
+
+    private lateinit var notificationHelper: NotificationHelper
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateType = AppUpdateType.IMMEDIATE
@@ -278,6 +280,19 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             textViewMonth.text = hindiMonth
 
         }
+
+         val scheduler = Executors.newSingleThreadScheduledExecutor()
+
+         val updateTask = Runnable {
+            // Update your text view here
+             notificationHelper = NotificationHelper(this)
+             notificationHelper.sendNotification("This is notificaion at ${System.currentTimeMillis()}")
+            binding.bannerVerse.text = "Current time: ${System.currentTimeMillis()}"
+        }
+
+        scheduler.scheduleWithFixedDelay(updateTask, 0, 1, TimeUnit.MINUTES)
+
+        // Initialize MinuteTaskReceiver with the TextView instance
 
 
 

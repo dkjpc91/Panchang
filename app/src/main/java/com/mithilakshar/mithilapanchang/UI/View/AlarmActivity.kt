@@ -2,37 +2,51 @@ package com.mithilakshar.mithilapanchang.UI.View
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.Adapters.RingtoneAdapter
+import com.mithilakshar.mithilapanchang.Adapters.RingtonePickerAdapter
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Room.Ringtone
+
+import com.mithilakshar.mithilapanchang.Utility.AlarmHelper
+import com.mithilakshar.mithilapanchang.Utility.MyApplication
+import com.mithilakshar.mithilapanchang.ViewModel.RingtoneViewmodel
 import com.mithilakshar.mithilapanchang.databinding.ActivityAlarmBinding
-import java.text.SimpleDateFormat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.lifecycle.Observer
 import java.util.*
 
 class AlarmActivity : AppCompatActivity() {
 
+    private lateinit var alarmHelper: AlarmHelper
+
     private lateinit var selectRingtoneButton: Button
     private lateinit var ringtoneRecyclerView: RecyclerView
     private lateinit var ringtoneAdapter: RingtoneAdapter
-    private val sharedPreferences: SharedPreferences by lazy {
-        getSharedPreferences("RingtonePrefs", MODE_PRIVATE)
+
+    private val ringtoneViewModel: RingtoneViewmodel by viewModels {
+        RingtoneViewmodel.RingtoneViewmodelFactory((application as MyApplication).repository)
     }
+    private var selectedDateTime: Calendar = Calendar.getInstance()
 
     private val ringtones = arrayOf(
         R.raw.ram,  // Replace these with actual raw resource IDs
         R.raw.ganpati
     )
 
-    private var selectedDateTime: Calendar = Calendar.getInstance()
-    private var savedRingtones: MutableList<Pair<String, String>> = mutableListOf()
+
 
     lateinit var binding: ActivityAlarmBinding
     private var alertDialog: AlertDialog? = null // Reference to AlertDialog
@@ -45,27 +59,56 @@ class AlarmActivity : AppCompatActivity() {
         selectRingtoneButton = binding.saveButton
         ringtoneRecyclerView = binding.ringtoneRecyclerView
         ringtoneRecyclerView.layoutManager = LinearLayoutManager(this)
+        ringtoneAdapter=RingtoneAdapter(mutableListOf()){
+
+            ringtoneViewModel.deleteringtone(it)
+        }
+
+        ringtoneRecyclerView.apply {
+            adapter = ringtoneAdapter
+            layoutManager = LinearLayoutManager(this@AlarmActivity)
+        }
+
+        // Observe the LiveData
+        ringtoneViewModel.allringtone.observe(this, Observer {
+        it.let {
+            ringtoneAdapter.setringtone(it)
+        }
+        })
+
+
+        alarmHelper = AlarmHelper(this)
+
+
 
         selectRingtoneButton.setOnClickListener {
             showDatePicker()
         }
 
-        loadSavedRingtones() // Load saved ringtones initially
 
-        ringtoneAdapter = RingtoneAdapter(savedRingtones) { position ->
-            deleteRingtone(position)
-        }
-        ringtoneRecyclerView.adapter = ringtoneAdapter
+
+
+
+
+
+        //loadSavedRingtones()
+
     }
 
     private fun showDatePicker() {
         val currentDate = Calendar.getInstance()
-        DatePickerDialog(this, { _, year, month, dayOfMonth ->
-            selectedDateTime.set(Calendar.YEAR, year)
-            selectedDateTime.set(Calendar.MONTH, month)
-            selectedDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            showTimePicker()
-        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH)).show()
+        DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                selectedDateTime.set(Calendar.YEAR, year)
+                selectedDateTime.set(Calendar.MONTH, month)
+                selectedDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                showTimePicker()
+            },
+            currentDate.get(Calendar.YEAR),
+            currentDate.get(Calendar.MONTH),
+            currentDate.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun showTimePicker() {
@@ -78,6 +121,8 @@ class AlarmActivity : AppCompatActivity() {
     }
 
     private fun showRingtonePicker() {
+        val ringtoneNames = ringtones.map { resources.getResourceEntryName(it) }.toTypedArray()
+
         // Dialog to collect title and message text
         val dialogView = layoutInflater.inflate(R.layout.dialog_ringtone_details, null)
         val titleEditText = dialogView.findViewById<EditText>(R.id.titleEditText)
@@ -86,60 +131,47 @@ class AlarmActivity : AppCompatActivity() {
         alertDialog = AlertDialog.Builder(this)
             .setTitle("Enter Details")
             .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton("go ") { _, _ ->
                 val title = titleEditText.text.toString()
                 val messageText = messageEditText.text.toString()
 
-                saveRingtone(title, messageText) // Save the selected time, title, and message
+
+
+                // Save the selected time, title, and message
+                val ringtonePickerView = ListView(this)
+
+                val ringtonePickerDialog = AlertDialog.Builder(this)
+                    .setTitle("Select Ringtone")
+                    .setView(ringtonePickerView)
+                    .create()
+
+                ringtonePickerDialog.show()
+
+                ringtonePickerView.adapter = RingtonePickerAdapter(this, ringtoneNames, ringtones) { selectedRingtone, selectedTitle, selectedMessage ->
+                    saveRingtone(selectedRingtone, title, messageText)
+                    //loadSavedRingtones()
+                    ringtoneAdapter.notifyDataSetChanged()
+                    alertDialog?.dismiss()
+                    ringtonePickerDialog.dismiss()// Dismiss the main AlertDialog after selecting the ringtone
+                }
+
+
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
-    private fun saveRingtone(title: String, messageText: String) {
-        val editor = sharedPreferences.edit()
-        val dateTime = selectedDateTime.timeInMillis
-        val formattedDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(selectedDateTime.time)
 
-        val ringtoneKey = "ringtone_$dateTime"
-        val ringtoneValue = "$title|$formattedDateTime"
+    private fun saveRingtone(selectedRingtone: Int, title: String, messageText: String) {
 
-        editor.putString(ringtoneKey, ringtoneValue)
-        editor.apply()
+        ringtoneViewModel.insertringtone(Ringtone(0,messageText,selectedRingtone,selectedDateTime.timeInMillis))
 
-        savedRingtones.add(title to formattedDateTime) // Add to the list to display
+        // Add to the list to display
         ringtoneAdapter.notifyDataSetChanged()
 
-        Toast.makeText(this, "Ringtone saved with selected date and time", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Ringtone saved with selected date and time", Toast.LENGTH_SHORT)
+            .show()
     }
 
-    private fun loadSavedRingtones() {
-        savedRingtones.clear()
-        val allEntries = sharedPreferences.all
-        for ((key, value) in allEntries) {
-            if (key.startsWith("ringtone_")) {
-                val dateTime = key.removePrefix("ringtone_").toLongOrNull()
-                dateTime?.let {
-                    val ringtoneData = value as String
-                    val dataParts = ringtoneData.split("|")
-                    if (dataParts.size >= 2) {
-                        val title = dataParts[0]
-                        val dateTimeString = dataParts[1]
-                        savedRingtones.add(title to dateTimeString)
-                    }
-                }
-            }
-        }
-    }
 
-    private fun deleteRingtone(position: Int) {
-        val editor = sharedPreferences.edit()
-        val dateTime = selectedDateTime.timeInMillis
-        val ringtoneKey = "ringtone_$dateTime"
-        editor.remove(ringtoneKey)
-        editor.apply()
-        savedRingtones.removeAt(position)
-        ringtoneAdapter.notifyItemRemoved(position)
-        Toast.makeText(this, "Ringtone deleted", Toast.LENGTH_SHORT).show()
-    }
 }

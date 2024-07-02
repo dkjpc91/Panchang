@@ -1,5 +1,6 @@
 package com.mithilakshar.mithilapanchang.Adapters
 
+import java.text.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,10 +8,11 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Room.Ringtone
 
 class RingtoneAdapter(
-    private val ringtones: MutableList<Pair<String, String>>,
-    private val deleteRingtone: (Int) -> Unit
+    var ringtones: MutableList<Ringtone>,
+    private val deleteRingtone: (Ringtone) -> Unit // Lambda to delete a Ringtone
 ) : RecyclerView.Adapter<RingtoneAdapter.RingtoneViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RingtoneViewHolder {
@@ -19,8 +21,7 @@ class RingtoneAdapter(
     }
 
     override fun onBindViewHolder(holder: RingtoneViewHolder, position: Int) {
-        val (title, dateTimeString) = ringtones[position]
-        holder.bind(title, dateTimeString, deleteRingtone)
+        holder.bind(ringtones[position])
     }
 
     override fun getItemCount(): Int = ringtones.size
@@ -30,12 +31,22 @@ class RingtoneAdapter(
         private val timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
         private val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
 
-        fun bind(title: String, dateTimeString: String, deleteRingtone: (Int) -> Unit) {
-            titleTextView.text = title
-            timeTextView.text = dateTimeString // Display formatted date/time
+        fun bind(ringtone: Ringtone) {
+            titleTextView.text = ringtone.message
+            // Format the date time for display
+            val formattedDateTime = ringtone.dateTimeInMillis
+            timeTextView.text = formattedDateTime.toString()
             deleteButton.setOnClickListener {
-                deleteRingtone(adapterPosition)
+                val removedPosition = adapterPosition
+                ringtones.removeAt(removedPosition)
+                notifyItemRemoved(removedPosition)
+                deleteRingtone(ringtone)  // Pass Ringtone object for deletion
             }
         }
+    }
+
+    fun setringtone(newlist: List<Ringtone>) {
+        ringtones = newlist.toMutableList()
+        notifyDataSetChanged()
     }
 }

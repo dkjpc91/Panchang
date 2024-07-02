@@ -43,14 +43,17 @@ android {
 
 dependencies {
 
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+    
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
 
-
-
-
-    implementation ("androidx.room:room-ktx:2.6.1")
     implementation("androidx.core:core-animation:1.0.0")
     implementation("androidx.compose.animation:animation-graphics-android:1.6.7")
 
@@ -60,12 +63,13 @@ dependencies {
     implementation("androidx.activity:activity:1.9.0")
     implementation("androidx.compose.material3:material3-android:1.2.1")
 
-    kapt ("androidx.room:room-compiler:2.6.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+
+
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.google.code.gson:gson:2.8.8")

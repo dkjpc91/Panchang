@@ -10,8 +10,11 @@ import android.os.Looper
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import android.animation.ObjectAnimator
+
 import com.mithilakshar.mithilapanchang.R
+
 import com.mithilakshar.mithilapanchang.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +25,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
 
         val animation = AnimationUtils.loadAnimation(this, R.anim.fade)
         animation.duration = 2500
@@ -42,4 +48,6 @@ class MainActivity : AppCompatActivity() {
             finish()
         }, 2500)
     }
+
+
 }

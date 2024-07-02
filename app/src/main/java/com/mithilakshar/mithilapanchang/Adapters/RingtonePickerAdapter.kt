@@ -19,11 +19,8 @@ class RingtonePickerAdapter(
 ) : ArrayAdapter<String>(context, 0, ringtoneNames) {
 
     private var mediaPlayer: MediaPlayer? = null
-    private var parentDialog: AlertDialog? = null // Reference to parent dialog
 
-    fun setParentDialog(dialog: AlertDialog) {
-        parentDialog = dialog
-    }
+
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
@@ -57,7 +54,7 @@ class RingtonePickerAdapter(
             ringtoneSelectedListener(ringtones[position], title, messageText)
             stopRingtone()
 
-            parentDialog?.dismiss() // Dismiss the parent AlertDialog
+
         }
 
         return view!!

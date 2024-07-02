@@ -2,7 +2,7 @@ buildscript {
 
     dependencies {
         classpath ("com.google.gms:google-services:4.4.0")
-        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0-Beta3")
+        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0")
 
         val nav_version = "2.7.7"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version")

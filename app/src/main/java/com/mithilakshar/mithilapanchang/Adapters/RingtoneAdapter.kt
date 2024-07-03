@@ -9,6 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.Room.Ringtone
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class RingtoneAdapter(
     var ringtones: MutableList<Ringtone>,
@@ -29,14 +32,13 @@ class RingtoneAdapter(
     inner class RingtoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.ringtoneTextView)
         private val timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
-        private val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
 
         fun bind(ringtone: Ringtone) {
             titleTextView.text = ringtone.message
             // Format the date time for display
-            val formattedDateTime = ringtone.dateTimeInMillis
-            timeTextView.text = formattedDateTime.toString()
-            deleteButton.setOnClickListener {
+            val formattedDateTime = convertMillisToDateTime(ringtone.dateTimeInMillis)
+            timeTextView.text = formattedDateTime
+            titleTextView.setOnClickListener {
                 val removedPosition = adapterPosition
                 ringtones.removeAt(removedPosition)
                 notifyItemRemoved(removedPosition)
@@ -48,5 +50,11 @@ class RingtoneAdapter(
     fun setringtone(newlist: List<Ringtone>) {
         ringtones = newlist.toMutableList()
         notifyDataSetChanged()
+    }
+
+    fun convertMillisToDateTime(millis: Long): String {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val date = Date(millis)
+        return dateFormat.format(date)
     }
 }

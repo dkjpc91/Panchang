@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 data class Ringtone(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val message: String,
+    val title: String,
     val selectedRingtone: Int,
     val dateTimeInMillis: Long
 )

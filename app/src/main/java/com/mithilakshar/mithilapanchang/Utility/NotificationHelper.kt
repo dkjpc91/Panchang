@@ -55,6 +55,7 @@ class NotificationHelper(private val context: Context, @DrawableRes private val 
         title: String,
         message: String,
         activity: Class<out Activity>,
+        selectedRingtone: Int,
         @DrawableRes smallIcon: Int = defaultIcon // Use default or provided icon
     ) {
         val intent = Intent(context, activity)
@@ -71,7 +72,7 @@ class NotificationHelper(private val context: Context, @DrawableRes private val 
             .into(object : CustomTarget<Bitmap>() {
 
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    val rawSoundUri = Uri.parse("android.resource://" + context.packageName + "/" + R.raw.ram)
+                    val rawSoundUri = Uri.parse("android.resource://" + context.packageName + "/" + selectedRingtone)
 
                     val builder = NotificationCompat.Builder(context, "your_channel_id")
                         .setSmallIcon(smallIcon)

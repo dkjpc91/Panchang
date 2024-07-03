@@ -2,14 +2,17 @@ package com.mithilakshar.mithilapanchang.UI.View
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+
 import android.os.Bundle
-import android.widget.Button
+
 import android.widget.EditText
 import android.widget.ListView
+
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.Adapters.RingtoneAdapter
@@ -21,18 +24,16 @@ import com.mithilakshar.mithilapanchang.Utility.AlarmHelper
 import com.mithilakshar.mithilapanchang.Utility.MyApplication
 import com.mithilakshar.mithilapanchang.ViewModel.RingtoneViewmodel
 import com.mithilakshar.mithilapanchang.databinding.ActivityAlarmBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+
 import androidx.lifecycle.Observer
 import java.util.*
+
 
 class AlarmActivity : AppCompatActivity() {
 
     private lateinit var alarmHelper: AlarmHelper
 
-    private lateinit var selectRingtoneButton: Button
+    private lateinit var selectRingtoneButton: AppCompatButton
     private lateinit var ringtoneRecyclerView: RecyclerView
     private lateinit var ringtoneAdapter: RingtoneAdapter
 
@@ -43,7 +44,26 @@ class AlarmActivity : AppCompatActivity() {
 
     private val ringtones = arrayOf(
         R.raw.ram,  // Replace these with actual raw resource IDs
-        R.raw.ganpati
+        R.raw.shyama,  // Replace these with actual raw resource IDs
+        R.raw.jai_jai_bhairab,  // Replace these with actual raw resource IDs
+        R.raw.maithili,  // Replace these with actual raw resource IDs
+        R.raw.achyutam_keshavam,
+        R.raw.adharam_madhuram,
+        R.raw.bajrang_baan,
+        R.raw.bajrang_baan_,
+        R.raw.ganpati,
+        R.raw.gayatri_mantra,
+        R.raw.hanuman_chalisa,
+        R.raw.hanuman_gyan_gun,
+        R.raw.jai_hanuman,
+        R.raw.jai_raja_raam,
+        R.raw.jai_hanuman_sant,
+        R.raw.kesari_ke_laal,
+        R.raw.prabhu_ji,
+        R.raw.ram_aayege,
+        R.raw.serawaliye,
+        R.raw.shashank_shekhar,
+        R.raw.ye_chamak,
     )
 
 
@@ -59,9 +79,15 @@ class AlarmActivity : AppCompatActivity() {
         selectRingtoneButton = binding.saveButton
         ringtoneRecyclerView = binding.ringtoneRecyclerView
         ringtoneRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        alarmHelper = AlarmHelper(this)
+
         ringtoneAdapter=RingtoneAdapter(mutableListOf()){
 
             ringtoneViewModel.deleteringtone(it)
+
+            alarmHelper.cancelAlarm(it.title,it.message,it.selectedRingtone)
+
         }
 
         ringtoneRecyclerView.apply {
@@ -73,11 +99,20 @@ class AlarmActivity : AppCompatActivity() {
         ringtoneViewModel.allringtone.observe(this, Observer {
         it.let {
             ringtoneAdapter.setringtone(it)
+
+            for (ringtone in it){
+                ringtone.dateTimeInMillis
+
+
+
+            }
+
         }
         })
 
 
-        alarmHelper = AlarmHelper(this)
+
+
 
 
 
@@ -91,7 +126,7 @@ class AlarmActivity : AppCompatActivity() {
 
 
 
-        //loadSavedRingtones()
+
 
     }
 
@@ -121,7 +156,30 @@ class AlarmActivity : AppCompatActivity() {
     }
 
     private fun showRingtonePicker() {
-        val ringtoneNames = ringtones.map { resources.getResourceEntryName(it) }.toTypedArray()
+        val ringtoneName = ringtones.map { resources.getResourceEntryName(it) }.toTypedArray()
+         val ringtoneNames = arrayOf(
+            "राम",
+             "श्यामा",
+             "जय जय भैरव",
+             "मैथिली",
+            "अच्युतम केशवम",
+            "अधरम मधुरम",
+            "बजरंग बाण",
+            "बजरंग-बाण",
+            "गणपति",
+            "गायत्री मंत्र",
+            "हनुमान चालीसा",
+            "हनुमान ज्ञान गुण",
+            "जय हनुमान",
+            "जय राजा राम",
+            "जय हनुमान संत",
+            "केसरी के लाल",
+            "प्रभु जी",
+            "राम आएंगे",
+            "सेरावालिये",
+            "शशांक शेखर",
+            "ये चमक"
+        )
 
         // Dialog to collect title and message text
         val dialogView = layoutInflater.inflate(R.layout.dialog_ringtone_details, null)
@@ -129,27 +187,31 @@ class AlarmActivity : AppCompatActivity() {
         val messageEditText = dialogView.findViewById<EditText>(R.id.messageEditText)
 
         alertDialog = AlertDialog.Builder(this)
-            .setTitle("Enter Details")
             .setView(dialogView)
-            .setPositiveButton("go ") { _, _ ->
-                val title = titleEditText.text.toString()
-                val messageText = messageEditText.text.toString()
+            .setPositiveButton("आगू बढू") { _, _ ->
+
+                val title = if (titleEditText.text.isBlank()) "अलार्म" else titleEditText.text.toString()
+                val messageText = if (messageEditText.text.isBlank()) "मिथिला पंचांग" else messageEditText.text.toString()
 
 
 
                 // Save the selected time, title, and message
                 val ringtonePickerView = ListView(this)
 
+
                 val ringtonePickerDialog = AlertDialog.Builder(this)
-                    .setTitle("Select Ringtone")
+                    .setTitle("मनपसंद टोन सेलेक्ट करू")
                     .setView(ringtonePickerView)
                     .create()
 
                 ringtonePickerDialog.show()
 
                 ringtonePickerView.adapter = RingtonePickerAdapter(this, ringtoneNames, ringtones) { selectedRingtone, selectedTitle, selectedMessage ->
-                    saveRingtone(selectedRingtone, title, messageText)
+
                     //loadSavedRingtones()
+                    Toast.makeText(this, "picker tone# $selectedRingtone", Toast.LENGTH_LONG)
+                        .show()
+                    saveRingtone(selectedRingtone, title, messageText)
                     ringtoneAdapter.notifyDataSetChanged()
                     alertDialog?.dismiss()
                     ringtonePickerDialog.dismiss()// Dismiss the main AlertDialog after selecting the ringtone
@@ -157,20 +219,26 @@ class AlarmActivity : AppCompatActivity() {
 
 
             }
-            .setNegativeButton("Cancel", null)
             .show()
+
+
     }
 
 
     private fun saveRingtone(selectedRingtone: Int, title: String, messageText: String) {
 
-        ringtoneViewModel.insertringtone(Ringtone(0,messageText,selectedRingtone,selectedDateTime.timeInMillis))
+        ringtoneViewModel.insertringtone(Ringtone(0,messageText,title,selectedRingtone,selectedDateTime.timeInMillis))
 
         // Add to the list to display
         ringtoneAdapter.notifyDataSetChanged()
-
-        Toast.makeText(this, "Ringtone saved with selected date and time", Toast.LENGTH_SHORT)
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = selectedDateTime.timeInMillis
+        }
+        Toast.makeText(this, "आहाँ के अलार्म सेट भ गेल $selectedRingtone", Toast.LENGTH_LONG)
             .show()
+        alarmHelper.setAlarm (calendar,title,messageText,selectedRingtone)
+
+
     }
 
 

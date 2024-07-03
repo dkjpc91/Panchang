@@ -8,29 +8,27 @@
     android:layout_height="match_parent"
     tools:context=".UI.View.AlarmActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="-90dp"
+        android:src="@drawable/header"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_marginTop="-130dp"
+        android:padding="27dp"
+        android:src="@drawable/splashtxt"/>
+    <TextView
 
-
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="Save"/>
-    <Button
-        android:id="@+id/ringtone"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="ringtone"/>
-    <Button
-        android:id="@+id/Closeringtone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Closeringtone"/>
+        android:text="अलार्म सूचि "
+        android:textSize="36sp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:gravity="center"
+        android:textColor="#F44336"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -39,5 +37,16 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="16dp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:text="अलार्म दर्ज करू"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:background="@drawable/button_background"/>
 
 </LinearLayout>

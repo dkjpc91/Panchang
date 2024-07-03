@@ -29,7 +29,7 @@ class RingtonePickerAdapter(
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.item_ringtone_picker, parent, false)
             viewHolder = ViewHolder()
-            viewHolder.ringtoneNameTextView = view.findViewById(R.id.ringtoneNameTextView)
+            viewHolder.ringtoneNameTextView = view.findViewById(R.id.titleTextView)
             viewHolder.playButton = view.findViewById(R.id.playButton)
             viewHolder.stopButton = view.findViewById(R.id.stopButton)
             viewHolder.saveButton = view.findViewById(R.id.saveButton)

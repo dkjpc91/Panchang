@@ -1,6 +1,7 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
 
+import android.content.ContentValues
 import androidx.lifecycle.Observer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,8 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -15,10 +18,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.mithilakshar.mithilapanchang.Adapters.holidayadapter
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
+import com.mithilakshar.mithilapanchang.Room.Updates
+import com.mithilakshar.mithilapanchang.Room.UpdatesDao
+import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 import com.mithilakshar.mithilapanchang.Utility.FileDownloaderProgress
+import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
 import com.mithilakshar.mithilapanchang.Utility.dbHelper
+import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 
 import com.mithilakshar.mithilapanchang.databinding.ActivityHolidaylistBinding
+import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -26,13 +35,14 @@ class HolidayListActivity : AppCompatActivity() {
 
     lateinit var binding:ActivityHolidaylistBinding
     private lateinit var fileExistenceLiveData: LiveData<Boolean>
-
+    private lateinit var updatesDao: UpdatesDao
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: holidayadapter
     private var holidays: MutableList<Map<String, String>> = mutableListOf()
 
+    private lateinit var fileDownloader: FirebaseFileDownloader
+    private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
 
-    private lateinit var fileDownloaderProgress: FileDownloaderProgress
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +62,14 @@ class HolidayListActivity : AppCompatActivity() {
             }
         })
 
+        fileDownloader = FirebaseFileDownloader(this)
+        updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
+
+        val factory = BhagwatGitaViewModel.factory(fileDownloader)
+        bhagwatgitaviewmodel =
+            ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
+
+
         recyclerView = binding.holidayrecycler
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = holidayadapter(this, holidays)
@@ -67,49 +85,19 @@ class HolidayListActivity : AppCompatActivity() {
         val intValue = intent.getIntExtra("intValue", 1)
 
 
-
-
-
-        fileDownloaderProgress = FileDownloaderProgress(this)
-
-
-
-
-        val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection("SQLdb")
-        val documentRef = collectionRef.document("holiday")
-        documentRef.get().addOnSuccessListener {
-            if (it != null) {
-                val fileUrl =it.getString("test") ?: ""
-                val actions = it.getString("action") ?: "delete"
-                fileDownloaderProgress.downloadFile(fileUrl, "holiday.db", actions)
-            }
-            else {
-                Log.d("Firestore", "No such document")
-            }
-        }
+        observeFileExistence(monthEng)
 
 
 
 
 
 
-        fileDownloaderProgress.getDownloadStatus().observe(this, Observer { isSuccess ->
-           //binding.monthname.text = if (isSuccess) "Download Successful" else "Download Failed"
-        })
-
-        fileDownloaderProgress.getDownloadProgress().observe(this, Observer { progress ->
 
 
-            if (progress == 100) {
-                binding.lottieAnimationView.visibility = View.GONE
-                observeFileExistence(monthEng)
-                adapter.notifyDataSetChanged()
-            } else {
-                binding.lottieAnimationView.visibility = View.VISIBLE
-            }
 
-        })
+
+
+
 
 
 
@@ -123,19 +111,7 @@ class HolidayListActivity : AppCompatActivity() {
 
 
 
-    private fun observeFileExistence(month:String) {
-        fileExistenceLiveData = checkFileExistence("holiday.db")
 
-        // Observe changes in file existence
-        fileExistenceLiveData.observe(this) { fileExists ->
-            if (fileExists) {
-                // File exists, proceed with reading its content
-                readFileContent(month)
-            } else {
-                // File does not exist, handle accordingly
-            }
-        }
-    }
 
 
     private fun readFileContent(month:String) {
@@ -146,12 +122,123 @@ class HolidayListActivity : AppCompatActivity() {
 
     }
 
+
+    private fun downloadFile(storagePath: String, action: String, localFileName: String) {
+        if (::fileDownloader.isInitialized) {
+            fileDownloader.retrieveURL(storagePath, action, localFileName) { downloadedFile ->
+                if (downloadedFile != null) {
+                    // File downloaded successfully, do something with the file if needed
+                    Log.d(ContentValues.TAG, "File downloaded successfully: $downloadedFile")
+
+                    // Notify UI or perform tasks with downloaded file
+                    handleDownloadedFile(downloadedFile)
+                } else {
+                    // Handle the case where download failed
+                    Log.d(ContentValues.TAG, "Download failed for file: $localFileName")
+                }
+            }
+        } else {
+            Log.e(ContentValues.TAG, "fileDownloader is not initialized.")
+        }
+    }
+    private fun handleDownloadedFile(downloadedFile: File) {
+
+        //readFileContent()
+
+    }
+
     fun checkFileExistence(fileName: String): LiveData<Boolean> {
         val fileExistsLiveData = MutableLiveData<Boolean>()
         val dbFolderPath = this.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
         val dbFile = File(dbFolderPath, fileName)
         fileExistsLiveData.value = dbFile.exists()
         return fileExistsLiveData
+    }
+
+    private fun observeFileExistence(month:String) {
+        fileExistenceLiveData = checkFileExistence("holiday.db")
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("SQLdb")
+        val documentRef = collectionRef.document("holiday")
+        fileExistenceLiveData.observe(this) { fileExists ->
+            if (fileExists) {
+
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "holiday.db"
+                        lifecycleScope.launch {
+                            val updates = updatesDao.getfileupdate(fileName)
+                            if (updates.get(0).uniqueString == actions) {
+                                //readFileContent()
+                                binding.lottieAnimationView .visibility=View.GONE
+                                readFileContent(month)
+
+
+                            } else {
+                                updatesDao.updateUniqueString("holiday.db", actions)
+
+                                val storagePath = "SQLdb/holiday"
+                                downloadFile(storagePath, "delete", "holiday.db")
+                                bhagwatgitaviewmodel.downloadProgressLiveData.observe(this@HolidayListActivity, {
+
+                                    if (it >=100){
+
+                                        binding.lottieAnimationView .visibility=View.GONE
+                                        readFileContent(month)
+                                    }
+
+                                })
+
+
+                            }
+                        }
+
+
+                        // File exists, proceed with reading its content
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+                // File does not exist, handle accordingly
+            } else {
+
+                val storagePath = "SQLdb/holiday"
+                downloadFile(storagePath, "delete", "holiday.db")
+                bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
+
+                    if (it >=100){
+
+                        binding.lottieAnimationView .visibility=View.GONE
+                        readFileContent(month)
+                    }
+
+                })
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val fileUrl = it.getString("test") ?: ""
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "holiday.db"
+                        lifecycleScope.launch {
+                            updatesDao.insert(Updates(0, "holiday.db", actions))
+                        }
+
+                    }
+
+
+                }
+
+            }
+        }
+
     }
 
 

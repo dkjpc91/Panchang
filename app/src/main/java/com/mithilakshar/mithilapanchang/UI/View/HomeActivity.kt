@@ -52,6 +52,10 @@ import android.content.ContentValues.TAG
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.mithilakshar.mithilapanchang.Room.Updates
+import com.mithilakshar.mithilapanchang.Room.UpdatesDao
+import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 
 
 import java.io.File
@@ -65,7 +69,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     lateinit var binding: ActivityHomeBinding
     private lateinit var appUpdateManager: AppUpdateManager
     private val updateType = AppUpdateType.IMMEDIATE
-
+    private lateinit var updatesDao: UpdatesDao
     private val firestoreRepo = FirestoreRepo()
 
     val mediaPlayer = MediaPlayer()
@@ -137,23 +141,14 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         fileDownloader = FirebaseFileDownloader(this)
 
+        observeFileExistence("January")
+
+        updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
+
         val factory = BhagwatGitaViewModel.factory(fileDownloader)
         bhagwatgitaviewmodel =
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
-        val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection("SQLdb")
-        val documentRef = collectionRef.document("Gita")
-        documentRef.get().addOnSuccessListener {
-            if (it != null) {
-                val storagePath = "SQLdb/Gita"
-                //val fileUrl =it.getString("test") ?: ""
-                val actions = it.getString("action") ?: "delete"
-                downloadFile(storagePath, actions, "Gita.db")
-            }
-            else {
-                Log.d("Firestore", "No such document")
-            }
-        }
+
 
 
 
@@ -192,7 +187,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         })
 
-        observeFileExistence()
 
 
 
@@ -623,12 +617,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-    private fun startFileDownloads(storagePaths:String, actions:String, localFileNames:String) {
-        // Start downloading files based on stored paths and filenames
-
-            downloadFile(storagePaths, actions, localFileNames)
-
-    }
 
 
     private fun downloadFile(storagePath: String, action: String, localFileName: String) {
@@ -656,21 +644,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     }
 
-    private fun observeFileExistence() {
-        fileExistenceLiveData = fileDownloader.checkFileExistence("Gita.db")
-
-        // Observe changes in file existence
-        fileExistenceLiveData.observe(this) { fileExists ->
-            if (fileExists) {
-                // File exists, proceed with reading its content
-                readFileContent()
-            } else {
-                // File does not exist, handle accordingly
-            }
-        }
-    }
 
     private fun readFileContent() {
+        binding.HomeBoard.visibility=View.VISIBLE
         val dbHelper = dbHelper(applicationContext, "Gita.db")
         val av = dbHelper.getRowCount("Gita")
 
@@ -685,6 +661,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 if (G1 != null){
                     val formattedText  = G1
                     runOnUiThread {
+
                         binding.bannerVerse.text = formattedText
                         binding.bannerVerse.invalidate()
                     }
@@ -710,4 +687,80 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         startActivity(intent) // Start the activity again
     }
 
-}
+
+    private fun observeFileExistence(month:String) {
+        fileExistenceLiveData = checkFileExistence("Gita.db")
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("SQLdb")
+        val documentRef = collectionRef.document("Gita")
+        fileExistenceLiveData.observe(this) { fileExists ->
+            if (fileExists) {
+
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "Gita.db"
+                        lifecycleScope.launch {
+                            val updates = updatesDao.getfileupdate(fileName)
+                            if (updates.get(0).uniqueString == actions) {
+                                readFileContent()
+
+
+
+                            } else {
+                                updatesDao.updateUniqueString("Gita.db", actions)
+
+                                val storagePath = "SQLdb/Gita"
+                                downloadFile(storagePath, "delete", "Gita.db")
+
+
+                            }
+                        }
+
+
+                        // File exists, proceed with reading its content
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+                // File does not exist, handle accordingly
+            } else {
+
+                val storagePath = "SQLdb/Gita"
+                downloadFile(storagePath, "delete", "Gita.db")
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val fileUrl = it.getString("test") ?: ""
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "Gita.db"
+                        lifecycleScope.launch {
+                            updatesDao.insert(Updates(0, "Gita.db", actions))
+                        }
+
+                    }
+
+
+                }
+
+            }
+        }
+
+    }
+
+    fun checkFileExistence(fileName: String): LiveData<Boolean> {
+        val fileExistsLiveData = MutableLiveData<Boolean>()
+        val dbFolderPath =
+            this.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
+        val dbFile = File(dbFolderPath, fileName)
+        fileExistsLiveData.value = dbFile.exists()
+        return fileExistsLiveData
+    }
+
+    }

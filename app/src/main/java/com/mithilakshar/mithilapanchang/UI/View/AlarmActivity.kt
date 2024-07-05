@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 
 import android.os.Bundle
+import android.view.View
 
 import android.widget.EditText
 import android.widget.ListView
@@ -26,7 +27,13 @@ import com.mithilakshar.mithilapanchang.ViewModel.RingtoneViewmodel
 import com.mithilakshar.mithilapanchang.databinding.ActivityAlarmBinding
 
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
+import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.random.Random
 
 
 class AlarmActivity : AppCompatActivity() {
@@ -36,17 +43,17 @@ class AlarmActivity : AppCompatActivity() {
     private lateinit var selectRingtoneButton: AppCompatButton
     private lateinit var ringtoneRecyclerView: RecyclerView
     private lateinit var ringtoneAdapter: RingtoneAdapter
-
+    var notificationurl: List<String> = arrayListOf()
     private val ringtoneViewModel: RingtoneViewmodel by viewModels {
         RingtoneViewmodel.RingtoneViewmodelFactory((application as MyApplication).repository)
     }
     private var selectedDateTime: Calendar = Calendar.getInstance()
 
     private val ringtones = arrayOf(
-        R.raw.ram,  // Replace these with actual raw resource IDs
-        R.raw.shyama,  // Replace these with actual raw resource IDs
-        R.raw.jai_jai_bhairab,  // Replace these with actual raw resource IDs
-        R.raw.maithili,  // Replace these with actual raw resource IDs
+        R.raw.ram,
+        R.raw.shyama,
+        R.raw.jai_jai_bhairab,
+        R.raw.maithili,
         R.raw.achyutam_keshavam,
         R.raw.adharam_madhuram,
         R.raw.bajrang_baan,
@@ -63,7 +70,7 @@ class AlarmActivity : AppCompatActivity() {
         R.raw.ram_aayege,
         R.raw.serawaliye,
         R.raw.shashank_shekhar,
-        R.raw.ye_chamak,
+        R.raw.ye_chamak
     )
 
 
@@ -82,11 +89,29 @@ class AlarmActivity : AppCompatActivity() {
 
         alarmHelper = AlarmHelper(this)
 
+        val viewModel: HomeViewModel by lazy {
+            ViewModelProvider(this).get(HomeViewModel::class.java)
+        }
+
+        lifecycleScope.launch {
+
+            notificationurl = viewModel.getappbarImagelist("appbar")
+            if (notificationurl.size != 0) {
+                val random = Random.nextInt(notificationurl.size)
+
+            }
+
+
+        }
+
+
         ringtoneAdapter=RingtoneAdapter(mutableListOf()){
 
             ringtoneViewModel.deleteringtone(it)
 
-            alarmHelper.cancelAlarm(it.title,it.message,it.selectedRingtone)
+            alarmHelper.cancelAlarm(it.title,it.message,it.selectedRingtone,notificationurl[0])
+            Toast.makeText(this, "आहाँ के अलार्म ${it.title} कैंसिल भ गेल ", Toast.LENGTH_LONG)
+                .show()
 
         }
 
@@ -100,12 +125,6 @@ class AlarmActivity : AppCompatActivity() {
         it.let {
             ringtoneAdapter.setringtone(it)
 
-            for (ringtone in it){
-                ringtone.dateTimeInMillis
-
-
-
-            }
 
         }
         })
@@ -206,9 +225,9 @@ class AlarmActivity : AppCompatActivity() {
 
                 ringtonePickerDialog.show()
 
-                ringtonePickerView.adapter = RingtonePickerAdapter(this, ringtoneNames, ringtones) { selectedRingtone, selectedTitle, selectedMessage ->
+                ringtonePickerView.adapter = RingtonePickerAdapter(this, ringtoneName, ringtones) { selectedRingtone, selectedTitle, selectedMessage ->
 
-                    //loadSavedRingtones()
+
                     Toast.makeText(this, "picker tone# $selectedRingtone", Toast.LENGTH_LONG)
                         .show()
                     saveRingtone(selectedRingtone, title, messageText)
@@ -234,9 +253,9 @@ class AlarmActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance().apply {
             timeInMillis = selectedDateTime.timeInMillis
         }
-        Toast.makeText(this, "आहाँ के अलार्म सेट भ गेल $selectedRingtone", Toast.LENGTH_LONG)
+        Toast.makeText(this, "आहाँ के अलार्म ${title} सेट भ गेल $selectedRingtone", Toast.LENGTH_LONG)
             .show()
-        alarmHelper.setAlarm (calendar,title,messageText,selectedRingtone)
+        alarmHelper.setAlarm (calendar,title,messageText,selectedRingtone,notificationurl[0])
 
 
     }

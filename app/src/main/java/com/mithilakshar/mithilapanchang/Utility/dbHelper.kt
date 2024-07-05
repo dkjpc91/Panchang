@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import java.io.File
 
 
@@ -136,6 +138,48 @@ class dbHelper(context: Context, dbName: String) {
         }
         return rowValues
     }
+
+    @SuppressLint("Range")
+    fun getHolidaysByMonth(monthName: String): List<Map<String, String>> {
+        val holidays = mutableListOf<Map<String, String>>()
+        db?.let { database ->
+            if (!database.isOpen) {
+                Log.w(TAG, "Database not open for reading holidays for month: $monthName")
+                return emptyList()
+            }
+
+            val query = "SELECT * FROM holiday WHERE month = ?"
+            val selectionArgs = arrayOf(monthName)
+
+            database.rawQuery(query, selectionArgs)?.use { cursor ->
+                while (cursor.moveToNext()) {
+                    val rowData = mutableMapOf<String, String>()
+                    val month = cursor.getString(cursor.getColumnIndex("month"))
+                    val value1 = cursor.getString(cursor.getColumnIndex("date"))
+                    val value2 = cursor.getString(cursor.getColumnIndex("name"))
+                    rowData["month"] = month
+                    rowData["date"] = value1
+                    rowData["name"] = value2
+                    holidays.add(rowData)
+                }
+            }
+        }
+
+        if (holidays.isEmpty()) {
+            // Example: Return a default value indicating no holidays found
+            val defaultHoliday = mutableMapOf<String, String>()
+            defaultHoliday["month"] = monthName
+            defaultHoliday["date"] = ""
+            defaultHoliday["name"] = "जल्द अपडेट उपलब्ध हैत मिथिला पंचांग स जुरल रहू |"
+            holidays.add(defaultHoliday)
+        }
+
+        return holidays
+    }
+
+
+
+
 
 
 }

@@ -6,20 +6,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.Models.holidaydatamodel
 import com.mithilakshar.mithilapanchang.databinding.HolidayitemBinding
 import com.squareup.picasso.Picasso
+import android.content.Context
 
-
-class holidayadapter(var datalist: ArrayList<holidaydatamodel>) :  RecyclerView.Adapter<holidayadapter.holidayviewholder>() {
+class holidayadapter(private val context: Context, private val holidays: List<Map<String, String>>) :  RecyclerView.Adapter<holidayadapter.holidayviewholder>() {
 
     class holidayviewholder(val binding:HolidayitemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: holidaydatamodel){
+        fun bind(model: Map<String, String>){
             binding.apply {
 
-                holidayDesc.text=model.holidayDesc
-                holidayName.text=model.holidayName
-                Picasso .get()
+                holidayDesc.text=model.get("date")
+                holidayName.text=model.get("name")
+               /* Picasso .get()
                     .load(model.imageUrl)  // Replace with your image URL
-                    .into(binding.holidayImage)
+                    .into(binding.holidayImage)*/
 
             }
 
@@ -33,11 +33,11 @@ class holidayadapter(var datalist: ArrayList<holidaydatamodel>) :  RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        return datalist.size
+        return holidays.size
     }
 
     override fun onBindViewHolder(holder: holidayviewholder, position: Int) {
-        val currentdata=datalist.get(position)
+        val currentdata=holidays.get(position)
 
         if (currentdata != null) {
             holder.bind(currentdata)

@@ -91,9 +91,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var fileDownloader: FirebaseFileDownloader
     private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
 
-    private var storagePaths: MutableList<String> = mutableListOf()
-    private var localFileNames: MutableList<String> = mutableListOf()
-    private var actions: MutableList<String> = mutableListOf()
+
 
     companion object {
         private const val REQUEST_WRITE_STORAGE = 1
@@ -144,7 +142,26 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
         val db = FirebaseFirestore.getInstance()
         val collectionRef = db.collection("SQLdb")
-        collectionRef.get().addOnSuccessListener {
+        val documentRef = collectionRef.document("Gita")
+        documentRef.get().addOnSuccessListener {
+            if (it != null) {
+                val storagePath = "SQLdb/Gita"
+                //val fileUrl =it.getString("test") ?: ""
+                val actions = it.getString("action") ?: "delete"
+                downloadFile(storagePath, actions, "Gita.db")
+            }
+            else {
+                Log.d("Firestore", "No such document")
+            }
+        }
+
+
+
+
+
+
+
+    /*    collectionRef.get().addOnSuccessListener {
             if (it != null) {
                 for (document in it) {
                     val documentId = document.id
@@ -164,7 +181,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }.addOnFailureListener { exception ->
             Log.w(TAG, "Error getting documents: ", exception)
-        }
+        }*/
 
         bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
 
@@ -606,11 +623,11 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-    private fun startFileDownloads() {
+    private fun startFileDownloads(storagePaths:String, actions:String, localFileNames:String) {
         // Start downloading files based on stored paths and filenames
-        for (i in storagePaths.indices) {
-            downloadFile(storagePaths[i], actions[i], localFileNames[i])
-        }
+
+            downloadFile(storagePaths, actions, localFileNames)
+
     }
 
 

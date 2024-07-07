@@ -21,6 +21,7 @@ import com.mithilakshar.mithilapanchang.Notification.NetworkManager
 import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
+import com.mithilakshar.mithilapanchang.Utility.DownloadManager
 import com.mithilakshar.mithilapanchang.Utility.FileDownloaderProgress
 import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
 import com.mithilakshar.mithilapanchang.Utility.dbHelper
@@ -32,6 +33,8 @@ import java.io.File
 
 
 class HolidayListActivity : AppCompatActivity() {
+
+    private lateinit var downloadmanager: DownloadManager
 
     lateinit var binding:ActivityHolidaylistBinding
     private lateinit var fileExistenceLiveData: LiveData<Boolean>
@@ -70,6 +73,31 @@ class HolidayListActivity : AppCompatActivity() {
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
 
 
+        downloadmanager=DownloadManager(this)
+        downloadmanager.getDownloadStatus().observe(this, Observer { isSuccess ->
+            if (isSuccess) {
+                // Handle successful download
+               // binding.title.text = "Download completed successfully."
+            } else {
+                // Handle failed download
+               // binding.title.text = "Download completed successfully."
+            }
+        })
+
+        downloadmanager.getDownloadProgress().observe(this, Observer { progress ->
+            // Update the ProgressBar with the download progress
+
+           // binding.title.text =  "Download progress: $progress%"
+        })
+
+        // Trigger the download
+        val fileUrl = "https://sharedby.blomp.com/IMN1j3"
+        val fileName = "file.db"
+        val deleteOrReturn = "delete" // or "return" based on your requirement
+
+        //downloadmanager.downloadFile(fileUrl, fileName, deleteOrReturn)
+
+
         recyclerView = binding.holidayrecycler
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = holidayadapter(this, holidays)
@@ -101,7 +129,7 @@ class HolidayListActivity : AppCompatActivity() {
 
 
 
-        binding.monthname.text="$month"+"त्यौहार"
+        binding.title.text="हिन्दू त्योहार - "+"$month"+"2024"
 
 
 

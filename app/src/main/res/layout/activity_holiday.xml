@@ -21,16 +21,39 @@
         android:padding="27dp"
         android:src="@drawable/splashtxt"/>
 
-    <TextView
-
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="त्यौहार"
-        android:textSize="36sp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:gravity="center"
-        android:textColor="#F44336"/>
+        android:layout_margin="8dp"
+        android:elevation="10dp"
+        app:cardCornerRadius="18dp">
+
+        <LinearLayout
+            android:background="@drawable/header_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="वार्षिक कैलेंडर"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:padding="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+
+                android:textColor="#000000"/>
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieAnimationView"
@@ -75,18 +98,21 @@
                 app:cardCornerRadius="60dp">
 
                 <LinearLayout
+                    android:background="#E8F1F0"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
+                        android:background="#E8F1F0"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:scaleType="centerInside"
+                        android:src="@drawable/jan" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -104,6 +130,7 @@
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
                 android:id="@+id/feb"
+
                 android:layout_width="0dp"
                 android:layout_height="180dp"
                 android:layout_columnWeight="1"
@@ -112,18 +139,21 @@
                 app:cardCornerRadius="60dp">
 
                 <LinearLayout
+
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
+
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:scaleType="centerInside"
+                        android:src="@drawable/febr" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -158,9 +188,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/mar" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -195,9 +225,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/apr" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -232,9 +262,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/may" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -269,9 +299,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/june" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -306,9 +336,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/july" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -343,9 +373,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/aug" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -380,9 +410,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/sep" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -417,9 +447,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/oct" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -454,9 +484,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:src="@drawable/nov" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -491,9 +521,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="5"
-                        android:background="@color/white"
+                        android:background="#E8F1F0"
                         android:padding="5dp"
-                        android:src="@drawable/calendar" />
+                        android:scaleType="centerInside"
+                        android:src="@drawable/dec" />
 
                     <TextView
                         android:layout_width="match_parent"

@@ -24,7 +24,7 @@ import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 
-
+import java.util.Calendar
 class HolidayActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityHolidayBinding
@@ -52,8 +52,8 @@ class HolidayActivity : AppCompatActivity() {
 
             }
         })
-
-
+        val currentYear = getCurrentYear()
+        binding.header.text="वार्षिक त्योहार कैलेंडर - $currentYear"
 
 
         fileDownloader = FirebaseFileDownloader(this)
@@ -226,6 +226,7 @@ class HolidayActivity : AppCompatActivity() {
                             if (updates.get(0).uniqueString == actions) {
                                 //readFileContent()
                                 binding.lottieAnimationView .visibility=View.GONE
+                                binding.loadingstatus.text= "महीना के चुनाव करू  "
 
 
 
@@ -239,6 +240,7 @@ class HolidayActivity : AppCompatActivity() {
                                     if (it >=100){
 
                                         binding.lottieAnimationView .visibility=View.GONE
+                                        binding.loadingstatus.text= "लोडिंग पूर्ण भेल महीना के चुनाव करू "
                                     }
 
                                 })
@@ -269,6 +271,7 @@ class HolidayActivity : AppCompatActivity() {
                     if (it >=100){
 
                         binding.lottieAnimationView .visibility=View.GONE
+                        binding.loadingstatus.text= "लोडिंग पूर्ण भेल महीना के चुनाव करू "
                     }
 
                 })
@@ -292,7 +295,10 @@ class HolidayActivity : AppCompatActivity() {
 
     }
 
-
+    fun getCurrentYear(): Int {
+        val calendar = Calendar.getInstance()
+        return calendar.get(Calendar.YEAR)
+    }
 
 
 }

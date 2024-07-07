@@ -157,9 +157,11 @@ class dbHelper(context: Context, dbName: String) {
                     val month = cursor.getString(cursor.getColumnIndex("month"))
                     val value1 = cursor.getString(cursor.getColumnIndex("date"))
                     val value2 = cursor.getString(cursor.getColumnIndex("name"))
+                    val value3 = cursor.getString(cursor.getColumnIndex("desc"))
                     rowData["month"] = month
                     rowData["date"] = value1
                     rowData["name"] = value2
+                    rowData["desc"] = value3
                     holidays.add(rowData)
                 }
             }
@@ -169,8 +171,8 @@ class dbHelper(context: Context, dbName: String) {
             // Example: Return a default value indicating no holidays found
             val defaultHoliday = mutableMapOf<String, String>()
             defaultHoliday["month"] = monthName
-            defaultHoliday["date"] = ""
-            defaultHoliday["name"] = "जल्द अपडेट उपलब्ध हैत मिथिला पंचांग स जुरल रहू |"
+            defaultHoliday["date"] = "वर्तमान मास आ अगिला मास के चुनाव करू।"
+            defaultHoliday["name"] = "ई महीना के जल्द अपडेट उपलब्ध हैत। मिथिला पंचांग स जुरल रहू |"
             holidays.add(defaultHoliday)
         }
 

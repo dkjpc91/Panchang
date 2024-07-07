@@ -15,9 +15,10 @@ class holidayadapter(private val context: Context, private val holidays: List<Ma
         fun bind(model: Map<String, String>){
             binding.apply {
 
-                holidayDesc.text=model.get("date")
-                holidayName.text=model.get("name")
-               /* Picasso .get()
+                holidayDesc.text=model.get("name")
+                holidayName.text=model.get("date")
+                holidaydetails.text=model.get("desc")
+             /*  Picasso .get()
                     .load(model.imageUrl)  // Replace with your image URL
                     .into(binding.holidayImage)*/
 

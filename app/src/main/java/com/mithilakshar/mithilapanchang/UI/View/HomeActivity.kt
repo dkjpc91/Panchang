@@ -709,7 +709,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
                             } else {
-                                updatesDao.updateUniqueString("Gita.db", actions)
+
+                                val gitaUpdate = updatesDao.findById(4)
+                                gitaUpdate.let {
+                                    it.uniqueString = actions
+                                    updatesDao.update(it)
+                                }
+
 
                                 val storagePath = "SQLdb/Gita"
                                 downloadFile(storagePath, "delete", "Gita.db")
@@ -741,7 +747,12 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         val actions = it.getString("action") ?: "delete"
                         val fileName = "Gita.db"
                         lifecycleScope.launch {
-                            updatesDao.insert(Updates(0, "Gita.db", actions))
+                            val gitaUpdate = updatesDao.findById(4)
+                            gitaUpdate.let {
+                                it.uniqueString = actions
+                                updatesDao.update(it)
+                            }
+
                         }
 
                     }

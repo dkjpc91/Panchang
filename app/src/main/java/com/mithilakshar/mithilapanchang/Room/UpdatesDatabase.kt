@@ -5,6 +5,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Database(entities = [Updates::class], version = 1)
 abstract class UpdatesDatabase : RoomDatabase() {
@@ -20,10 +24,34 @@ abstract class UpdatesDatabase : RoomDatabase() {
                     context.applicationContext,
                     UpdatesDatabase::class.java,
                     "Update_database"
-                ).build()
+                ).addCallback(UpdatesDatabaseCallback(context))
+                    .build()
                 INSTANCE = instance
                 instance
             }
         }
+    }
+    private class UpdatesDatabaseCallback(private val context: Context) : Callback() {
+        override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+            super.onCreate(db)
+            // Pre-populate the database on first creation
+            INSTANCE?.let { database ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    // Use runBlocking to call suspend function prepopulateDatabase
+                    runBlocking {
+                        database.prepopulateDatabase(database.UpdatesDao())
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun prepopulateDatabase(updatesDao: UpdatesDao) {
+        // Insert dummy data here
+        val gita = Updates(id = 4, fileName = "Gita.db", uniqueString = "Gita")
+        val holiday = Updates(id = 2, fileName = "holiday.db", uniqueString = "holiday")
+
+        updatesDao.insert(gita)
+       updatesDao.insert(holiday)
     }
 }

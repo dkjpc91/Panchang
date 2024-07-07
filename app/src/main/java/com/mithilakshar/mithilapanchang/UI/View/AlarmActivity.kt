@@ -31,6 +31,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.random.Random
@@ -101,7 +103,6 @@ class AlarmActivity : AppCompatActivity() {
 
             }
 
-
         }
 
 
@@ -124,7 +125,6 @@ class AlarmActivity : AppCompatActivity() {
         ringtoneViewModel.allringtone.observe(this, Observer {
         it.let {
             ringtoneAdapter.setringtone(it)
-
 
         }
         })

@@ -11,6 +11,6 @@ class MyApplication: Application() {
 
     private val applicationScope = CoroutineScope(SupervisorJob())
 
-    val database by lazy { RingtoneDatabase.getDatabase(this) }
+    val database by lazy { RingtoneDatabase.getDatabase(this,applicationScope) }
     val repository by lazy { RingtoneRepository(database.ringtonedao()) }
 }

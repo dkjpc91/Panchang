@@ -205,7 +205,12 @@ class HolidayListActivity : AppCompatActivity() {
 
 
                             } else {
-                                updatesDao.updateUniqueString("holiday.db", actions)
+                                val holidayupdate = updatesDao.findById(2)
+                                holidayupdate.let {
+                                    it.uniqueString = actions
+                                    updatesDao.update(it)
+                                }
+
 
                                 val storagePath = "SQLdb/holiday"
                                 downloadFile(storagePath, "delete", "holiday.db")
@@ -256,7 +261,12 @@ class HolidayListActivity : AppCompatActivity() {
                         val actions = it.getString("action") ?: "delete"
                         val fileName = "holiday.db"
                         lifecycleScope.launch {
-                            updatesDao.insert(Updates(0, "holiday.db", actions))
+                            val holidayupdate = updatesDao.findById(2)
+                            holidayupdate.let {
+                                it.uniqueString = actions
+                                updatesDao.update(it)
+                            }
+
                         }
 
                     }

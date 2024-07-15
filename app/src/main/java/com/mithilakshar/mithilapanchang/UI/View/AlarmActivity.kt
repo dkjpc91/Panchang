@@ -4,7 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 
 import android.os.Bundle
-import android.view.View
+
 
 import android.widget.EditText
 import android.widget.ListView
@@ -29,13 +29,28 @@ import com.mithilakshar.mithilapanchang.databinding.ActivityAlarmBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
+
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.random.Random
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+
+import android.os.Build
+
+
+import android.app.Activity
+import android.app.AlarmManager
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.annotation.RequiresApi
+
+
+import androidx.core.app.ActivityCompat
 
 
 class AlarmActivity : AppCompatActivity() {
@@ -75,15 +90,19 @@ class AlarmActivity : AppCompatActivity() {
         R.raw.ye_chamak
     )
 
-
+    private val REQUEST_EXACT_ALARM_PERMISSION_CODE = 100
 
     lateinit var binding: ActivityAlarmBinding
     private var alertDialog: AlertDialog? = null // Reference to AlertDialog
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlarmBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Check if the permission is already granted
+
+
 
         selectRingtoneButton = binding.saveButton
         ringtoneRecyclerView = binding.ringtoneRecyclerView
@@ -136,7 +155,15 @@ class AlarmActivity : AppCompatActivity() {
 
 
         selectRingtoneButton.setOnClickListener {
-            showDatePicker()
+
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !alarmManager.canScheduleExactAlarms()) {
+                // Permission might not be granted, handle accordingly
+                requestExactAlarmPermission()
+            } else {
+                showDatePicker()
+            }
+
         }
 
 
@@ -225,7 +252,7 @@ class AlarmActivity : AppCompatActivity() {
 
                 ringtonePickerDialog.show()
 
-                ringtonePickerView.adapter = RingtonePickerAdapter(this, ringtoneName, ringtones) { selectedRingtone, selectedTitle, selectedMessage ->
+                ringtonePickerView.adapter = RingtonePickerAdapter(this, ringtoneNames, ringtones) { selectedRingtone, selectedTitle, selectedMessage ->
 
 
                     Toast.makeText(this, "picker tone# $selectedRingtone", Toast.LENGTH_LONG)
@@ -260,5 +287,43 @@ class AlarmActivity : AppCompatActivity() {
 
     }
 
+
+
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API level 33 or above
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.SCHEDULE_EXACT_ALARM),
+                REQUEST_EXACT_ALARM_PERMISSION_CODE
+            )
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_EXACT_ALARM_PERMISSION_CODE) {
+            val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (granted) {
+                // Permission granted, proceed with alarms
+                showDatePicker()
+            } else {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.SCHEDULE_EXACT_ALARM)) {
+                    // User has opted out of being asked again
+
+                    val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                    intent.data = Uri.parse("package:" + packageName)
+                    startActivity(intent)  // Missing semicolon
+                    Toast.makeText(this, "Permission required for exact alarms. Please grant it from App Settings.", Toast.LENGTH_LONG).show()
+
+                    } else {
+                    // User denied but can still be prompted again (might not trigger prompt)
+                    // Explain why the permission is needed (optional)
+                }
+            }
+        }
+    }
 
 }

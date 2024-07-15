@@ -5,8 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import java.io.File
 
 
@@ -116,7 +114,7 @@ class dbHelper(context: Context, dbName: String) {
     fun getRowValues(tableName: String, primaryKeyValue: Any): List<Any>? {
         var rowValues: MutableList<Any>? = null // Use MutableList instead of List
         db?.let {
-            val cursor = it.rawQuery("SELECT * FROM $tableName WHERE id = ?", arrayOf(primaryKeyValue.toString()))
+            val cursor = it.rawQuery("SELECT * FROM $tableName WHERE uid = ?", arrayOf(primaryKeyValue.toString()))
             cursor.use { c ->
                 if (c.moveToFirst()) {
                     rowValues = mutableListOf()
@@ -179,6 +177,106 @@ class dbHelper(context: Context, dbName: String) {
         return holidays
     }
 
+
+
+    @SuppressLint("Range")
+    fun getChapterNames(): List<String> {
+        val chapterNames = mutableListOf<String>()
+        db?.let { database ->
+            try {
+                if (!database.isOpen) {
+                    Log.w(TAG, "Database not open for reading chapter names")
+                    return emptyList()
+                }
+
+                val query = "SELECT DISTINCT chaptername FROM Gita"
+                database.rawQuery(query, null)?.use { cursor ->
+                    while (cursor.moveToNext()) {
+                        val columnIndex = cursor.getColumnIndexOrThrow("chaptername")
+                        val chapterName = if (!cursor.isNull(columnIndex)) {
+                            cursor.getString(columnIndex)
+                        } else {
+                            // Handle null values, e.g., replace with a default value
+                            "Unknown Chapter Name"
+                        }
+                        chapterNames.add(chapterName)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching chapter names", e)
+                e.printStackTrace()
+            }
+        } ?: Log.e(TAG, "Database is null!")
+
+        return chapterNames
+    }
+
+    @SuppressLint("Range")
+    fun getRowsByChapterName(chapterName: String): List<Map<String, Any?>> {
+        val rows = mutableListOf<Map<String, Any?>>()
+        db?.let { database ->
+            if (!database.isOpen) {
+                Log.w(TAG, "Database not open for reading rows by chapter name")
+                return emptyList()
+            }
+
+            val query = "SELECT * FROM Gita WHERE chaptername = ?"
+            val selectionArgs = arrayOf(chapterName)
+
+            database.rawQuery(query, selectionArgs)?.use { cursor ->
+                val columnNames = getColumnNames("Gita")  // Assuming getColumnNames fetches column names dynamically
+
+                while (cursor.moveToNext()) {
+                    val rowData = mutableMapOf<String, Any?>()
+                    for (columnName in columnNames) {
+                        val value = cursor.getString(cursor.getColumnIndex(columnName))
+                        rowData[columnName] = value
+                    }
+                    rows.add(rowData)
+                }
+            }
+        }
+        return rows
+    }
+
+    @SuppressLint("Range")
+    fun getRowById(uid: Int): Map<String, Any?>? {
+        var rowData: MutableMap<String, Any?>? = null
+        db?.let { database ->
+            try {
+                if (!database.isOpen) {
+                    Log.w(TAG, "Database not open for reading row by id")
+                    return null
+                }
+
+                val query = "SELECT * FROM Gita WHERE uid = ?"
+                val selectionArgs = arrayOf(uid.toString())
+
+                database.rawQuery(query, selectionArgs)?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        rowData = mutableMapOf()
+                        val columnNames = cursor.columnNames
+
+                        for (columnName in columnNames) {
+                            val value = when (cursor.getType(cursor.getColumnIndex(columnName))) {
+                                Cursor.FIELD_TYPE_NULL -> null
+                                Cursor.FIELD_TYPE_INTEGER -> cursor.getLong(cursor.getColumnIndex(columnName))
+                                Cursor.FIELD_TYPE_FLOAT -> cursor.getDouble(cursor.getColumnIndex(columnName))
+                                Cursor.FIELD_TYPE_STRING -> cursor.getString(cursor.getColumnIndex(columnName))
+                                Cursor.FIELD_TYPE_BLOB -> cursor.getBlob(cursor.getColumnIndex(columnName))
+                                else -> null
+                            }
+                            rowData!!.put(columnName, value)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error fetching row by id", e)
+            }
+        } ?: Log.e(TAG, "Database is null!")
+
+        return rowData
+    }
 
 
 

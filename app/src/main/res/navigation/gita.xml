@@ -4,43 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/gita"
     app:startDestination="@id/bhagwatGitaChapterFragment">
-
     <fragment
         android:id="@+id/bhagwatGitaChapterFragment"
         android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaChapterFragment"
         android:label="fragment_bhagwat_gita_chapter"
         tools:layout="@layout/fragment_bhagwat_gita_chapter" >
-        <action
-            android:id="@+id/action_bhagwatGitaChapterFragment_to_bhagwatGitaVersesFragment"
-            app:destination="@id/bhagwatGitaVersesFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/bhagwatGitaVersesFragment"
-        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaVersesFragment"
-        android:label="fragment_bhagwat_gita_verses"
-        tools:layout="@layout/fragment_bhagwat_gita_verses" >
-        <action
-            android:id="@+id/action_bhagwatGitaVersesFragment_to_bhagwatGitaChapterFragment"
-            app:destination="@id/bhagwatGitaChapterFragment" />
         <argument
-            android:name="chapternumber"
-            app:argType="integer"
-            android:defaultValue="13" />
+            android:name="chaptername"
+            app:argType="string" />
         <action
-            android:id="@+id/action_bhagwatGitaVersesFragment_to_bhagwatGitaVerseDetailsFragment"
-            app:destination="@id/bhagwatGitaVerseDetailsFragment" />
+            android:id="@+id/action_bhagwatGitaChapterFragment_to_bhagwatGitaVerseFragment"
+            app:destination="@id/bhagwatGitaVerseFragment" />
     </fragment>
     <fragment
-        android:id="@+id/bhagwatGitaVerseDetailsFragment"
-        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaVerseDetailsFragment"
-        android:label="fragment_bhagwat_gita_verse_details"
-        tools:layout="@layout/fragment_bhagwat_gita_verse_details" >
+        android:id="@+id/bhagwatGitaVerseFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaVerseFragment"
+        android:label="fragment_bhagwat_gita_verse"
+        tools:layout="@layout/fragment_bhagwat_gita_verse" >
+        <argument
+            android:name="chapternameq"
+            app:argType="string" />
         <action
-            android:id="@+id/action_bhagwatGitaVerseDetailsFragment_to_bhagwatGitaVersesFragment"
-            app:destination="@id/bhagwatGitaVersesFragment" />
+            android:id="@+id/action_bhagwatGitaVerseFragment_to_bhagwatGitaDetailsverseFragment"
+            app:destination="@id/bhagwatGitaDetailsverseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bhagwatGitaDetailsverseFragment"
+        android:name="com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaDetailsverseFragment"
+        android:label="fragment_bhagwat_gita_detailsverse"
+        tools:layout="@layout/fragment_bhagwat_gita_detailsverse" >
         <argument
             android:name="versenumber"
-            app:argType="integer"
-            android:defaultValue="13" />
+            app:argType="integer" />
     </fragment>
 </navigation>

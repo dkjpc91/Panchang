@@ -1,6 +1,7 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
 
+import android.content.BroadcastReceiver
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -49,6 +50,8 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.IntentFilter
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -64,6 +67,8 @@ import java.util.concurrent.TimeUnit
 
 
 class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+
+
 
 
     lateinit var binding: ActivityHomeBinding
@@ -116,7 +121,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
-
 
 
 
@@ -258,6 +262,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         textToSpeech = TextToSpeech(this, this)
 
+
         //text speak broadcast
         binding.floatingActionButton.setOnClickListener {
             isFabClicked = !isFabClicked
@@ -353,6 +358,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             stopAudio()
         }
 
+        binding.Gita.setOnClickListener {
+            val i = Intent(this, GitaChapterActivity::class.java)
+
+            startActivity(i)
+            stopAudio()
+        }
+
 
     }
 
@@ -443,6 +455,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         textToSpeech!!.stop()
         textToSpeech!!.shutdown()
         stopAudio()
+
+
 
 
     }

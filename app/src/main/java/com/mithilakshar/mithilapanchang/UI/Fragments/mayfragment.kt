@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.mithilakshar.mithilapanchang.Adapters.CalendarAdapter
+import com.mithilakshar.mithilapanchang.Utility.dbHelper
 
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
 
@@ -31,6 +32,8 @@ class mayfragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     lateinit var binding: FragmentMayfragmentBinding
+
+    private lateinit var dbHelper: dbHelper
 
     val viewmodelhome : HomeViewModel by viewModels()
 
@@ -75,9 +78,7 @@ class mayfragment : Fragment() {
 
 
 
-        loadfragmentdata(
-            fragmentindex[fragmentindexnumber].toString().lowercase(Locale.getDefault())
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+        loadfragmentdata( fragmentindex[fragmentindexnumber])
 
 
         binding.backmonth.setOnClickListener {
@@ -85,16 +86,12 @@ class mayfragment : Fragment() {
 
                 fragmentindexnumber=(fragmentindex.size-1)
                 binding.monthName.text=translateToHindi(fragmentindex[fragmentindexnumber])
-                loadfragmentdata(
-                    fragmentindex[fragmentindexnumber].toString().lowercase(Locale.getDefault())
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                loadfragmentdata(fragmentindex[fragmentindexnumber])
 
             }
             else {
                 binding.monthName.text=translateToHindi(fragmentindex[--fragmentindexnumber])
-                loadfragmentdata(
-                    fragmentindex[fragmentindexnumber].toString().lowercase(Locale.getDefault())
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                loadfragmentdata(fragmentindex[fragmentindexnumber])
             }
 
         }
@@ -105,17 +102,13 @@ class mayfragment : Fragment() {
 
                 fragmentindexnumber=0
                 binding.monthName.text=translateToHindi(fragmentindex[fragmentindexnumber])
-                loadfragmentdata(
-                    fragmentindex[fragmentindexnumber].toString().lowercase(Locale.getDefault())
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                loadfragmentdata(fragmentindex[fragmentindexnumber])
 
             }
             else{
 
                 binding.monthName.text=translateToHindi(fragmentindex[++fragmentindexnumber])
-                loadfragmentdata(
-                    fragmentindex[fragmentindexnumber].toString().lowercase(Locale.getDefault())
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+                loadfragmentdata(fragmentindex[fragmentindexnumber])
             }
 
         }
@@ -128,7 +121,11 @@ class mayfragment : Fragment() {
 
         lifecycleScope.launch {
 
-            val calendarAdapter=CalendarAdapter(viewmodelhome.getCalendarList(path),requireContext())
+            dbHelper = dbHelper(requireContext(), "calander.db")
+            val rowsForAugust = dbHelper.getRowsByMonth(path)
+
+
+            val calendarAdapter=CalendarAdapter(rowsForAugust,requireContext())
 
             val layoutManager: RecyclerView.LayoutManager =
                 GridLayoutManager(context, 7, LinearLayoutManager.HORIZONTAL, false)

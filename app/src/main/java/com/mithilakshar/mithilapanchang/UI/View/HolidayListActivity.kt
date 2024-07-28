@@ -140,8 +140,6 @@ class HolidayListActivity : AppCompatActivity() {
 
 
 
-
-
     private fun readFileContent(month:String) {
         val dbHelper = dbHelper(applicationContext, "holiday.db")
         val av = dbHelper.getHolidaysByMonth(month)

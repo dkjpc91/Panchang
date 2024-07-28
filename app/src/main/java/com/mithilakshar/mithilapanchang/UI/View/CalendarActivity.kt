@@ -1,34 +1,50 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+import android.content.ContentValues
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 
 import com.denzcoskun.imageslider.models.SlideModel
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
 
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Room.Updates
+import com.mithilakshar.mithilapanchang.Room.UpdatesDao
+import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 
 import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
 import com.mithilakshar.mithilapanchang.databinding.ActivityCalendarBinding
 import com.mithilakshar.mithilapanchang.UI.Fragments.mayfragment
+import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
+import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
+import kotlinx.coroutines.launch
+import java.io.File
 import java.time.LocalDate
 
 class CalendarActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityCalendarBinding
 
-    val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(this).get(HomeViewModel::class.java)
-    }
+    private lateinit var fileExistenceLiveData: LiveData<Boolean>
+
+    private lateinit var updatesDao: UpdatesDao
+
+    private lateinit var fileDownloader: FirebaseFileDownloader
 
 
-    var bannerImageList: ArrayList<SlideModel> = arrayListOf()
-    var bannerurls: ArrayList<String> = arrayListOf()
+    private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
+
 
 
 
@@ -52,15 +68,16 @@ class CalendarActivity : AppCompatActivity() {
 
 
 
-        //get Banner
-        viewModel.getBannerurlList("home").observe(this, {
-            for (i in it) {
-                bannerImageList.add(SlideModel(i))
-                bannerurls.add(i)
+        fileDownloader = FirebaseFileDownloader(this)
+        updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
 
-                binding.calendarimageSlider.setImageList(bannerImageList)
-            }
-        })
+        val factory = BhagwatGitaViewModel.factory(fileDownloader)
+        bhagwatgitaviewmodel =
+            ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
+
+
+        observeFileExistence("calander")
+
 
         replaceFragment(mayfragment())
 
@@ -78,7 +95,138 @@ class CalendarActivity : AppCompatActivity() {
     }
 
 
+    private fun downloadFile(storagePath: String, action: String, localFileName: String) {
+        if (::fileDownloader.isInitialized) {
+            fileDownloader.retrieveURL(storagePath, action, localFileName) { downloadedFile ->
+                if (downloadedFile != null) {
+                    // File downloaded successfully, do something with the file if needed
+                    Log.d(ContentValues.TAG, "File downloaded successfully: $downloadedFile")
+
+                    // Notify UI or perform tasks with downloaded file
+                    handleDownloadedFile(downloadedFile)
+                } else {
+                    // Handle the case where download failed
+                    Log.d(ContentValues.TAG, "Download failed for file: $localFileName")
+                }
+            }
+        } else {
+            Log.e(ContentValues.TAG, "fileDownloader is not initialized.")
+        }
+    }
+    private fun handleDownloadedFile(downloadedFile: File) {
+
+        //readFileContent()
+
+    }
+
+    fun checkFileExistence(fileName: String): LiveData<Boolean> {
+        val fileExistsLiveData = MutableLiveData<Boolean>()
+        val dbFolderPath = this.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
+        val dbFile = File(dbFolderPath, fileName)
+        fileExistsLiveData.value = dbFile.exists()
+        return fileExistsLiveData
+    }
+
+    private fun observeFileExistence(month:String) {
+        fileExistenceLiveData = checkFileExistence("calander.db")
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("SQLdb")
+        val documentRef = collectionRef.document("calander")
+        fileExistenceLiveData.observe(this) { fileExists ->
+            if (fileExists) {
+
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "calander.db"
+                        lifecycleScope.launch {
+                            val updates = updatesDao.getfileupdate(fileName)
+                            if (updates.get(0).uniqueString == actions) {
+                                //readFileContent()
+                                binding.lottieAnimationView .visibility=View.GONE
+
+
+                            } else {
+                                val holidayupdate = updatesDao.findById(3)
+                                holidayupdate.let {
+                                    it.uniqueString = actions
+                                    updatesDao.update(it)
+                                }
+
+
+                                val storagePath = "SQLdb/calander"
+                                downloadFile(storagePath, "delete", "calander.db")
+                                bhagwatgitaviewmodel.downloadProgressLiveData.observe(this@CalendarActivity, {
+
+                                    if (it >=100){
+
+                                        binding.lottieAnimationView .visibility=View.GONE
+
+                                    }
+
+                                })
+
+
+                            }
+                        }
+
+
+                        // File exists, proceed with reading its content
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+                // File does not exist, handle accordingly
+            } else {
+
+                val storagePath = "SQLdb/calander"
+                downloadFile(storagePath, "delete", "calander.db")
+                bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
+
+                    if (it >=100){
+
+                        binding.lottieAnimationView .visibility=View.GONE
+                    }
+
+                })
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val fileUrl = it.getString("test") ?: ""
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "calander.db"
+                        lifecycleScope.launch {
+
+                            val calander = Updates(id = 3, fileName = "calander.db", uniqueString = "calander")
+                            updatesDao.insert(calander)
+                            val holidayupdate = updatesDao.findById(3)
+                            holidayupdate.let {
+                                it.uniqueString = actions
+                                updatesDao.update(it)
+                            }
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+        }
+
+    }
+
+    }
 
 
 
-}
+
+

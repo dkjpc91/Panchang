@@ -50,8 +50,7 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.IntentFilter
+
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -62,8 +61,7 @@ import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 
 
 import java.io.File
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+
 
 
 class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -141,13 +139,14 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             }
         })
-
+        updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
 
         fileDownloader = FirebaseFileDownloader(this)
 
-        observeFileExistence("January")
+        observeFileExistence("Gita")
 
-        updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
+
+
 
         val factory = BhagwatGitaViewModel.factory(fileDownloader)
         bhagwatgitaviewmodel =
@@ -337,12 +336,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             stopAudio()
         }
 
-        binding.eclipse.setOnClickListener {
-            val i = Intent(this, EclipseActivity::class.java)
-
-            startActivity(i)
-            stopAudio()
-        }
 
         binding.mantra.setOnClickListener {
             val i = Intent(this, MantraActivity::class.java)
@@ -632,7 +625,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-
     private fun downloadFile(storagePath: String, action: String, localFileName: String) {
         if (::fileDownloader.isInitialized) {
             fileDownloader.retrieveURL(storagePath, action, localFileName) { downloadedFile ->
@@ -668,8 +660,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             val avt = dbHelper.getRowValues("Gita", Random.nextInt(av))
             if (avt != null) {
 
-                 G1 = avt[1].toString()
-                 G2 = avt[2].toString()
+                G1 = avt[1].toString()
+                G2 = avt[2].toString()
 
 
                 if (G1 != null){
@@ -760,7 +752,12 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         val fileUrl = it.getString("test") ?: ""
                         val actions = it.getString("action") ?: "delete"
                         val fileName = "Gita.db"
+
                         lifecycleScope.launch {
+
+                            val gita = Updates(id = 4 ,fileName = "Gita.db", uniqueString = "Gita")
+                            updatesDao.insert(gita)
+
                             val gitaUpdate = updatesDao.findById(4)
                             gitaUpdate.let {
                                 it.uniqueString = actions

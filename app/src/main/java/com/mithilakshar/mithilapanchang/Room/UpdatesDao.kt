@@ -2,12 +2,14 @@ package com.mithilakshar.mithilapanchang.Room
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 
 @Dao
 interface  UpdatesDao  {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(Updates: Updates)
     @Update
     suspend fun update(Updates: Updates)

@@ -63,7 +63,8 @@ class HolidayActivity : AppCompatActivity() {
         bhagwatgitaviewmodel =
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
 
-        observeFileExistence("january")
+        observeFileExistence("holiday")
+
 
 
 
@@ -226,8 +227,6 @@ class HolidayActivity : AppCompatActivity() {
                             if (updates.get(0).uniqueString == actions) {
                                 //readFileContent()
                                 binding.lottieAnimationView .visibility=View.GONE
-                                binding.loadingstatus.text= "महीना के चुनाव करू  "
-
 
 
                             } else {
@@ -237,6 +236,7 @@ class HolidayActivity : AppCompatActivity() {
                                     updatesDao.update(it)
                                 }
 
+
                                 val storagePath = "SQLdb/holiday"
                                 downloadFile(storagePath, "delete", "holiday.db")
                                 bhagwatgitaviewmodel.downloadProgressLiveData.observe(this@HolidayActivity, {
@@ -244,7 +244,7 @@ class HolidayActivity : AppCompatActivity() {
                                     if (it >=100){
 
                                         binding.lottieAnimationView .visibility=View.GONE
-                                        binding.loadingstatus.text= "लोडिंग पूर्ण भेल महीना के चुनाव करू "
+
                                     }
 
                                 })
@@ -275,7 +275,6 @@ class HolidayActivity : AppCompatActivity() {
                     if (it >=100){
 
                         binding.lottieAnimationView .visibility=View.GONE
-                        binding.loadingstatus.text= "लोडिंग पूर्ण भेल महीना के चुनाव करू "
                     }
 
                 })
@@ -286,6 +285,10 @@ class HolidayActivity : AppCompatActivity() {
                         val actions = it.getString("action") ?: "delete"
                         val fileName = "holiday.db"
                         lifecycleScope.launch {
+
+                            val holiday = Updates(id = 2,fileName = "holiday.db", uniqueString = "holiday")
+                            updatesDao.insert(holiday)
+
                             val holidayupdate = updatesDao.findById(2)
                             holidayupdate.let {
                                 it.uniqueString = actions
@@ -308,6 +311,5 @@ class HolidayActivity : AppCompatActivity() {
         val calendar = Calendar.getInstance()
         return calendar.get(Calendar.YEAR)
     }
-
 
 }

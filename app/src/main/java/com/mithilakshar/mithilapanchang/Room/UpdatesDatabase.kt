@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,13 +20,16 @@ abstract class UpdatesDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: UpdatesDatabase? = null
 
+
         fun getDatabase(context: Context): UpdatesDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     UpdatesDatabase::class.java,
                     "Update_database"
-                ).addCallback(UpdatesDatabaseCallback(context))
+                )
+
+                    .addCallback(UpdatesDatabaseCallback(context))
                     .build()
                 INSTANCE = instance
                 instance
@@ -32,7 +37,7 @@ abstract class UpdatesDatabase : RoomDatabase() {
         }
     }
     private class UpdatesDatabaseCallback(private val context: Context) : Callback() {
-        override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+        override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             // Pre-populate the database on first creation
             INSTANCE?.let { database ->
@@ -46,12 +51,19 @@ abstract class UpdatesDatabase : RoomDatabase() {
         }
     }
 
+
     private suspend fun prepopulateDatabase(updatesDao: UpdatesDao) {
         // Insert dummy data here
-        val gita = Updates(id = 4, fileName = "Gita.db", uniqueString = "Gita")
-        val holiday = Updates(id = 2, fileName = "holiday.db", uniqueString = "holiday")
+        val gita = Updates(id = 4 ,fileName = "Gita.db", uniqueString = "Gita")
+        val holiday = Updates(id = 2,fileName = "holiday.db", uniqueString = "holiday")
+        val mantra = Updates(id = 1, fileName = "mantra.db", uniqueString = "mantra")
+        val calander = Updates(id = 3, fileName = "calander.db", uniqueString = "calander")
+        val vrat = Updates(id = 5, fileName = "vrat.db", uniqueString = "vrat")
 
         updatesDao.insert(gita)
-       updatesDao.insert(holiday)
+
+
     }
+
+
 }

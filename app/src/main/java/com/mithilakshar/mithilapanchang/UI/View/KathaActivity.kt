@@ -1,36 +1,42 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import com.denzcoskun.imageslider.ImageSlider
-import com.denzcoskun.imageslider.constants.ScaleTypes
-import com.denzcoskun.imageslider.models.SlideModel
+
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mithilakshar.mithilapanchang.Adapters.eclipseadapter
-import com.mithilakshar.mithilapanchang.Adapters.kathaapapter
+
+
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
-import com.mithilakshar.mithilapanchang.Models.eclipsedatamodel
-import com.mithilakshar.mithilapanchang.Models.kathadatamodel
+
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
-import com.mithilakshar.mithilapanchang.R
-import com.mithilakshar.mithilapanchang.ViewModel.HomeViewModel
-import com.mithilakshar.mithilapanchang.databinding.ActivityEclipseBinding
+
+import com.mithilakshar.mithilapanchang.Room.Updates
+import com.mithilakshar.mithilapanchang.Room.UpdatesDao
+import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
+import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
+import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
+
 import com.mithilakshar.mithilapanchang.databinding.ActivityKathaBinding
 import kotlinx.coroutines.launch
+import java.io.File
 
 class KathaActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityKathaBinding
-    lateinit var dataList: List<kathadatamodel>
-    val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(this).get(HomeViewModel::class.java)
-    }
-    var bannerImageList: ArrayList<SlideModel> = arrayListOf()
-    var bannerurls: ArrayList<String> = arrayListOf()
 
+    private lateinit var fileExistenceLiveData: LiveData<Boolean>
+
+    private lateinit var updatesDao: UpdatesDao
+
+    private lateinit var fileDownloader: FirebaseFileDownloader
+    private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,26 +55,147 @@ class KathaActivity : AppCompatActivity() {
             }
         })
 
+        fileDownloader = FirebaseFileDownloader(this)
+        updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
 
-        viewModel.getBannerurlList("home").observe(this, {
-            for (i in it) {
-                bannerImageList.add(SlideModel(i))
-                bannerurls.add(i)
+        val factory = BhagwatGitaViewModel.factory(fileDownloader)
+        bhagwatgitaviewmodel =
+            ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
 
-                binding.kathaImageSlider .setImageList(bannerImageList)
+        observeFileExistence("vrat")
+
+
+
+
+
+    }
+
+    private fun downloadFile(storagePath: String, action: String, localFileName: String) {
+        if (::fileDownloader.isInitialized) {
+            fileDownloader.retrieveURL(storagePath, action, localFileName) { downloadedFile ->
+                if (downloadedFile != null) {
+                    // File downloaded successfully, do something with the file if needed
+                    Log.d(ContentValues.TAG, "File downloaded successfully: $downloadedFile")
+
+                    // Notify UI or perform tasks with downloaded file
+                    handleDownloadedFile(downloadedFile)
+                } else {
+                    // Handle the case where download failed
+                    Log.d(ContentValues.TAG, "Download failed for file: $localFileName")
+                }
             }
-        })
-
-        lifecycleScope.launch {
-
-            dataList=viewModel.getKathaList()
-
-            val kathaapapter= kathaapapter(dataList)
-
-            binding.kathaRecyclerView.adapter=kathaapapter
-
+        } else {
+            Log.e(ContentValues.TAG, "fileDownloader is not initialized.")
         }
+    }
+    private fun handleDownloadedFile(downloadedFile: File) {
 
+        //readFileContent()
+
+    }
+
+    fun checkFileExistence(fileName: String): LiveData<Boolean> {
+        val fileExistsLiveData = MutableLiveData<Boolean>()
+        val dbFolderPath = this.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
+        val dbFile = File(dbFolderPath, fileName)
+        fileExistsLiveData.value = dbFile.exists()
+        return fileExistsLiveData
+    }
+
+    private fun observeFileExistence(month:String) {
+        fileExistenceLiveData = checkFileExistence("vrat.db")
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("SQLdb")
+        val documentRef = collectionRef.document("vrat")
+        fileExistenceLiveData.observe(this) { fileExists ->
+            if (fileExists) {
+
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "vrat.db"
+                        lifecycleScope.launch {
+                            val updates = updatesDao.getfileupdate(fileName)
+                            if (updates.get(0).uniqueString == actions) {
+                                //readFileContent()
+                                binding.lottieAnimationView .visibility=View.GONE
+
+
+                            } else {
+                                val holidayupdate = updatesDao.findById(5)
+                                holidayupdate.let {
+                                    it.uniqueString = actions
+                                    updatesDao.update(it)
+                                }
+
+
+                                val storagePath = "SQLdb/vrat"
+                                downloadFile(storagePath, "delete", "vrat.db")
+                                bhagwatgitaviewmodel.downloadProgressLiveData.observe(this@KathaActivity, {
+
+                                    if (it >=100){
+
+                                        binding.lottieAnimationView .visibility=View.GONE
+
+                                    }
+
+                                })
+
+
+                            }
+                        }
+
+
+                        // File exists, proceed with reading its content
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+                // File does not exist, handle accordingly
+            } else {
+
+                val storagePath = "SQLdb/vrat"
+                downloadFile(storagePath, "delete", "vrat.db")
+                bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
+
+                    if (it >=100){
+
+                        binding.lottieAnimationView .visibility=View.GONE
+                    }
+
+                })
+
+                documentRef.get().addOnSuccessListener {
+                    if (it != null) {
+                        val fileUrl = it.getString("test") ?: ""
+                        val actions = it.getString("action") ?: "delete"
+                        val fileName = "vrat.db"
+                        lifecycleScope.launch {
+
+                            val vrat = Updates(id = 5, fileName = "vrat.db", uniqueString = "vrat")
+                            updatesDao.insert(vrat)
+                            val holidayupdate = updatesDao.findById(5)
+                            holidayupdate.let {
+                                it.uniqueString = actions
+                                updatesDao.update(it)
+                            }
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+        }
 
     }
 }

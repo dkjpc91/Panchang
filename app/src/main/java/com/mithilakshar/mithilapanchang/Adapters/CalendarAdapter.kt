@@ -15,17 +15,20 @@ import com.mithilakshar.mithilapanchang.Models.mantradatamodel
 import com.mithilakshar.mithilapanchang.databinding.CalendardayitemBinding
 import com.squareup.picasso.Picasso
 
-class CalendarAdapter(var datalist: List<calendardatamodel>,val context: Context) : RecyclerView.Adapter<CalendarAdapter.calendarviewholder>() {
+
+class CalendarAdapter (private val data: List<Map<String, String>>,private val context: Context) : RecyclerView.Adapter<CalendarAdapter.calendarviewholder>() {
 
     class calendarviewholder(val binding: CalendardayitemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: calendardatamodel,context: Context){
+        fun bind(model: Map<String, String>,context: Context){
             binding.apply {
 
 
-                calendardayText.text=model.day
-                calendardateText.text=model.date
-                calendardescText.text=model.desc
+
+                calendardateText.text=model.get("date")
+                calendardayText.text=model.get("tithi")
+                calendardescText.text=model.get("monthhindi")
+
 
 
             }
@@ -33,8 +36,8 @@ class CalendarAdapter(var datalist: List<calendardatamodel>,val context: Context
             binding.root.setOnClickListener {
 
                 val calendarDialog = calendardialog(context)
-                calendarDialog.setcalendardialogtext("${model.date}")
-                calendarDialog.setcalendardialogtext1(" ${model.day}, ${model.desc}" )
+                calendarDialog.setcalendardialogtext("${model.get("date")}")
+                calendarDialog.setcalendardialogtext1(" ${model.get("day")}, ${model.get("day")}" )
                 calendarDialog.show()
             }
 
@@ -54,7 +57,7 @@ class CalendarAdapter(var datalist: List<calendardatamodel>,val context: Context
         }
 
         override fun onBindViewHolder(holder: calendarviewholder, position: Int) {
-            val currentdata=datalist.get(position)
+            val currentdata=data.get(position)
 
             if (currentdata != null) {
                 holder.bind(currentdata,context)
@@ -68,7 +71,7 @@ class CalendarAdapter(var datalist: List<calendardatamodel>,val context: Context
         }
 
         override fun getItemCount(): Int {
-            return datalist.size
+            return data.size
         }
 
         private fun translateToHindi(currentMonth: String): String? {

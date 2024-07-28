@@ -278,6 +278,34 @@ class dbHelper(context: Context, dbName: String) {
         return rowData
     }
 
+    @SuppressLint("Range")
+    fun getRowsByMonth(month: String): List<Map<String, String>> {
+        val rows = mutableListOf<Map<String, String>>()
+        db?.let { database ->
+            if (!database.isOpen) {
+                Log.w(TAG, "Database not open for reading rows by month: $month")
+                return emptyList()
+            }
+
+            val query = "SELECT * FROM calander WHERE month = ?"
+            val selectionArgs = arrayOf(month)
+
+            database.rawQuery(query, selectionArgs)?.use { cursor ->
+                val columnNames = cursor.columnNames
+
+                while (cursor.moveToNext()) {
+                    val rowData = mutableMapOf<String, String>()
+                    for (columnName in columnNames) {
+                        val value = cursor.getString(cursor.getColumnIndex(columnName)) ?: ""
+                        rowData[columnName] = value
+                    }
+                    rows.add(rowData)
+                }
+            }
+        } ?: Log.e(TAG, "Database is null!")
+
+        return rows
+    }
 
 
 

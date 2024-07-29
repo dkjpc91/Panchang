@@ -1,0 +1,35 @@
+package com.mithilakshar.mithilapanchang.Utility
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
+import android.view.View
+import androidx.core.content.FileProvider
+class ViewShareUtil {
+
+    companion object {
+        fun viewToBitmap(view: View): Bitmap {
+            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            view.draw(canvas)
+            return bitmap
+        }
+
+        fun shareViewAsImageDirectly(view: View, context: Context) {
+            val bitmap = viewToBitmap(view)
+            val contentUri = Uri.parse("content://${context.packageName}.bitmapprovider")
+            BitmapContentProvider.setBitmap(contentUri, bitmap)
+
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/png"
+                val shareText = "मिमिथिला पंचांग ऐप: \n\n @mithilakshar13"
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                putExtra(Intent.EXTRA_STREAM, contentUri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            context.startActivity(Intent.createChooser(intent, "मिथिला पंचांग ऐप"))
+        }
+    }
+}

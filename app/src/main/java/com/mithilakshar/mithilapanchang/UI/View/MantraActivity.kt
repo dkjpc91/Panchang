@@ -9,8 +9,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mithilakshar.mithilapanchang.Adapters.mantraadapter
 
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
 
@@ -20,6 +22,7 @@ import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
+import com.mithilakshar.mithilapanchang.Utility.dbHelper
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 
 import com.mithilakshar.mithilapanchang.databinding.ActivityMantraBinding
@@ -30,7 +33,8 @@ class MantraActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMantraBinding
 
-
+    private lateinit var dbHelper: dbHelper
+    private lateinit var mantraadapter: mantraadapter
 
     private lateinit var fileExistenceLiveData: LiveData<Boolean>
 
@@ -66,8 +70,15 @@ class MantraActivity : AppCompatActivity() {
 
         observeFileExistence("mantra")
 
+        dbHelper=dbHelper(this,"mantra.db")
 
 
+        val mantradata= dbHelper.getAllTableData("mantra")
+        mantraadapter=mantraadapter(mantradata)
+        binding.mantraRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MantraActivity)
+            adapter = mantraadapter
+        }
 
 
     }

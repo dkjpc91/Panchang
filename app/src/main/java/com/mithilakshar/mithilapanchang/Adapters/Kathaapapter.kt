@@ -15,17 +15,17 @@ import com.mithilakshar.mithilapanchang.databinding.EclipseitemBinding
 import com.mithilakshar.mithilapanchang.databinding.KathaitemBinding
 import com.squareup.picasso.Picasso
 
-class kathaapapter(var datalist: List<kathadatamodel>) : RecyclerView.Adapter<kathaapapter.kathaviewholder>() {
+class kathaapapter(var datalist: List<Map<String, Any?>>) : RecyclerView.Adapter<kathaapapter.kathaviewholder>() {
 
     class kathaviewholder(val binding:KathaitemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: kathadatamodel){
+        fun bind(model: Map<String, Any?>){
             binding.apply {
 
-                kathaName.text=model.kathaName
-                kathaStory.text=model.kathaStory
+                kathaName.text=model.get("kathaname").toString()
+                kathaStory.text=model.get("kathadescription").toString()
                 Picasso .get()
-                    .load(model.kathaUrl)  // Replace with your image URL
+                    .load(model.get("kathaimage").toString())  // Replace with your image URL
                     .into(binding.kathaImage)
 
             }
@@ -33,10 +33,10 @@ class kathaapapter(var datalist: List<kathadatamodel>) : RecyclerView.Adapter<ka
             binding.root.setOnClickListener {
 
                 val i = Intent(it.context, KathaDescriptionActivity::class.java)
-                i.putExtra("kathaName", model.kathaName)
-                i.putExtra("kathaStory", model.kathaStory)
-                i.putExtra("kathaUrl", model.kathaUrl)
-                i.putExtra("audioURL", model.audioURL)
+                i.putExtra("kathaName", model.get("kathaname").toString())
+                i.putExtra("kathaStory", model.get("kathadescription").toString())
+                i.putExtra("kathaUrl", model.get("kathaimage").toString())
+                i.putExtra("audioURL", model.get("mantraName").toString())
                 it.context.startActivity(i)
 
             }

@@ -9,8 +9,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.mithilakshar.mithilapanchang.Adapters.kathaapapter
+import com.mithilakshar.mithilapanchang.Adapters.mantraadapter
 
 
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
@@ -21,6 +24,7 @@ import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
+import com.mithilakshar.mithilapanchang.Utility.dbHelper
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 
 import com.mithilakshar.mithilapanchang.databinding.ActivityKathaBinding
@@ -30,6 +34,8 @@ import java.io.File
 class KathaActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityKathaBinding
+    private lateinit var dbHelper: dbHelper
+    private lateinit var kathaapapter: kathaapapter
 
     private lateinit var fileExistenceLiveData: LiveData<Boolean>
 
@@ -63,6 +69,16 @@ class KathaActivity : AppCompatActivity() {
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
 
         observeFileExistence("vrat")
+
+        dbHelper=dbHelper(this,"vrat.db")
+
+
+        val vratkathadata= dbHelper.getAllTableData("vrat")
+        kathaapapter=kathaapapter(vratkathadata)
+        binding.kathaRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@KathaActivity)
+            adapter = kathaapapter
+        }
 
 
 

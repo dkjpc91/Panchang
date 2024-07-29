@@ -53,11 +53,14 @@ import android.content.ContentValues.TAG
 
 
 import android.util.Log
+import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
+import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
 
 
 import java.io.File
@@ -119,6 +122,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
+
+
+
 
 
 
@@ -356,6 +362,25 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             startActivity(i)
             stopAudio()
+        }
+
+        binding.homeBanner.setOnClickListener {
+           ViewShareUtil.shareViewAsImageDirectly(binding.homeBanner,this)
+
+        }
+
+        binding.share.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                // Put the text to share in the intent
+
+                val shareText = "नीचा देल गेल लिंक पर क्लिक क मिथिला पंचांग ऐप्प डाउनलोड करू .\n https://play.google.com/store/apps/details?id=com.mithilakshar.mithilapanchang  \n\n\n @mithilakshar13"
+
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                // Set the MIME type
+                type = "text/plain"
+            }
+            // Start the activity with the intent
+            startActivity(Intent.createChooser(intent, "साझा करू : "))
         }
 
 

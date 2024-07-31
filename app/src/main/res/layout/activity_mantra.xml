@@ -37,7 +37,7 @@
                 android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="वार्षिक कैलेंडर"
+                android:text="संस्कृत मंत्र"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
@@ -45,7 +45,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
 
-                android:textColor="#000000"/>
+                android:textColor="#673AB7"/>
 
 
         </LinearLayout>

@@ -364,8 +364,14 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             stopAudio()
         }
 
-        binding.homeBanner.setOnClickListener {
-           ViewShareUtil.shareViewAsImageDirectly(binding.homeBanner,this)
+
+        binding.shareicon.setOnClickListener {
+            ViewShareUtil.shareViewAsImageDirectly(binding.homeBanner,this)
+
+        }
+
+        binding.bannerVerseshare.setOnClickListener {
+            ViewShareUtil.shareViewAsImageDirectly(binding.HomeBoard,this)
 
         }
 

@@ -23,7 +23,7 @@ class ViewShareUtil {
 
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
-                val shareText = "मिमिथिला पंचांग ऐप: \n\n @mithilakshar13"
+                val shareText = "मिमिथिला पंचांग ऐप: \n\n@mithilakshar13"
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 putExtra(Intent.EXTRA_STREAM, contentUri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.R
@@ -30,15 +31,21 @@ class RingtoneAdapter(
     override fun getItemCount(): Int = ringtones.size
 
     inner class RingtoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val titleTextView: TextView = itemView.findViewById(R.id.ringtoneTextView)
-        private val timeTextView: TextView = itemView.findViewById(R.id.timeTextView)
+        private val titleTextView: TextView = itemView.findViewById(R.id.task_title)
+        private val task_description: TextView = itemView.findViewById(R.id.task_description)
+        private val dateTextView: TextView = itemView.findViewById(R.id.task_date)
+        private val timeTextView: TextView = itemView.findViewById(R.id.task_time)
+        private val delete: ImageView = itemView.findViewById(R.id.delete)
 
         fun bind(ringtone: Ringtone) {
-            titleTextView.text = ringtone.message
+            titleTextView.text = ringtone.title
+            task_description.text = ringtone.message
             // Format the date time for display
-            val formattedDateTime = convertMillisToDateTime(ringtone.dateTimeInMillis)
-            timeTextView.text = formattedDateTime
-            titleTextView.setOnClickListener {
+            val formattedDate = convertMillisToDate(ringtone.dateTimeInMillis)
+            val formattedTime = convertMillisToTime(ringtone.dateTimeInMillis)
+            dateTextView.text ="दिनांक: " + formattedDate
+            timeTextView.text = "समय : "+ formattedTime
+            delete.setOnClickListener {
                 val removedPosition = adapterPosition
                 ringtones.removeAt(removedPosition)
                 notifyItemRemoved(removedPosition)
@@ -52,8 +59,20 @@ class RingtoneAdapter(
         notifyDataSetChanged()
     }
 
+    fun convertMillisToDate(millis: Long): String {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val date = Date(millis)
+        return dateFormat.format(date)
+    }
+
     fun convertMillisToDateTime(millis: Long): String {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        val date = Date(millis)
+        return dateFormat.format(date)
+    }
+
+    fun convertMillisToTime(millis: Long): String {
+        val dateFormat = SimpleDateFormat("HH:mm a", Locale.getDefault())
         val date = Date(millis)
         return dateFormat.format(date)
     }

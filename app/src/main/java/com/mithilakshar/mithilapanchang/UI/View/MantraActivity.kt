@@ -74,7 +74,7 @@ class MantraActivity : AppCompatActivity() {
 
 
         val mantradata= dbHelper.getAllTableData("mantra")
-        mantraadapter=mantraadapter(mantradata)
+        mantraadapter=mantraadapter(mantradata,this)
         binding.mantraRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MantraActivity)
             adapter = mantraadapter
@@ -133,6 +133,7 @@ class MantraActivity : AppCompatActivity() {
                             if (updates.get(0).uniqueString == actions) {
                                 //readFileContent()
                                 binding.lottieAnimationView .visibility=View.GONE
+                                binding.loadingstatus.visibility=View.GONE
 
 
                             } else {
@@ -150,6 +151,7 @@ class MantraActivity : AppCompatActivity() {
                                     if (it >=100){
 
                                         binding.lottieAnimationView .visibility=View.GONE
+                                        binding.loadingstatus.visibility=View.GONE
 
                                     }
 
@@ -181,6 +183,7 @@ class MantraActivity : AppCompatActivity() {
                     if (it >=100){
 
                         binding.lottieAnimationView .visibility=View.GONE
+                        binding.loadingstatus.text="लोडिंग पूर्ण भेल"
                     }
 
                 })

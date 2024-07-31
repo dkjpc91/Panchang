@@ -42,7 +42,7 @@ class GitaChapterAdapter(private val chapterNames: List<String>) : RecyclerView.
         }
 
         fun bind(chapterName: String) {
-            binding.ChapterName.text=chapterName
+            binding.chaptername.text=chapterName
         }
     }
 }

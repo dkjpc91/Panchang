@@ -27,9 +27,9 @@ class GitaVerseAdapter(private val rows: List<Map<String, Any?>>) : RecyclerView
     inner class RowViewHolder(private val binding: ItemGitachapterBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(rowData: Map<String, Any?>) {
-            binding.ChapterName.text = rowData["chaptername"].toString()
-            binding.chapterdescription.text = rowData["chapterdescription"].toString()
-            binding.chapternumber.text = rowData["uid"].toString()
+            binding.chaptername.text = rowData["chaptername"].toString()
+            binding.chapterdesc.text = rowData["chapterdescription"].toString()
+            binding.shlokaCount.text = rowData["uid"].toString()
 
             val verseids = rowData["uid"].toString()
             // Set click listener to navigate to details fragment with integer data

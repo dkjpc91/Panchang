@@ -36,8 +36,11 @@ class CalendarAdapter (private val data: List<Map<String, String>>,private val c
             binding.root.setOnClickListener {
 
                 val calendarDialog = calendardialog(context)
-                calendarDialog.setcalendardialogtext("${model.get("date")}")
-                calendarDialog.setcalendardialogtext1(" ${model.get("day")}, ${model.get("day")}" )
+                calendarDialog.setcalendardialogtext("पंचांग विवरण:" + "${model.get("date")}")
+                calendarDialog.setcalendardialogtext1("hello")
+                calendarDialog.setcalendardialogtext2("hello")
+                calendarDialog.setcalendardialogtext3("hello")
+                calendarDialog.setcalendardialogtext4("hello")
                 calendarDialog.show()
             }
 

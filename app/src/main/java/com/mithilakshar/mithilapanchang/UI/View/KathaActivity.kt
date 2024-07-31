@@ -136,6 +136,7 @@ class KathaActivity : AppCompatActivity() {
                             if (updates.get(0).uniqueString == actions) {
                                 //readFileContent()
                                 binding.lottieAnimationView .visibility=View.GONE
+                                binding.loadingstatus.visibility=View.GONE
 
 
                             } else {
@@ -153,6 +154,7 @@ class KathaActivity : AppCompatActivity() {
                                     if (it >=100){
 
                                         binding.lottieAnimationView .visibility=View.GONE
+                                        binding.loadingstatus.visibility=View.GONE
 
                                     }
 
@@ -184,6 +186,7 @@ class KathaActivity : AppCompatActivity() {
                     if (it >=100){
 
                         binding.lottieAnimationView .visibility=View.GONE
+                        binding.loadingstatus.text="लोडिंग पूर्ण भेल"
                     }
 
                 })

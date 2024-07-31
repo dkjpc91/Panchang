@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
 import com.mithilakshar.mithilapanchang.Utility.dbHelper
 import com.mithilakshar.mithilapanchang.databinding.FragmentBhagwatGitaDetailsverseBinding
 import com.mithilakshar.mithilapanchang.databinding.FragmentBhagwatGitaVerseBinding
@@ -52,9 +53,14 @@ class BhagwatGitaDetailsverseFragment : Fragment() {
             binding.apply {
 
                 // Access rowData values and set them in TextViews
-                sholktext.text = "Shlok: ${it["shlok"] as? String ?: "N/A"}"
-                descsholk.text = "Maithili: ${it["maithili"] as? String ?: "N/A"}"
-                sknumber.text = "Chapter Number: ${it["Chapternumber"] as? Int ?: 0}"
+                sholktext.text = "${it["shlok"] as? String ?: "N/A"}"
+                descsholk.text = "${it["maithili"] as? String ?: "N/A"}"
+                shlokdesc.text = "${it["Chapternumber"] as? Int ?: 0}"
+            }
+
+            binding.sharegita.setOnClickListener {
+
+                ViewShareUtil.shareViewAsImageDirectly(binding.root,requireContext())
             }
 
         }

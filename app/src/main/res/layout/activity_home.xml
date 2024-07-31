@@ -28,6 +28,11 @@
             style="?attr/collapsingToolbarLayoutLargeSize"
             android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
             <ImageView
                 android:id="@+id/homeBanner"
                 android:layout_marginTop="99dp"
@@ -39,7 +44,23 @@
                 app:layout_collapseMode="parallax"
                 android:scaleType="center" />
 
-            <com.google.android.material.appbar.MaterialToolbar
+
+            <ImageView
+                android:id="@+id/shareicon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/forward"
+                android:layout_below="@id/homeBanner"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="-40dp"
+                android:layout_marginRight="10dp"
+                app:tint="@color/blue" />
+
+        </RelativeLayout>
+
+
+
+        <com.google.android.material.appbar.MaterialToolbar
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="13dp"
                 android:layout_marginLeft="15dp"
@@ -125,17 +146,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:layout_marginBottom="6dp"
-                        android:id="@+id/bannerVerse"
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:textSize="24sp"
-                        android:gravity="center"
-                        android:textColor="#F41505"
-                        android:layout_marginTop="170dp"
-                        android:padding="2dp"
-                        />
+                        android:layout_height="match_parent"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_marginBottom="6dp"
+                            android:id="@+id/bannerVerse"
+                            android:layout_width="match_parent"
+                            android:layout_height="180dp"
+                            android:textSize="24sp"
+                            android:gravity="center"
+                            android:textColor="#F41505"
+                            android:layout_marginTop="170dp"
+                            android:padding="2dp"
+                            />
+
+
+                        <ImageView
+                            android:id="@+id/bannerVerseshare"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:src="@drawable/forward"
+                            android:layout_below="@id/bannerVerse"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="-16dp"
+                            android:layout_marginRight="10dp"
+                            app:tint="@color/blue" />
+
+                    </RelativeLayout>
+
+
+
 
                 </FrameLayout>
                 <LinearLayout

@@ -44,17 +44,18 @@
                     android:layout_height="180dp"/>
 
                 <TextView
-                    android:layout_marginTop="-10dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
-
                     android:id="@+id/kathatitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/red"
+
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginRight="3dp"
                     android:gravity="center"
-                    android:textStyle="bold"
-                    android:textSize="30sp"/>
+                    android:textColor="@color/red"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
                 <ScrollView
                     android:background="@drawable/borderred"
                     android:layout_margin="5dp"

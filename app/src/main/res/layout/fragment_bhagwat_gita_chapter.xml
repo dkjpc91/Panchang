@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="#FBF5BD"
     tools:context=".UI.Fragments.BhagwatGitaChapterFragment">
 
     <ImageView
@@ -19,10 +20,27 @@
         android:layout_marginTop="-130dp"
         android:padding="27dp"
         android:src="@drawable/splashtxt"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:text="श्रीमद् भगवद्गीता"
+            android:textColor="#3F51B5"
+            android:textSize="44sp"
+            android:background="@drawable/button_background"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:padding="10dp"
         android:id="@+id/gitachapterrecyclerView"
         tools:listitem="@layout/item_gitachapter"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

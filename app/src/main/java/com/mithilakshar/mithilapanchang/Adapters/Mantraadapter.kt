@@ -20,6 +20,12 @@ import com.squareup.picasso.Picasso
 
 class mantraadapter(var datalist:  List<Map<String, Any?>>,var context: Context) : RecyclerView.Adapter<mantraadapter.mantraviewholder>() {
 
+
+    fun updateData(newData: List<Map<String, Any?>>) {
+        datalist = newData
+        notifyDataSetChanged()
+    }
+
     class mantraviewholder(val binding:MantraitemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(model: Map<String, Any?>,context: Context){
@@ -33,11 +39,11 @@ class mantraadapter(var datalist:  List<Map<String, Any?>>,var context: Context)
             }
             binding.root.setOnClickListener {
 
-                val calendardialog = Mantradialog(it.context)
-                calendardialog.setmantradialogtext(model.get("mantraName").toString())
-                calendardialog.setmantradialogtext1(model.get("mantraDesc").toString())
-                calendardialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                calendardialog.show()
+                val Mantradialog = Mantradialog(it.context)
+                Mantradialog.setmantradialogtext(model.get("mantraName").toString())
+                Mantradialog.setmantradialogtext1(model.get("mantraDesc").toString())
+                Mantradialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                Mantradialog.show()
 
             }
 

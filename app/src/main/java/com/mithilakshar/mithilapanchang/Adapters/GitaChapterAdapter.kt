@@ -3,11 +3,12 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.UI.Fragments.BhagwatGitaChapterFragmentDirections
+import com.mithilakshar.mithilapanchang.Utility.dbHelper
 import com.mithilakshar.mithilapanchang.databinding.ItemGitachapterBinding
 
 // Import your View Binding class for the item layout
 
-class GitaChapterAdapter(private val chapterNames: List<String>) : RecyclerView.Adapter<GitaChapterAdapter.ChapterViewHolder>() {
+class GitaChapterAdapter(private val chapterNames: List<dbHelper.Chapter>) : RecyclerView.Adapter<GitaChapterAdapter.ChapterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChapterViewHolder {
         val binding = ItemGitachapterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -35,14 +36,19 @@ class GitaChapterAdapter(private val chapterNames: List<String>) : RecyclerView.
 
                     // Navigate to destination fragment using Navigation Component with argument
 
-                    val action = BhagwatGitaChapterFragmentDirections.actionBhagwatGitaChapterFragmentToBhagwatGitaVerseFragment(chapterName)
+                    val action = BhagwatGitaChapterFragmentDirections.actionBhagwatGitaChapterFragmentToBhagwatGitaVerseFragment(chapterName.chapterName)
                     binding.root.findNavController().navigate(action)
                 }
             }
         }
 
-        fun bind(chapterName: String) {
-            binding.chaptername.text=chapterName
+        fun bind(chapterName: dbHelper.Chapter) {
+            binding.apply {
+                chaptername.text=chapterName.chapterName
+                shlokaCount.text=chapterName.uid.toString()
+                chapterdesc.text=chapterName.description
+
+            }
         }
     }
 }

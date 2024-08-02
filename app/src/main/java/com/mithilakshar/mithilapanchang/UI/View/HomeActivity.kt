@@ -1,6 +1,7 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
 
+import FileManager
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.media.AudioAttributes
@@ -77,6 +78,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private val updateType = AppUpdateType.IMMEDIATE
     private lateinit var updatesDao: UpdatesDao
     private val firestoreRepo = FirestoreRepo()
+    private lateinit var fileManager: FileManager
+    private lateinit var dbHelper: dbHelper
 
     val mediaPlayer = MediaPlayer()
     var currentPlaybackPosition: Int = 0
@@ -145,7 +148,24 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             }
         })
+
+        val cDate: LocalDate = LocalDate.now()
+        val currentMonthString: String = cDate.month.name // Gets the current month in uppercase (e.g., "JANUARY")
+        val currentDay: Int = cDate.dayOfMonth
+
+        dbHelper = dbHelper(this, "calander.db")
+        val rowsFormonthdate = dbHelper.getRowByMonthAndDate(currentMonthString,currentDay.toString())
+
+        speak= rowsFormonthdate?.get(key = "speak")
+
         updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
+
+        fileManager = FileManager(
+            context = this,
+            updatesDao = updatesDao,
+        )
+
+        fileManager.observeFileExistence("calander")
 
         fileDownloader = FirebaseFileDownloader(this)
 
@@ -254,16 +274,16 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         //text speak auto data.
 
-        firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2, '0'),
+   /*     firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2, '0'),
             currentDate.month.toString().lowercase(Locale.getDefault())
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }) {
 
             if (it != null) {
-                speak = it
+                //speak = it
 
             }
 
-        }
+        }*/
 
         textToSpeech = TextToSpeech(this, this)
 
@@ -677,7 +697,11 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun handleDownloadedFile(downloadedFile: File) {
 
-        readFileContent()
+
+            readFileContent()
+
+
+
 
     }
 
@@ -741,7 +765,11 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         lifecycleScope.launch {
                             val updates = updatesDao.getfileupdate(fileName)
                             if (updates.get(0).uniqueString == actions) {
-                                readFileContent()
+
+
+                                    readFileContent()
+
+
 
 
 

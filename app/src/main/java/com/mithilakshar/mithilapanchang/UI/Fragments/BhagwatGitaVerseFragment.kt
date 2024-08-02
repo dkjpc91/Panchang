@@ -51,6 +51,8 @@ class BhagwatGitaVerseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val chapterName = args.chapternameq
 
+        binding.chaptrname.text=chapterName.toString()
+
         dbHelper = dbHelper(requireContext(), "Gita.db")
         val rows = dbHelper.getRowsByChapterName(chapterName)
         val adapter = GitaVerseAdapter(rows)

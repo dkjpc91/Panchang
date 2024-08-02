@@ -177,11 +177,12 @@ class dbHelper(context: Context, dbName: String) {
         return holidays
     }
 
+    data class Chapter(val uid: String, val chapterName: String, val description: String)
 
 
     @SuppressLint("Range")
-    fun getChapterNames(): List<String> {
-        val chapterNames = mutableListOf<String>()
+    fun getChapterNames(): List<Chapter> {
+        val chapters = mutableListOf<Chapter>()
         db?.let { database ->
             try {
                 if (!database.isOpen) {
@@ -189,17 +190,32 @@ class dbHelper(context: Context, dbName: String) {
                     return emptyList()
                 }
 
-                val query = "SELECT DISTINCT chaptername FROM Gita"
+                val query = "SELECT DISTINCT uid, chaptername, chapterdescription FROM Gita"
                 database.rawQuery(query, null)?.use { cursor ->
                     while (cursor.moveToNext()) {
-                        val columnIndex = cursor.getColumnIndexOrThrow("chaptername")
-                        val chapterName = if (!cursor.isNull(columnIndex)) {
-                            cursor.getString(columnIndex)
+                        val uidIndex = cursor.getColumnIndexOrThrow("uid")
+                        val chapterNameIndex = cursor.getColumnIndexOrThrow("chaptername")
+                        val descriptionIndex = cursor.getColumnIndexOrThrow("chapterdescription")
+
+                        val uid = if (!cursor.isNull(uidIndex)) {
+                            cursor.getString(uidIndex)
                         } else {
-                            // Handle null values, e.g., replace with a default value
+                            "Unknown UID"
+                        }
+
+                        val chapterName = if (!cursor.isNull(chapterNameIndex)) {
+                            cursor.getString(chapterNameIndex)
+                        } else {
                             "Unknown Chapter Name"
                         }
-                        chapterNames.add(chapterName)
+
+                        val description = if (!cursor.isNull(descriptionIndex)) {
+                            cursor.getString(descriptionIndex)
+                        } else {
+                            "No Description Available"
+                        }
+
+                        chapters.add(Chapter(uid, chapterName, description))
                     }
                 }
             } catch (e: Exception) {
@@ -208,8 +224,9 @@ class dbHelper(context: Context, dbName: String) {
             }
         } ?: Log.e(TAG, "Database is null!")
 
-        return chapterNames
+        return chapters
     }
+
 
     @SuppressLint("Range")
     fun getRowsByChapterName(chapterName: String): List<Map<String, Any?>> {
@@ -306,6 +323,36 @@ class dbHelper(context: Context, dbName: String) {
 
         return rows
     }
+
+    @SuppressLint("Range")
+    fun getRowByMonthAndDate(month: String, date: String): Map<String, String>? {
+        db?.let { database ->
+            if (!database.isOpen) {
+                Log.w(TAG, "Database not open for reading rows by month: $month and date: $date")
+                return null
+            }
+
+            val query = "SELECT * FROM calander WHERE month = ? AND date = ?"
+            val selectionArgs = arrayOf(month, date)
+
+            database.rawQuery(query, selectionArgs)?.use { cursor ->
+                val columnNames = cursor.columnNames
+
+                if (cursor.moveToFirst()) {
+                    val rowData = mutableMapOf<String, String>()
+                    for (columnName in columnNames) {
+                        val value = cursor.getString(cursor.getColumnIndex(columnName)) ?: ""
+                        rowData[columnName] = value
+                    }
+                    return rowData
+                }
+            }
+        } ?: Log.e(TAG, "Database is null!")
+
+        return null
+    }
+
+
 
 
 

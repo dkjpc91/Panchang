@@ -42,7 +42,7 @@
                        android:layout_width="0dp"
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
-                       android:text="तिथि"
+                       android:text="तिथि :-"
                        android:textColor="@android:color/holo_orange_dark" />
 
                    <TextView
@@ -52,7 +52,7 @@
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
                        android:text="उपलब्ध नहीं"
-                       android:textColor="@android:color/darker_gray" />
+                       android:textColor="@android:color/holo_green_dark" />
                </LinearLayout>
 
                <LinearLayout
@@ -66,7 +66,7 @@
                        android:layout_width="0dp"
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
-                       android:text="दिन"
+                       android:text="दिन :-"
                        android:textColor="@android:color/holo_orange_dark" />
 
                    <TextView
@@ -75,7 +75,7 @@
                        android:layout_height="match_parent"
                        android:layout_weight="1"
                        android:text="उपलब्ध नहीं"
-                       android:textColor="@android:color/darker_gray"
+                       android:textColor="@android:color/holo_green_dark"
                        android:textSize="25sp" />
                </LinearLayout>
 
@@ -91,7 +91,7 @@
                        android:layout_width="0dp"
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
-                       android:text="नक्षत्र"
+                       android:text="नक्षत्र :-"
                        android:textColor="@android:color/holo_orange_dark" />
 
                    <TextView
@@ -101,7 +101,7 @@
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
                        android:text="उपलब्ध नहीं"
-                       android:textColor="@android:color/darker_gray" />
+                       android:textColor="@android:color/holo_green_dark"/>
                </LinearLayout>
 
                <LinearLayout
@@ -115,7 +115,7 @@
                        android:layout_width="0dp"
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
-                       android:text="त्योहार"
+                       android:text="महीना :-"
                        android:textColor="@android:color/holo_orange_dark" />
 
                    <TextView
@@ -124,7 +124,7 @@
                        android:layout_width="0dp"
                        android:layout_height="wrap_content"
                        android:layout_weight="1"
-                       android:text="कोई त्योहार नहीं"
+                       android:text=""
                        android:textColor="@android:color/holo_green_dark" />
                </LinearLayout>
            </LinearLayout>

@@ -55,12 +55,12 @@ class BhagwatGitaDetailsverseFragment : Fragment() {
                 // Access rowData values and set them in TextViews
                 sholktext.text = "${it["shlok"] as? String ?: "N/A"}"
                 descsholk.text = "${it["maithili"] as? String ?: "N/A"}"
-                shlokdesc.text = "${it["Chapternumber"] as? Int ?: 0}"
+                shlokdesc.text = "${it["vyakhya"] as? String ?:"N/A"}"
             }
 
             binding.sharegita.setOnClickListener {
 
-                ViewShareUtil.shareViewAsImageDirectly(binding.root,requireContext())
+                ViewShareUtil.shareViewAsImageDirectly(binding.sharegitascreen,requireContext())
             }
 
         }

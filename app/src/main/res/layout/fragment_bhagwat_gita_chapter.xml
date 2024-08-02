@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#FBF5BD"
+    android:background="#D6DDFD"
     tools:context=".UI.Fragments.BhagwatGitaChapterFragment">
 
     <ImageView
@@ -37,15 +37,29 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:padding="10dp"
-        android:id="@+id/gitachapterrecyclerView"
-        tools:listitem="@layout/item_gitachapter"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:cardElevation="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:id="@+id/gitachapterrecyclerView"
+            tools:listitem="@layout/item_gitachapter"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
 
 
 

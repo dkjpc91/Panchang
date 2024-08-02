@@ -38,7 +38,7 @@
                 android:id="@+id/header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="वार्षिक कैलेंडर"
+                android:text="व्रत कथा"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"

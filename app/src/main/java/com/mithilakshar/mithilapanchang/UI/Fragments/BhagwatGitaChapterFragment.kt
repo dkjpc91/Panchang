@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.Utility.dbHelper
 import com.mithilakshar.mithilapanchang.databinding.FragmentBhagwatGitaChapterBinding
 

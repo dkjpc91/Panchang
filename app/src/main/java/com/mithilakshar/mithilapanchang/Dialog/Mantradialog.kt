@@ -8,13 +8,17 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.core.widget.NestedScrollView
 import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
+import com.mithilakshar.mithilapanchang.Utility.ViewShareXUtil
 
 class Mantradialog : Dialog {
     private var mantratext: TextView? = null
     private var mantradesc: TextView? = null
     private var shareImage: ImageView? = null
+    private var shareXImage: ImageView? = null
 
 
 
@@ -26,12 +30,19 @@ class Mantradialog : Dialog {
         mantratext = findViewById(R.id.sanskrit_quote)
         mantradesc = findViewById(R.id.hindi_translation)
         shareImage = findViewById(R.id.shareicon)
+        shareXImage = findViewById(R.id.iconxshare)
 
-        val shareImageroot: CardView?  = findViewById(R.id.rootview)
+        val shareImageroot: NestedScrollView?  = findViewById(R.id.shareview)
 
         shareImage?.setOnClickListener {
             if (shareImageroot != null) {
                 sharemantraimage(shareImageroot, context)
+            }
+        }
+
+        shareXImage?.setOnClickListener {
+            if (shareImageroot != null) {
+                sharexmantraimage(shareImageroot, context)
             }
         }
 
@@ -51,8 +62,16 @@ class Mantradialog : Dialog {
         mantradesc?.text = text
     }
 
-    fun sharemantraimage(view: CardView,context: Context) {
+    fun sharemantraimage(view: NestedScrollView,context: Context) {
+
+
         ViewShareUtil.shareViewAsImageDirectly(view, context)
+    }
+
+    fun sharexmantraimage(view: NestedScrollView,context: Context) {
+
+        ViewShareXUtil.shareViewAsImageDirectly(view,context)
+
     }
 
 

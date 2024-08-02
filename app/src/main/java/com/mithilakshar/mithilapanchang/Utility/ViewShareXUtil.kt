@@ -1,40 +1,27 @@
 package com.mithilakshar.mithilapanchang.Utility
-
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.net.Uri
 import android.view.View
-import android.widget.ScrollView
 import androidx.core.content.FileProvider
-import androidx.core.widget.NestedScrollView
-
-class ViewShareUtil {
+class ViewShareXUtil {
 
     companion object {
+        private const val TWITTER_IMAGE_WIDTH = 1080
+        private const val TWITTER_IMAGE_HEIGHT = 1350
+
         fun viewToBitmap(view: View): Bitmap {
-            val width = view.width
-            var height = view.height
-
-            if (view is NestedScrollView) {
-                // Measure the total height of the ScrollView content
-                height = 0
-                for (i in 0 until view.childCount) {
-                    height += view.getChildAt(i).height
-                }
-            }
-
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-
-            // Fill the canvas with a white background
+            val originalBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(originalBitmap)
             canvas.drawColor(android.graphics.Color.WHITE)
-
-            // Draw the view onto the canvas
             view.draw(canvas)
-            return bitmap
+
+
+
+            // Create scaled bitmap to Twitter's recommended dimensions
+            return Bitmap.createScaledBitmap(originalBitmap, TWITTER_IMAGE_WIDTH, TWITTER_IMAGE_HEIGHT, true)
         }
 
         fun shareViewAsImageDirectly(view: View, context: Context) {

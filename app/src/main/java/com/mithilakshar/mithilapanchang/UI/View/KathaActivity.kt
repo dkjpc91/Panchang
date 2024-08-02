@@ -155,6 +155,7 @@ class KathaActivity : AppCompatActivity() {
 
                                         binding.lottieAnimationView .visibility=View.GONE
                                         binding.loadingstatus.visibility=View.GONE
+                                        recreate()
 
                                     }
 
@@ -187,6 +188,7 @@ class KathaActivity : AppCompatActivity() {
 
                         binding.lottieAnimationView .visibility=View.GONE
                         binding.loadingstatus.text="लोडिंग पूर्ण भेल"
+                        recreate()
                     }
 
                 })

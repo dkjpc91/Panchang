@@ -152,6 +152,9 @@ class MantraActivity : AppCompatActivity() {
 
                                         binding.lottieAnimationView .visibility=View.GONE
                                         binding.loadingstatus.visibility=View.GONE
+                                       recreate()
+
+
 
                                     }
 
@@ -184,6 +187,7 @@ class MantraActivity : AppCompatActivity() {
 
                         binding.lottieAnimationView .visibility=View.GONE
                         binding.loadingstatus.text="लोडिंग पूर्ण भेल"
+                        recreate()
                     }
 
                 })
@@ -214,4 +218,8 @@ class MantraActivity : AppCompatActivity() {
         }
 
     }
+
+
+
 }
+

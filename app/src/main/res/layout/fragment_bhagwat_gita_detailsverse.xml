@@ -19,22 +19,23 @@
         android:src="@drawable/forward"
         app:backgroundTint="#9ED2FB"  />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sharegitascreen"
         android:layout_width="match_parent"
-        android:background="#FBF5BD"
+        android:background="#D6DDFD"
         android:layout_height="match_parent">
 
         <LinearLayout
 
-            android:backgroundTint="#FBF5BD"
+
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:orientation="vertical"
 
-            android:layout_margin="10dp"
-            android:elevation="4dp"
+            android:layout_margin="04dp"
+            android:elevation="0dp"
             android:background="@drawable/gitashlokborder">
 
             <!-- Title -->
@@ -52,7 +53,7 @@
             <TextView
                 android:id="@+id/sholktext"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
 
                 android:background="@drawable/gitatextbackground"
                 android:padding="8dp"
@@ -64,7 +65,7 @@
 
             <!-- Hindi Translation -->
             <TextView
-                android:background="#FBF5BD"
+
                 android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,7 +78,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:background="#FBF5BD"
+
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
 
@@ -100,6 +101,7 @@
 
             <!-- Notes -->
             <TextView
+
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:padding="10dp"
@@ -112,6 +114,7 @@
                 android:textStyle="bold" />
 
             <TextView
+
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
 
@@ -130,12 +133,12 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
-                android:background="#FBF5BD"
+
                 android:layout_marginVertical="8dp" />
         </LinearLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 

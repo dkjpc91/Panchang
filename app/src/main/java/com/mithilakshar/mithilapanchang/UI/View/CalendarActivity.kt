@@ -164,6 +164,7 @@ class CalendarActivity : AppCompatActivity() {
 
                                         binding.lottieAnimationView .visibility=View.GONE
                                         binding.loadingstatus.visibility=View.GONE
+                                        replaceFragment(mayfragment())
 
                                     }
 
@@ -196,6 +197,7 @@ class CalendarActivity : AppCompatActivity() {
 
                         binding.lottieAnimationView .visibility=View.GONE
                         binding.loadingstatus.text="लोडिंग पूर्ण भेल"
+                        replaceFragment(mayfragment())
                     }
 
                 })

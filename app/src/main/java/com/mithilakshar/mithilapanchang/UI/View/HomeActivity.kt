@@ -2,7 +2,7 @@ package com.mithilakshar.mithilapanchang.UI.View
 
 
 import FileManager
-import android.content.BroadcastReceiver
+
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -53,9 +53,8 @@ import kotlin.time.Duration.Companion.seconds
 import android.content.ContentValues.TAG
 
 
+
 import android.util.Log
-import android.view.ViewGroup
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mithilakshar.mithilapanchang.Room.Updates
@@ -125,7 +124,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
-
 
 
 
@@ -270,6 +268,8 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         val hindiMonth = translateToHindi(currentDate.month.toString())
         val hindiDay = translateToHindiday(currentDate.dayOfWeek.toString())
         val hindidate = translateToHindidate(currentDate.dayOfMonth.toString())
+
+
 
 
         //text speak auto data.
@@ -834,6 +834,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         fileExistsLiveData.value = dbFile.exists()
         return fileExistsLiveData
     }
+
+
+
 
 }
 

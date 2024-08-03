@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.SET_ALARM" />
 
 
+
     <application
         android:name=".Utility.MyApplication"
         android:allowBackup="true"
@@ -96,14 +97,15 @@
                 <action android:name="STOP_AUDIO_ACTION" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".Utility.DateWidgetProvider"
+
+
+
+
+        <receiver android:name=".Utility.DateWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.mithilakshar.mithilapanchang.Utility.WIDGET_DATE_REFRESH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/date_widget_info" />

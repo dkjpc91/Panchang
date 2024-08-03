@@ -42,6 +42,7 @@ class mantraadapter(var datalist:  List<Map<String, Any?>>,var context: Context)
                 val Mantradialog = Mantradialog(it.context)
                 Mantradialog.setmantradialogtext(model.get("mantraName").toString())
                 Mantradialog.setmantradialogtext1(model.get("mantraDesc").toString())
+                Mantradialog.setmantraimage(model.get("mantraImageurl").toString())
                 Mantradialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 Mantradialog.show()
 

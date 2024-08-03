@@ -44,11 +44,55 @@ class GitaChapterAdapter(private val chapterNames: List<dbHelper.Chapter>) : Rec
 
         fun bind(chapterName: dbHelper.Chapter) {
             binding.apply {
-                chaptername.text=chapterName.chapterName
-                shlokaCount.text=chapterName.uid.toString()
+                chaptername.text=translateToHindidate(chapterName.chapternumber)+". "+ chapterName.chapterName
+                shlokaCount.text=chapterName.uid.toString()+" श्लोक "
                 chapterdesc.text=chapterName.description
 
             }
         }
+    }
+
+    private fun translateToHindidate(date: String): String? {
+        // Manually create a mapping for English to Hindi month names
+        val nmap: MutableMap<String, String> = HashMap()
+        nmap["1"] = "१"
+        nmap["2"] = "२"
+        nmap["3"] = "३"
+        nmap["4"] = "४"
+        nmap["5"] = "५"
+        nmap["6"] = "६"
+        nmap["7"] = "७"
+        nmap["8"] = "८"
+        nmap["9"] = "९"
+        nmap["10"] = "१०"
+        nmap["11"] = "११"
+        nmap["12"] = "१२"
+        nmap["13"] = "१३"
+        nmap["14"] = "१४"
+        nmap["15"] = "१५"
+        nmap["16"] = "१६"
+        nmap["17"] = "१७"
+        nmap["18"] = "१८"
+        nmap["19"] = "१९"
+        nmap["20"] = "२०"
+        nmap["21"] = "२१"
+        nmap["22"] = "२२"
+        nmap["23"] = "२३"
+        nmap["24"] = "२४"
+        nmap["25"] = "२५"
+        nmap["26"] = "२६"
+        nmap["27"] = "२७"
+        nmap["28"] = "२८"
+        nmap["29"] = "२९"
+        nmap["30"] = "३०"
+        nmap["2024"] = "२०२४"
+        nmap["2025"] = "२०२५"
+        nmap["2026"] = "२०२६"
+        nmap["2027"] = "२०२७"
+        nmap["2028"] = "२०२८"
+        nmap["2029"] = "२०२९"
+        nmap["2030"] = "२०३०"
+        // Return the translated month name
+        return nmap[date]
     }
 }

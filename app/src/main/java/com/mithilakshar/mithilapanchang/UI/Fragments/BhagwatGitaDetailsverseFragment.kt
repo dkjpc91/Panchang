@@ -1,12 +1,15 @@
 package com.mithilakshar.mithilapanchang.UI.Fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Utility.InAppReviewUtil
 import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
 import com.mithilakshar.mithilapanchang.Utility.dbHelper
 import com.mithilakshar.mithilapanchang.databinding.FragmentBhagwatGitaDetailsverseBinding
@@ -26,6 +29,7 @@ class BhagwatGitaDetailsverseFragment : Fragment() {
     lateinit var binding: FragmentBhagwatGitaDetailsverseBinding
     private val args: BhagwatGitaDetailsverseFragmentArgs by navArgs()
     lateinit var dbHelper: dbHelper
+    private lateinit var inAppReviewUtil: InAppReviewUtil
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -48,6 +52,14 @@ class BhagwatGitaDetailsverseFragment : Fragment() {
 
         dbHelper = dbHelper(requireContext(), "Gita.db")
         val rowsvalue= dbHelper.getRowById(args.versenumber)
+
+        inAppReviewUtil = InAppReviewUtil(requireActivity())
+
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            inAppReviewUtil.startReviewFlow()
+        }, 30000)
+
 
         rowsvalue?.let {
             binding.apply {

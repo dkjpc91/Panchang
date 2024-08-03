@@ -28,10 +28,10 @@ class GitaVerseAdapter(private val rows: List<Map<String, Any?>>) : RecyclerView
 
         fun bind(rowData: Map<String, Any?>) {
             binding.chaptername.text = rowData["chaptername"].toString()
-            binding.chapterdesc.text = rowData["chapterdescription"].toString()
-            binding.shlokaCount.text = rowData["uid"].toString()
+            binding.chapterdesc.text = rowData["shlok"].toString()
+            binding.shlokaCount.text = "श्लोक संख्या: "+rowData["id"].toString()
 
-            val verseids = rowData["uid"].toString()
+            val verseids = rowData["id"].toString()
             // Set click listener to navigate to details fragment with integer data
             binding.root.setOnClickListener {
 

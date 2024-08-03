@@ -160,7 +160,7 @@
                             android:textSize="24sp"
                             android:gravity="center"
                             android:textColor="#F41505"
-                            android:layout_marginTop="170dp"
+                            android:layout_marginTop="175dp"
                             android:padding="2dp"
                             />
 

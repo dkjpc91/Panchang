@@ -185,27 +185,27 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-    /*    collectionRef.get().addOnSuccessListener {
-            if (it != null) {
-                for (document in it) {
-                    val documentId = document.id
-                    val storagePath = "SQLdb/$documentId"
-                    val localFileName = "$documentId.db"
-                    val action = document.getString("action") ?: "delete"
-                    storagePaths.add(storagePath)
-                    localFileNames.add(localFileName)
-                    actions.add(action)
+        /*    collectionRef.get().addOnSuccessListener {
+                if (it != null) {
+                    for (document in it) {
+                        val documentId = document.id
+                        val storagePath = "SQLdb/$documentId"
+                        val localFileName = "$documentId.db"
+                        val action = document.getString("action") ?: "delete"
+                        storagePaths.add(storagePath)
+                        localFileNames.add(localFileName)
+                        actions.add(action)
 
+                    }
+
+                    startFileDownloads()
+
+                } else {
+                    Log.d(TAG, "No documents found in collection.")
                 }
-
-                startFileDownloads()
-
-            } else {
-                Log.d(TAG, "No documents found in collection.")
-            }
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Error getting documents: ", exception)
-        }*/
+            }.addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents: ", exception)
+            }*/
 
         bhagwatgitaviewmodel.downloadProgressLiveData.observe(this, {
 
@@ -274,16 +274,16 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         //text speak auto data.
 
-   /*     firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2, '0'),
-            currentDate.month.toString().lowercase(Locale.getDefault())
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }) {
+        /*     firestoreRepo.getspeaktext(currentDate.dayOfMonth.toString().padStart(2, '0'),
+                 currentDate.month.toString().lowercase(Locale.getDefault())
+                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }) {
 
-            if (it != null) {
-                //speak = it
+                 if (it != null) {
+                     //speak = it
 
-            }
+                 }
 
-        }*/
+             }*/
 
         textToSpeech = TextToSpeech(this, this)
 
@@ -675,7 +675,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-
     private fun downloadFile(storagePath: String, action: String, localFileName: String) {
         if (::fileDownloader.isInitialized) {
             fileDownloader.retrieveURL(storagePath, action, localFileName) { downloadedFile ->
@@ -697,20 +696,16 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun handleDownloadedFile(downloadedFile: File) {
 
-
-            readFileContent()
-
-
-
+        readFileContent()
 
     }
 
 
     private fun readFileContent() {
         binding.HomeBoard.visibility=View.VISIBLE
+
         val dbHelper = dbHelper(applicationContext, "Gita.db")
         val av = dbHelper.getRowCount("Gita")
-
         if (av > 0) {
             val avt = dbHelper.getRowValues("Gita", Random.nextInt(av))
             if (avt != null) {
@@ -765,11 +760,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         lifecycleScope.launch {
                             val updates = updatesDao.getfileupdate(fileName)
                             if (updates.get(0).uniqueString == actions) {
-
-
-                                    readFileContent()
-
-
+                                readFileContent()
 
 
 
@@ -844,4 +835,5 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         return fileExistsLiveData
     }
 
-    }
+}
+

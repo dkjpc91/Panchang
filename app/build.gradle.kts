@@ -43,6 +43,12 @@ android {
 
 dependencies {
 
+
+
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
+    implementation("com.google.android.play:review-ktx:2.0.1")
+
+
     val billing_version = "7.0.0"
 
     implementation("com.android.billingclient:billing:$billing_version")

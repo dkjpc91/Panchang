@@ -56,7 +56,7 @@ class BhagwatGitaVerseFragment : Fragment() {
         dbHelper = dbHelper(requireContext(), "Gita.db")
         val rows = dbHelper.getRowsByChapterName(chapterName)
         val adapter = GitaVerseAdapter(rows)
-        binding.gitaverserecyclerView .adapter = adapter
+        binding.gitaverserecyclerView.adapter = adapter
     }
 
 

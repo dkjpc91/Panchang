@@ -4,6 +4,8 @@ import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -20,6 +22,7 @@ import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 import com.mithilakshar.mithilapanchang.Utility.FileDownloaderProgress
 import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
+import com.mithilakshar.mithilapanchang.Utility.InAppReviewUtil
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -64,7 +67,6 @@ class HolidayActivity : AppCompatActivity() {
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
 
         observeFileExistence("holiday")
-
 
 
 

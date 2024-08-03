@@ -114,7 +114,7 @@ class dbHelper(context: Context, dbName: String) {
     fun getRowValues(tableName: String, primaryKeyValue: Any): List<Any>? {
         var rowValues: MutableList<Any>? = null // Use MutableList instead of List
         db?.let {
-            val cursor = it.rawQuery("SELECT * FROM $tableName WHERE uid = ?", arrayOf(primaryKeyValue.toString()))
+            val cursor = it.rawQuery("SELECT * FROM $tableName WHERE id = ?", arrayOf(primaryKeyValue.toString()))
             cursor.use { c ->
                 if (c.moveToFirst()) {
                     rowValues = mutableListOf()
@@ -177,7 +177,7 @@ class dbHelper(context: Context, dbName: String) {
         return holidays
     }
 
-    data class Chapter(val uid: String, val chapterName: String, val description: String)
+    data class Chapter(val uid: String, val chapterName: String,val chapternumber:String, val description: String)
 
 
     @SuppressLint("Range")
@@ -190,11 +190,12 @@ class dbHelper(context: Context, dbName: String) {
                     return emptyList()
                 }
 
-                val query = "SELECT DISTINCT uid, chaptername, chapterdescription FROM Gita"
+                val query = "SELECT DISTINCT uid, chaptername, Chapternumber, chapterdescription FROM Gita"
                 database.rawQuery(query, null)?.use { cursor ->
                     while (cursor.moveToNext()) {
                         val uidIndex = cursor.getColumnIndexOrThrow("uid")
                         val chapterNameIndex = cursor.getColumnIndexOrThrow("chaptername")
+                        val chapterNumberIndex = cursor.getColumnIndexOrThrow("Chapternumber")
                         val descriptionIndex = cursor.getColumnIndexOrThrow("chapterdescription")
 
                         val uid = if (!cursor.isNull(uidIndex)) {
@@ -209,13 +210,19 @@ class dbHelper(context: Context, dbName: String) {
                             "Unknown Chapter Name"
                         }
 
+                        val chapterNumber = if (!cursor.isNull(chapterNumberIndex)) {
+                            cursor.getInt(chapterNumberIndex)
+                        } else {
+                            0 // Default value if Chapternumber is null
+                        }
+
                         val description = if (!cursor.isNull(descriptionIndex)) {
                             cursor.getString(descriptionIndex)
                         } else {
                             "No Description Available"
                         }
 
-                        chapters.add(Chapter(uid, chapterName, description))
+                        chapters.add(Chapter(uid, chapterName, chapterNumber.toString(), description))
                     }
                 }
             } catch (e: Exception) {
@@ -226,6 +233,7 @@ class dbHelper(context: Context, dbName: String) {
 
         return chapters
     }
+
 
 
     @SuppressLint("Range")
@@ -266,7 +274,7 @@ class dbHelper(context: Context, dbName: String) {
                     return null
                 }
 
-                val query = "SELECT * FROM Gita WHERE uid = ?"
+                val query = "SELECT * FROM Gita WHERE id = ?"
                 val selectionArgs = arrayOf(uid.toString())
 
                 database.rawQuery(query, selectionArgs)?.use { cursor ->

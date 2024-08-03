@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import com.mithilakshar.mithilapanchang.databinding.ActivityBoardDetailBinding
 
@@ -96,6 +97,11 @@ class BoardDetailActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
 
 
+            }
+
+            binding.bhagwatimage.setOnClickListener {
+
+                ViewShareUtil.shareViewAsImageDirectly(binding.root,this@BoardDetailActivity)
             }
 
 

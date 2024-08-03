@@ -13,12 +13,14 @@ import androidx.core.widget.NestedScrollView
 import com.mithilakshar.mithilapanchang.R
 import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
 import com.mithilakshar.mithilapanchang.Utility.ViewShareXUtil
+import com.squareup.picasso.Picasso
 
 class Mantradialog : Dialog {
     private var mantratext: TextView? = null
     private var mantradesc: TextView? = null
     private var shareImage: ImageView? = null
     private var shareXImage: ImageView? = null
+    private var banner_image: ImageView? = null
 
 
 
@@ -31,6 +33,7 @@ class Mantradialog : Dialog {
         mantradesc = findViewById(R.id.hindi_translation)
         shareImage = findViewById(R.id.shareicon)
         shareXImage = findViewById(R.id.iconxshare)
+        banner_image = findViewById(R.id.banner_image)
 
         val shareImageroot: NestedScrollView?  = findViewById(R.id.shareview)
 
@@ -72,6 +75,12 @@ class Mantradialog : Dialog {
 
         ViewShareXUtil.shareViewAsImageDirectly(view,context)
 
+    }
+
+    fun setmantraimage(text: String?) {
+        Picasso .get()
+            .load(text)  // Replace with your image URL
+            .into(banner_image)
     }
 
 

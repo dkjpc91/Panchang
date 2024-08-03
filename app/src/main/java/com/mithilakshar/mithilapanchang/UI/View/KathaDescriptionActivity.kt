@@ -52,6 +52,10 @@ class KathaDescriptionActivity : AppCompatActivity() {
         val kathaI = intent.getStringExtra("kathaUrl")
         val audioURL = intent.getStringExtra("audioURL")
 
+        if (audioURL != null) {
+            binding.fab.visibility=View.GONE
+        }
+
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA) // Set usage type (e.g., music, alarm)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC) // Set content type

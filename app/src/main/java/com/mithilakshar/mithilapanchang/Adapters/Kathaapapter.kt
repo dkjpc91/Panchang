@@ -2,14 +2,12 @@ package com.mithilakshar.mithilapanchang.Adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
+
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mithilakshar.mithilapanchang.Models.eclipsedatamodel
-import com.mithilakshar.mithilapanchang.R
-import com.mithilakshar.mithilapanchang.Models.kathadatamodel
+
 import com.mithilakshar.mithilapanchang.UI.View.KathaDescriptionActivity
 import com.mithilakshar.mithilapanchang.databinding.EclipseitemBinding
 import com.mithilakshar.mithilapanchang.databinding.KathaitemBinding

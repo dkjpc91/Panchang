@@ -4,17 +4,12 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
-import android.view.View
+
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.Dialog.Mantradialog
-import com.mithilakshar.mithilapanchang.Models.mantradatamodel
-import com.mithilakshar.mithilapanchang.R
-import com.mithilakshar.mithilapanchang.Dialog.calendardialog
-import com.mithilakshar.mithilapanchang.Models.eclipsedatamodel
-import com.mithilakshar.mithilapanchang.databinding.EclipseitemBinding
+
 import com.mithilakshar.mithilapanchang.databinding.MantraitemBinding
 import com.squareup.picasso.Picasso
 

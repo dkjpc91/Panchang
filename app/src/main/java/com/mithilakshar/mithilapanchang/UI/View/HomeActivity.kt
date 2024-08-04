@@ -384,6 +384,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             stopAudio()
         }
 
+        binding.purchase.setOnClickListener {
+            val i = Intent(this, BillingActivity::class.java)
+
+            startActivity(i)
+            stopAudio()
+        }
+
 
         binding.shareicon.setOnClickListener {
             ViewShareUtil.shareViewAsImageDirectly(binding.homeBanner,this)

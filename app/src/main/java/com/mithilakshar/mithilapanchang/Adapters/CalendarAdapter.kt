@@ -11,9 +11,6 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.Dialog.calendardialog
-import com.mithilakshar.mithilapanchang.R
-import com.mithilakshar.mithilapanchang.Models.calendardatamodel
-import com.mithilakshar.mithilapanchang.Models.mantradatamodel
 import com.mithilakshar.mithilapanchang.databinding.CalendardayitemBinding
 import com.squareup.picasso.Picasso
 import java.time.LocalDate

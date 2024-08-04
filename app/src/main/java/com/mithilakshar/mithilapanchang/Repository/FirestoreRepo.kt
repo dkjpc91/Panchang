@@ -3,11 +3,6 @@ package com.mithilakshar.mithilapanchang.Repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
-import com.mithilakshar.mithilapanchang.Models.calendardatamodel
-import com.mithilakshar.mithilapanchang.Models.eclipsedatamodel
-import com.mithilakshar.mithilapanchang.Models.holidaydatamodel
-import com.mithilakshar.mithilapanchang.Models.kathadatamodel
-import com.mithilakshar.mithilapanchang.Models.mantradatamodel
 import kotlinx.coroutines.tasks.await
 
 class FirestoreRepo {
@@ -84,36 +79,18 @@ class FirestoreRepo {
     }
 
 
-    suspend fun getHolidaylist(): List<holidaydatamodel> {
-        val db = FirebaseFirestore.getInstance()
-        val querySnapshot = db.collection("holiday").get().await()
-        return querySnapshot.toObjects(holidaydatamodel::class.java)
-    }
 
-    suspend fun getEclipseList(): List<eclipsedatamodel> {
-        val db = FirebaseFirestore.getInstance()
-        val querySnapshot = db.collection("eclipse").get().await()
-        return querySnapshot.toObjects(eclipsedatamodel::class.java)
-    }
 
-    suspend fun getMantraList(): List<mantradatamodel> {
+
+
+/*    suspend fun getMantraList(): List<mantradatamodel> {
         val db = FirebaseFirestore.getInstance()
         val querySnapshot = db.collection("mantra").get().await()
         return querySnapshot.toObjects(mantradatamodel::class.java)
-    }
-
-    suspend fun getKathaList(): List<kathadatamodel> {
-        val db = FirebaseFirestore.getInstance()
-        val querySnapshot = db.collection("katha").get().await()
-        return querySnapshot.toObjects(kathadatamodel::class.java)
-    }
+    }*/
 
 
-    suspend fun getCalendarList(path: String): List<calendardatamodel> {
-        val db = FirebaseFirestore.getInstance()
-        val snapshot = db.collection(path).get().await()
-        return snapshot.toObjects(calendardatamodel::class.java)
-    }
+
 
 
     suspend fun gethomeBroadcast(): String {

@@ -92,4 +92,14 @@ object TranslationUtils {
         )
         return dateTranslation[date] ?: date
     }
+
+    fun producttranslate(day: String): String {
+        val dayTranslation = mapOf(
+            "mithila_panchang_50 (Mithila Panchang)" to "मिथिला पंचांग : ₹५०",
+            "mithila_panchang_silver (Mithila Panchang)" to "मिथिला पंचांग : ₹२३",
+            "mithila_panchang_100 (Mithila Panchang)" to "मिथिला पंचांग : ₹१००",
+
+        )
+        return dayTranslation[day] ?: day
+    }
 }

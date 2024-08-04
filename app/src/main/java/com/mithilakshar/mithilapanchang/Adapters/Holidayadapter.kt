@@ -3,7 +3,6 @@ package com.mithilakshar.mithilapanchang.Adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mithilakshar.mithilapanchang.Models.holidaydatamodel
 import com.mithilakshar.mithilapanchang.databinding.HolidayitemBinding
 import com.squareup.picasso.Picasso
 import android.content.Context

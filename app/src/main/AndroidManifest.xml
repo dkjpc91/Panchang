@@ -10,8 +10,6 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.SET_ALARM" />
 
-
-
     <application
         android:name=".Utility.MyApplication"
         android:allowBackup="true"
@@ -24,9 +22,12 @@
         android:theme="@style/Theme.MithilaPanchang"
         tools:targetApi="31">
         <activity
-            android:screenOrientation="portrait"
-            android:name=".UI.View.GitaChapterActivity"
+            android:name=".UI.View.BillingActivity"
             android:exported="false" />
+        <activity
+            android:name=".UI.View.GitaChapterActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.View.AlarmActivity"
             android:exported="false"
@@ -97,15 +98,13 @@
                 <action android:name="STOP_AUDIO_ACTION" />
             </intent-filter>
         </receiver>
-
-
-
-
-        <receiver android:name=".Utility.DateWidgetProvider"
+        <receiver
+            android:name=".Utility.DateWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
+
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/date_widget_info" />
@@ -115,9 +114,7 @@
             android:name=".Utility.BitmapContentProvider"
             android:authorities="${applicationId}.bitmapprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
-        </provider>
-
+            android:grantUriPermissions="true"></provider>
     </application>
 
 </manifest>

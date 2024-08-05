@@ -55,29 +55,7 @@
                        android:textColor="@android:color/holo_green_dark" />
                </LinearLayout>
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="horizontal"
-                   android:layout_marginTop="8dp">
 
-                   <TextView
-                       android:textSize="25sp"
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="1"
-                       android:text="दिन :-"
-                       android:textColor="@android:color/holo_orange_dark" />
-
-                   <TextView
-                       android:id="@+id/calendardialogtext2"
-                       android:layout_width="0dp"
-                       android:layout_height="match_parent"
-                       android:layout_weight="1"
-                       android:text="उपलब्ध नहीं"
-                       android:textColor="@android:color/holo_green_dark"
-                       android:textSize="25sp" />
-               </LinearLayout>
 
                <LinearLayout
 

@@ -26,7 +26,7 @@ class CalendarAdapter (private val data: List<Map<String, String>>,private val c
 
 
 
-                calendardateText.text=model.get("date")
+                calendardateText.text=translateToHindidate(model.get("date").toString())
                 calendardayText.text=model.get("tithi")
                 calendardescText.text=model.get("monthhindi")
 
@@ -37,18 +37,16 @@ class CalendarAdapter (private val data: List<Map<String, String>>,private val c
             binding.root.setOnClickListener {
 
                 val calendarDialog = calendardialog(context)
+                                   val currentDate = LocalDate.now()
 
-                val currentDate = LocalDate.now()
+                val hindiMonth = translateToHindi(model.get("month").toString())
 
-                val hindiMonth =  translateToHindi (currentDate.month.toString())
-                val hindiDay = translateToHindiday(currentDate.dayOfWeek.toString())
-                val hindidate = translateToHindidate(currentDate.dayOfMonth.toString())
+                val hindidate = translateToHindidate(model.get("date").toString())
                 val hindiyear = translateToHindidate(currentDate.year.toString())
 
                 calendarDialog.setcalendardialogtext("\nपंचांग विवरण :-\n \n"
-                        + hindiDay +" "+ hindidate +" "+ hindiMonth+" " +hindiyear)
+                        + hindidate +" "+ hindiMonth+" " +hindiyear)
                 calendarDialog.setcalendardialogtext1(model.get("tithi"))
-                calendarDialog.setcalendardialogtext2(hindiDay)
                 calendarDialog.setcalendardialogtext3(model.get("nakshatra"))
                 calendarDialog.setcalendardialogtext4(model.get("monthhindi")+" "+ model.get("paksha"))
                 calendarDialog.show()

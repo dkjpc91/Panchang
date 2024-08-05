@@ -1,9 +1,22 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +30,8 @@ import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Utility.BillingManager
 import com.mithilakshar.mithilapanchang.databinding.ActivityBillingBinding
 import kotlinx.coroutines.launch
+import java.io.File
+import java.time.Instant
 
 class BillingActivity : AppCompatActivity() {
     lateinit var binding: ActivityBillingBinding
@@ -25,6 +40,7 @@ class BillingActivity : AppCompatActivity() {
 
     private lateinit var billingManager: BillingManager
     private lateinit var productAdapter: ProductAdapter
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,13 +52,25 @@ class BillingActivity : AppCompatActivity() {
             insets
         }
 
-        setupUI()
+        binding.upiid.setOnClickListener {
+            copyTextViewContentToClipboard(this,binding.upiid)
 
-        billingManager = BillingManager(this)
+        }
+
+
+
+       // billingManager = BillingManager(this)
+
+
+
+
+       // setupUI()
+
 
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupUI() {
         val recyclerView: RecyclerView = binding.billingrecycler
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -71,20 +99,46 @@ class BillingActivity : AppCompatActivity() {
 
     }
 
-    private fun purchaseProduct(skuId: String) {
-        billingManager.launchPurchaseFlow(this, skuId)
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun purchaseProduct(product: Product) {
+       billingManager.launchPurchaseFlow(this, product.sku)
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        billingManager.onDestroy()
-    }
-
-     fun updatebillingdao(updates: Updates){
+    fun updatebillingdao(updates: Updates){
 
         lifecycleScope.launch {
             updatesDao.insert(updates)
         }
 
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentTimestamp(): Long {
+        return Instant.now().toEpochMilli()
+    }
+
+    fun copyTextViewContentToClipboard(context: Context, textView: TextView) {
+        // Get the text from the TextView
+        val textToCopy = textView.text.toString()
+
+        // Get the Clipboard Manager
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        // Create a ClipData object with the text to copy
+        val clipData = ClipData.newPlainText("label", textToCopy)
+
+        // Set the ClipData to the Clipboard
+        clipboardManager.setPrimaryClip(clipData)
+
+        // Show a toast message to indicate that the text has been copied
+        Toast.makeText(context, "mithilakshar@upi  यू पी आई आईडी कॉपी भ गेल। ", Toast.LENGTH_SHORT).show()
+    }
+
+
+
+
+
 }
+
+

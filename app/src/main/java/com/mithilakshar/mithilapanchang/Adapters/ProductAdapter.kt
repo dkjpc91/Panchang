@@ -8,11 +8,11 @@ import com.mithilakshar.mithilapanchang.Models.Product
 import com.mithilakshar.mithilapanchang.Utility.TranslationUtils
 import com.mithilakshar.mithilapanchang.databinding.PurchaseitemBinding
 
-class ProductAdapter(private var datalist: List<Product>,private val onBuyButtonClick: (String) -> Unit) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(private var datalist: List<Product>,private val onBuyButtonClick: (Product) -> Unit) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(val binding: PurchaseitemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: Product,onBuyButtonClick: (String) -> Unit) {
+        fun bind(product: Product, onBuyButtonClick: (Product) -> Unit) {
             Log.d("ProductAdapter", "Binding product: Title: ${product.title}, Description: ${product.description}")
 
             binding.apply {
@@ -27,7 +27,7 @@ class ProductAdapter(private var datalist: List<Product>,private val onBuyButton
             }
             binding.buyButton.setOnClickListener {
                 Log.d("ProductViewHolder", "Buy button clicked for SKU: ${product.sku}")
-                onBuyButtonClick(product.sku)
+                onBuyButtonClick(product)
             }
 
         }

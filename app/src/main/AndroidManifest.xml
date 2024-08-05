@@ -126,6 +126,8 @@
             android:authorities="${applicationId}.bitmapprovider"
             android:exported="false"
             android:grantUriPermissions="true"></provider>
+
+
     </application>
 
 </manifest>

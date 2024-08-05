@@ -19,7 +19,6 @@ class calendardialog : Dialog {
         setContentView(R.layout.calendardialog)
         calendartext = findViewById(R.id.calendardialogtext)
         calendartext1 = findViewById(R.id.calendardialogtext1)
-        calendartext2 = findViewById(R.id.calendardialogtext2)
         calendartext3 = findViewById(R.id.calendardialogtext3)
         calendartext4 = findViewById(R.id.calendardialogtext4)
     }

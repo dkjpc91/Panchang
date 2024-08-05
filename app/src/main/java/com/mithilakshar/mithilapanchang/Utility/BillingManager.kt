@@ -3,8 +3,8 @@ import android.app.Activity
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.android.billingclient.api.*
-import com.google.api.Billing
 import com.mithilakshar.mithilapanchang.Models.Product
+import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.UI.View.BillingActivity
 
 class BillingManager(private val activity: Activity) : PurchasesUpdatedListener, BillingClientStateListener {
@@ -92,7 +92,9 @@ class BillingManager(private val activity: Activity) : PurchasesUpdatedListener,
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: List<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
-                handlePurchase(purchase)
+
+                val productDetails = Updates(id = 9,fileName = "iap", uniqueString = purchase.purchaseTime.toString())
+                handlePurchase(purchase,productDetails)
             }
         } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
             showPurchaseCancelledDialog()
@@ -102,7 +104,7 @@ class BillingManager(private val activity: Activity) : PurchasesUpdatedListener,
     }
 
     //8.Acknowledge Purchase:
-    private fun handlePurchase(purchase: Purchase) {
+    private fun handlePurchase(purchase: Purchase, productDetails: Updates) {
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
             if (!purchase.isAcknowledged) {
                 val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
@@ -111,6 +113,8 @@ class BillingManager(private val activity: Activity) : PurchasesUpdatedListener,
                 billingClient.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                         //Handle successful acknowledgment if needed
+                        showPurchaseSuccessDialog()
+                        (activity as? BillingActivity)?.updatebillingdao(productDetails)
                     }
                 }
             }
@@ -122,7 +126,8 @@ class BillingManager(private val activity: Activity) : PurchasesUpdatedListener,
         billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP) { billingResult, purchases ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 for (purchase in purchases) {
-                    handlePurchase(purchase)
+                    val productDetails = Updates(id = 10,fileName = "iap", uniqueString = "25")
+                    handlePurchase(purchase, productDetails)
                 }
             }
         }
@@ -134,8 +139,17 @@ class BillingManager(private val activity: Activity) : PurchasesUpdatedListener,
 
     private fun showPurchaseCancelledDialog() {
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Purchase Cancelled")
-        builder.setMessage("You have cancelled the purchase.")
+        builder.setTitle("भुगतान रद्द क देल गेल:")
+        builder.setMessage("अहाँ भुगतान रद्द क'देलहुं,एहि लेल भुगतान रद्द भ' गेल अछि. अहाँ बाद मे पुनः प्रयास क सकैत छी। \nमिथिला पंचांग के प्रयोग करबाक लेल धन्यवाद।")
+        builder.setPositiveButton("OK") { dialog, _ ->
+            dialog.dismiss()
+        }
+        builder.create().show()
+    }
+    private fun showPurchaseSuccessDialog() {
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle("भुगतान पूर्ण भ गेल:")
+        builder.setMessage("अपनेक भुगतान के लिये धन्यवाद।' गेल अछि. अहाँक सहयोग सँ मिथिला पंचांग एकटा व्यापक समुदायक लेल सुलभ होयत। \nमिथिला पंचांग के प्रयोग करबाक लेल धन्यवाद।")
         builder.setPositiveButton("OK") { dialog, _ ->
             dialog.dismiss()
         }

@@ -6,16 +6,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mithilakshar.mithilapanchang.Adapters.ProductAdapter
 import com.mithilakshar.mithilapanchang.Models.Product
 import com.mithilakshar.mithilapanchang.R
+import com.mithilakshar.mithilapanchang.Room.Updates
+import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Utility.BillingManager
 import com.mithilakshar.mithilapanchang.databinding.ActivityBillingBinding
+import kotlinx.coroutines.launch
 
 class BillingActivity : AppCompatActivity() {
     lateinit var binding: ActivityBillingBinding
+
+    private lateinit var updatesDao: UpdatesDao
 
     private lateinit var billingManager: BillingManager
     private lateinit var productAdapter: ProductAdapter
@@ -72,5 +78,13 @@ class BillingActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         billingManager.onDestroy()
+    }
+
+     fun updatebillingdao(updates: Updates){
+
+        lifecycleScope.launch {
+            updatesDao.insert(updates)
+        }
+
     }
 }

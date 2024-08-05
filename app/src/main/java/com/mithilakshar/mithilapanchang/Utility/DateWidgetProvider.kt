@@ -88,7 +88,7 @@ class DateWidgetProvider : AppWidgetProvider() {
         }
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
 
-        val intervalMillis = 60000L // Update every 60 seconds
+        val intervalMillis = 10000L // Update every 10 seconds
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), intervalMillis, pendingIntent)
 
         Log.d("DateWidgetProvider", "Alarm set for every 60 seconds")

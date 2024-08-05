@@ -17,7 +17,7 @@ class ProductAdapter(private var datalist: List<Product>,private val onBuyButton
 
             binding.apply {
                 productTitle.text = TranslationUtils.producttranslate(product.title)
-                productDescription.text = product.description
+                productPrice.text = product.price
 
 
                 // Uncomment and use Picasso if needed

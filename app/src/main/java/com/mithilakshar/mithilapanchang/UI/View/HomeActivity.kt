@@ -61,10 +61,11 @@ import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
+import com.mithilakshar.mithilapanchang.Utility.dbDownloader
 
 
 import java.io.File
-
+import java.time.format.DateTimeFormatter
 
 
 class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -79,6 +80,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private val firestoreRepo = FirestoreRepo()
     private lateinit var fileManager: FileManager
     private lateinit var dbHelper: dbHelper
+    private lateinit var dbHelperimage: dbHelper
 
     val mediaPlayer = MediaPlayer()
     var currentPlaybackPosition: Int = 0
@@ -156,6 +158,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         speak= rowsFormonthdate?.get(key = "speak")
 
+
         updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
 
         fileManager = FileManager(
@@ -166,6 +169,80 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         fileManager.observeFileExistence("calander")
 
         fileDownloader = FirebaseFileDownloader(this)
+        val dbDownloader= dbDownloader(updatesDao,fileDownloader)
+        dbDownloader.observeFileExistence("holiday",this,lifecycleScope)
+        dbDownloader.observeFileExistence("vrat",this,lifecycleScope)
+        dbDownloader.observeFileExistence("mantra",this,lifecycleScope)
+        dbDownloader.observeFileExistence("imageauto",this,lifecycleScope)
+
+        dbHelperimage = dbHelper(this, "imageauto.db")
+
+        val todayimage=dbHelperimage.getimageByDayName(getTodayDayName())
+
+
+        //get Banner for slider
+        val sliderimage= extractColumnValues(todayimage,"imageurl")
+        for (i in sliderimage) {
+                bannerImageList.add(SlideModel(i))
+                bannerurls.add(i)
+                binding.imageSlider.setImageList(bannerImageList)
+        }
+
+        //appbar banner
+        lifecycleScope.launch {
+
+            appbarbannerurls = viewModel.getappbarImagelist("appbar")
+            Log.d("appbar", "$appbarbannerurls")
+
+            var random = Random.nextInt(appbarbannerurls.size)
+            var appbarbannerurl =appbarbannerurls.get(random)
+            Log.d("appbar", "$appbarbannerurl")
+            if (appbarbannerurl=="empty") {
+
+                Log.d("appbar", "empty")
+                if (todayimage.size != 0) {
+                    val random = Random.nextInt(todayimage.size)
+                    val a=todayimage.get(random)
+                    Log.d("appbar", "$a")
+                    Glide.with(this@HomeActivity).load(a.get("imageurl"))
+                        .into(binding.homeBanner)
+                }else{
+                    Log.d("appbar", "inelse")
+                }
+
+            } else {
+
+                Log.d("appbar", "notempty")
+                // Perform tasks if homeBroadcast has a value
+                if (appbarbannerurls.size != 0) {
+                    val random = Random.nextInt(appbarbannerurls.size)
+                    Glide.with(this@HomeActivity).load(appbarbannerurls.get(random))
+                        .into(binding.homeBanner)
+                    Log.d("appbar", "$appbarbannerurls")
+                }
+            }
+
+            homeBroadcast = viewModel.gethomeBroadcast()
+
+            if (homeBroadcast.isNullOrEmpty()) {
+                binding.floatingActionButton.visibility = View.GONE
+            } else {
+                // Perform tasks if homeBroadcast has a value
+                binding.floatingActionButton.visibility = View.VISIBLE
+            }
+
+
+            //announce auto
+            delayedTask(1000)
+
+
+        }
+
+
+
+
+
+
 
         observeFileExistence("Gita")
 
@@ -225,40 +302,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         mediaPlayer.setAudioAttributes(audioAttributes)
 
-        //get Banner for slider
-        viewModel.getBannerurlList("home").observe(this, {
-            for (i in it) {
-                bannerImageList.add(SlideModel(i))
-                bannerurls.add(i)
-                binding.imageSlider.setImageList(bannerImageList)
-            }
-        })
 
 
 
-        //appbar banner
-        lifecycleScope.launch {
 
-            appbarbannerurls = viewModel.getappbarImagelist("appbar")
-            homeBroadcast = viewModel.gethomeBroadcast()
-
-            if (homeBroadcast.isNullOrEmpty()) {
-                binding.floatingActionButton.visibility = View.GONE
-            } else {
-                // Perform tasks if homeBroadcast has a value
-                binding.floatingActionButton.visibility = View.VISIBLE
-            }
-
-            if (appbarbannerurls.size != 0) {
-                val random = Random.nextInt(appbarbannerurls.size)
-                Glide.with(this@HomeActivity).load(appbarbannerurls.get(random))
-                    .into(binding.homeBanner)
-            }
-            //announce auto
-            delayedTask(1000)
-
-
-        }
 
 
         //date
@@ -842,6 +889,26 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         return fileExistsLiveData
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTodayDayName(): String {
+        val today = LocalDate.now()
+        val dayNameFormatter = DateTimeFormatter.ofPattern("EEEE")
+        return today.format(dayNameFormatter).uppercase(Locale.getDefault())
+    }
+
+    fun extractColumnValues(data: List<Map<String, String>>, columnName: String): ArrayList<String> {
+        val columnValues = arrayListOf<String>()
+
+        for (row in data) {
+            val value = row[columnName] ?: ""
+            if (value.isNotEmpty()) {
+                columnValues.add(value)
+            }
+        }
+
+        return columnValues
+    }
 
 
 

@@ -49,6 +49,7 @@ dependencies {
     implementation("com.google.android.play:review-ktx:2.0.1")
 
     implementation ("androidx.work:work-runtime:2.7.1")
+    implementation("androidx.lifecycle:lifecycle-common-jvm:2.8.4")
     val billing_version = "7.0.0"
 
     implementation("com.android.billingclient:billing:$billing_version")

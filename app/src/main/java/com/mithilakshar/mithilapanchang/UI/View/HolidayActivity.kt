@@ -23,6 +23,7 @@ import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
 import com.mithilakshar.mithilapanchang.Utility.FileDownloaderProgress
 import com.mithilakshar.mithilapanchang.Utility.FirebaseFileDownloader
 import com.mithilakshar.mithilapanchang.Utility.InAppReviewUtil
+import com.mithilakshar.mithilapanchang.Utility.dbDownloader
 import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -65,6 +66,7 @@ class HolidayActivity : AppCompatActivity() {
         val factory = BhagwatGitaViewModel.factory(fileDownloader)
         bhagwatgitaviewmodel =
             ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
+
 
         observeFileExistence("holiday")
 
@@ -203,13 +205,7 @@ class HolidayActivity : AppCompatActivity() {
 
     }
 
-    fun checkFileExistence(fileName: String): LiveData<Boolean> {
-        val fileExistsLiveData = MutableLiveData<Boolean>()
-        val dbFolderPath = this.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
-        val dbFile = File(dbFolderPath, fileName)
-        fileExistsLiveData.value = dbFile.exists()
-        return fileExistsLiveData
-    }
+
 
     private fun observeFileExistence(month:String) {
         fileExistenceLiveData = checkFileExistence("holiday.db")
@@ -312,6 +308,14 @@ class HolidayActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun checkFileExistence(fileName: String): LiveData<Boolean> {
+        val fileExistsLiveData = MutableLiveData<Boolean>()
+        val dbFolderPath = this.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
+        val dbFile = File(dbFolderPath, fileName)
+        fileExistsLiveData.value = dbFile.exists()
+        return fileExistsLiveData
     }
 
     fun getCurrentYear(): Int {

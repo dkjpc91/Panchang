@@ -1,18 +1,16 @@
 package com.mithilakshar.mithilapanchang.Utility
 
 import android.content.ContentValues
-import android.content.Context
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
+
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
-import com.mithilakshar.mithilapanchang.ViewModel.BhagwatGitaViewModel
-import com.mithilakshar.mithilapanchang.databinding.ActivityHolidayBinding
+import com.mithilakshar.mithilapanchang.UI.View.HomeActivity
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -20,25 +18,32 @@ import java.io.File
 
 class dbDownloader(
     private val updatesDao: UpdatesDao,
-    firebaseFileDownloader: FirebaseFileDownloader,
+    firebaseFileDownloader: FirebaseFileDownloader
 ) {
 
 
     private var firebaseFileDownloader: FirebaseFileDownloader = firebaseFileDownloader
 
-     fun observeFileExistence(filename:String,lifecycleOwner: LifecycleOwner,coroutineScope: CoroutineScope) {
-        var fileExistenceLiveData = checkFileExistence("$filename.db")
+     fun observeFileExistence(
+         filename: String,
+         lifecycleOwner: LifecycleOwner,
+         coroutineScope: CoroutineScope,
+         updatedaoid: Int,
+         homeActivity: HomeActivity
+     ) {
+        var fileExistenceLiveData = checkFileExistence("$filename.db",homeActivity)
         val db = FirebaseFirestore.getInstance()
         val collectionRef = db.collection("SQLdb")
         val documentRef = collectionRef.document(filename)
         fileExistenceLiveData.observe(lifecycleOwner) { fileExists ->
             if (fileExists) {
 
-
+                Log.d("dbd", "fileexist} ")
                 documentRef.get().addOnSuccessListener {
                     if (it != null) {
                         val actions = it.getString("action") ?: "delete"
                         val fileName = "$filename.db"
+                        Log.d("dbd", "$filename} ")
                         coroutineScope.launch {
                             val updates = updatesDao.getfileupdate(fileName)
                             if (updates.get(0).uniqueString == actions) {
@@ -46,15 +51,19 @@ class dbDownloader(
                                 //binding.lottieAnimationView .visibility=View.GONE
                                 //binding.loadingstatus.visibility=View.GONE
 
-
+                                Log.d("dbd", "actionmatch $actions, uiqueid ${updates.get(0).uniqueString} ")
                             } else {
-                                val holidayupdate = updatesDao.findById(2)
+
+                                Log.d("dbd", "actionnotmatch $actions, uiqueid ${updates.get(0).uniqueString} ")
+                                Log.d("dbd", "$filename} ")
+                                val holidayupdate = updatesDao.findById(updatedaoid)
+                                Log.d("dbd", "$updatedaoid} ")
                                 holidayupdate.let {
                                     it.uniqueString = actions
                                     updatesDao.update(it)
                                 }
 
-
+                                Log.d("dbd", "actionmismatch new file download} ")
                                 val storagePath = "SQLdb/$filename"
                                 downloadFile(storagePath, "delete", "$filename.db")
 
@@ -77,6 +86,8 @@ class dbDownloader(
                 // File does not exist, handle accordingly
             } else {
 
+                Log.d("dbd", "no file exist ")
+
                 val storagePath = "SQLdb/$filename"
                 downloadFile(storagePath, "delete", "$filename.db")
 
@@ -88,10 +99,12 @@ class dbDownloader(
                         val fileName = "$filename.db"
                         coroutineScope.launch {
 
-                            val holiday = Updates(id = 2,fileName = "holiday.db", uniqueString = "holiday")
+                            Log.d("dbd", "no file exist newfile download")
+
+                            val holiday = Updates(id = updatedaoid.toLong(),fileName = "$filename.db", uniqueString = "${filename}")
                             updatesDao.insert(holiday)
 
-                            val holidayupdate = updatesDao.findById(2)
+                            val holidayupdate = updatesDao.findById(updatedaoid)
                             holidayupdate.let {
                                 it.uniqueString = actions
                                 updatesDao.update(it)
@@ -111,9 +124,9 @@ class dbDownloader(
 
 
 
-    private fun checkFileExistence(fileName: String): LiveData<Boolean> {
+    fun checkFileExistence(fileName: String, homeActivity: HomeActivity): LiveData<Boolean> {
         val fileExistsLiveData = MutableLiveData<Boolean>()
-        val dbFolderPath = File.separator + "test"
+        val dbFolderPath = homeActivity.getExternalFilesDir(null)?.absolutePath + File.separator + "test"
         val dbFile = File(dbFolderPath, fileName)
         fileExistsLiveData.value = dbFile.exists()
         return fileExistsLiveData

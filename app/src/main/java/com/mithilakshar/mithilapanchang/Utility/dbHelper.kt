@@ -391,34 +391,6 @@ class dbHelper(context: Context, dbName: String) {
     }
 
     @SuppressLint("Range")
-    fun getimageByMonthAndDate(month: String, date: String): List<Map<String, String>> {
-        val rows = mutableListOf<Map<String, String>>()
-        db?.let { database ->
-            if (!database.isOpen) {
-                Log.w(TAG, "Database not open for reading rows by month: $month and date: $date")
-                return emptyList()
-            }
-
-            val query = "SELECT * FROM imageauto WHERE month = ? AND date = ?"
-            val selectionArgs = arrayOf(month, date)
-
-            database.rawQuery(query, selectionArgs)?.use { cursor ->
-                val columnNames = cursor.columnNames
-
-                while (cursor.moveToNext()) {
-                    val rowData = mutableMapOf<String, String>()
-                    for (columnName in columnNames) {
-                        val value = cursor.getString(cursor.getColumnIndex(columnName)) ?: ""
-                        rowData[columnName] = value
-                    }
-                    rows.add(rowData)
-                }
-            }
-        } ?: Log.e(TAG, "Database is null!")
-
-        return rows
-    }
-    @SuppressLint("Range")
     fun getimageByGodName(godName: String): List<Map<String, String>> {
         val rows = mutableListOf<Map<String, String>>()
         db?.let { database ->
@@ -447,7 +419,34 @@ class dbHelper(context: Context, dbName: String) {
         return rows
     }
 
+    @SuppressLint("Range")
+    fun getimageByholidayname(holidayname: String): List<Map<String, String>> {
+        val rows = mutableListOf<Map<String, String>>()
+        db?.let { database ->
+            if (!database.isOpen) {
+                Log.w(TAG, "Database not open for reading rows by god name: $holidayname")
+                return emptyList()
+            }
 
+            val query = "SELECT * FROM imageauto WHERE holiday = ?"
+            val selectionArgs = arrayOf(holidayname)
+
+            database.rawQuery(query, selectionArgs)?.use { cursor ->
+                val columnNames = cursor.columnNames
+
+                while (cursor.moveToNext()) {
+                    val rowData = mutableMapOf<String, String>()
+                    for (columnName in columnNames) {
+                        val value = cursor.getString(cursor.getColumnIndex(columnName)) ?: ""
+                        rowData[columnName] = value
+                    }
+                    rows.add(rowData)
+                }
+            }
+        } ?: Log.e(TAG, "Database is null!")
+
+        return rows
+    }
 
 
 

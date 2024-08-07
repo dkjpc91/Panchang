@@ -126,6 +126,11 @@
             android:authorities="${applicationId}.bitmapprovider"
             android:exported="false"
             android:grantUriPermissions="true"></provider>
+        <provider
+            android:name=".Utility.Bitmapgreeringprovider"
+            android:authorities="${applicationId}.bitmapprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"></provider>
 
 
     </application>

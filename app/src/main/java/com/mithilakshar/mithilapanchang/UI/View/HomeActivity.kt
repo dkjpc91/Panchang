@@ -1,8 +1,6 @@
 package com.mithilakshar.mithilapanchang.UI.View
 
 
-import FileManager
-
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -32,7 +30,7 @@ import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
 import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mithilakshar.mithilapanchang.Dialog.Networkdialog
-
+import com.bumptech.glide.request.target.CustomTarget
 import com.mithilakshar.mithilapanchang.Notification.NetworkManager
 import com.mithilakshar.mithilapanchang.R
 
@@ -51,17 +49,25 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 import android.content.ContentValues.TAG
-
+import android.graphics.Bitmap
 
 
 import android.util.Log
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+
+
 import com.mithilakshar.mithilapanchang.Room.Updates
 import com.mithilakshar.mithilapanchang.Room.UpdatesDao
 import com.mithilakshar.mithilapanchang.Room.UpdatesDatabase
+
+import com.mithilakshar.mithilapanchang.Utility.LayoutBitmapGenerator
 import com.mithilakshar.mithilapanchang.Utility.ViewShareUtil
 import com.mithilakshar.mithilapanchang.Utility.dbDownloader
+
+
 
 
 import java.io.File
@@ -78,17 +84,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private val updateType = AppUpdateType.IMMEDIATE
     private lateinit var updatesDao: UpdatesDao
     private val firestoreRepo = FirestoreRepo()
-    private lateinit var fileManager: FileManager
-    private lateinit var dbHelper: dbHelper
+    private lateinit var dbHelpercalander: dbHelper
     private lateinit var dbHelperimage: dbHelper
+
+    private lateinit var holidaybannerurl :String
 
     val mediaPlayer = MediaPlayer()
     var currentPlaybackPosition: Int = 0
-
-    var appbarbannerurls: List<String> = arrayListOf()
-
-    var bannerurls: ArrayList<String> = arrayListOf()
-    var bannerImageList: ArrayList<SlideModel> = arrayListOf()
 
     val handler = Handler(Looper.getMainLooper())
 
@@ -104,8 +106,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private lateinit var fileDownloader: FirebaseFileDownloader
     private lateinit var bhagwatgitaviewmodel: BhagwatGitaViewModel
-
-
 
     companion object {
         private const val REQUEST_WRITE_STORAGE = 1
@@ -128,9 +128,6 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
 
 
-
-
-
         checkForAppUpdate()
 
         val networkdialog = Networkdialog(this)
@@ -149,40 +146,98 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         })
 
+
+
         val cDate: LocalDate = LocalDate.now()
         val currentMonthString: String = cDate.month.name // Gets the current month in uppercase (e.g., "JANUARY")
         val currentDay: Int = cDate.dayOfMonth
 
-        dbHelper = dbHelper(this, "calander.db")
-        val rowsFormonthdate = dbHelper.getRowByMonthAndDate(currentMonthString,currentDay.toString())
 
-        speak= rowsFormonthdate?.get(key = "speak")
 
+        fileDownloader = FirebaseFileDownloader(this)
 
         updatesDao = UpdatesDatabase.getDatabase(applicationContext).UpdatesDao()
 
-        fileManager = FileManager(
-            context = this,
-            updatesDao = updatesDao,
-        )
-
-        fileManager.observeFileExistence("calander")
-
-        fileDownloader = FirebaseFileDownloader(this)
         val dbDownloader= dbDownloader(updatesDao,fileDownloader)
-        dbDownloader.observeFileExistence("holiday",this,lifecycleScope)
-        dbDownloader.observeFileExistence("vrat",this,lifecycleScope)
-        dbDownloader.observeFileExistence("mantra",this,lifecycleScope)
-        dbDownloader.observeFileExistence("imageauto",this,lifecycleScope)
+
+        dbDownloader.observeFileExistence("imageauto",this,lifecycleScope,5,this)
+        dbDownloader.observeFileExistence("calander",this,lifecycleScope,3,this)
+
+
+        dbHelpercalander = dbHelper(this, "calander.db")
 
         dbHelperimage = dbHelper(this, "imageauto.db")
 
-        val todayimage=dbHelperimage.getimageByDayName(getTodayDayName())
+        val rowsFormonthdate = dbHelpercalander.getRowByMonthAndDate(currentMonthString,currentDay.toString())
+
+        speak= rowsFormonthdate?.get(key = "speak")
+        val holidaytoday= rowsFormonthdate?.get(key = "holiday")
+        val holidaydesc= rowsFormonthdate?.get(key = "holidaydesc")
+        val holidayurl= dbHelperimage.getimageByholidayname(rowsFormonthdate?.get("holiday").toString())
+        if (holidayurl.isNotEmpty()) {
+            // Select a random entry from the list
+            val randomEntry = holidayurl[Random.nextInt(holidayurl.size)]
+            val randomImageUrl = randomEntry["imageurl"] // Replace "url" with the actual key that holds the image URL
+            Log.d("holidayurl", "$randomImageUrl")
+            // Now you can use randomImageUrl in your generateBitmap function
+            if (randomImageUrl != null) {
+                holidaybannerurl=randomImageUrl
+
+            }
+
+        }
 
 
-        //get Banner for slider
-        val sliderimage= extractColumnValues(todayimage,"imageurl")
-        for (i in sliderimage) {
+
+        val holidayNameData = holidaytoday.toString()
+        val holidayGreetingData = holidaydesc.toString()
+        val layoutBitmapGenerator = LayoutBitmapGenerator(this)
+
+        // Generate bitmap from the layout
+        layoutBitmapGenerator.generateBitmap(holidayNameData, holidayGreetingData, holidaybannerurl) { generatedBitmap ->
+            if (generatedBitmap != null) {
+                // Use the generated bitmap, for example, display it in an ImageView
+
+                Glide.with(this)
+                    .load(generatedBitmap)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE) // Avoid caching issues
+                    .skipMemoryCache(true) // Skip memory cache if needed
+                    .into(binding.homeBanner)
+            } else {
+                // Handle the error
+                Log.e("MyActivity", "Failed to generate bitmap from layout")
+            }
+        }
+
+
+        if (holidaytoday.isNullOrBlank()){
+
+            val todayimage=dbHelperimage.getimageByholidayname(holidaytoday.toString())
+            setupImageSlider(todayimage)
+            setupAppBarBanner(todayimage,viewModel)
+
+
+        }else{
+            val todayimage=dbHelperimage.getimageByholidayname(holidaytoday.toString())
+            setupImageSlider(todayimage)
+
+
+            handler.postDelayed({
+
+                setupAppBarBanner(todayimage,viewModel)
+            }, 20000)
+
+
+
+        }
+
+
+
+
+ /*      val todayimage=dbHelperimage.getimageByDayName(getTodayDayName())
+         //get Banner for slider
+       val sliderimage= extractColumnValues(todayimage,"imageurl")
+       for (i in sliderimage) {
                 bannerImageList.add(SlideModel(i))
                 bannerurls.add(i)
                 binding.imageSlider.setImageList(bannerImageList)
@@ -236,10 +291,12 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             delayedTask(1000)
 
 
-        }
+        }*/
 
 
-
+        val factory = BhagwatGitaViewModel.factory(fileDownloader)
+        bhagwatgitaviewmodel =
+            ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
 
 
 
@@ -249,9 +306,7 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
 
 
-        val factory = BhagwatGitaViewModel.factory(fileDownloader)
-        bhagwatgitaviewmodel =
-            ViewModelProvider(this, factory).get(BhagwatGitaViewModel::class.java)
+
 
 
 
@@ -766,12 +821,13 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 G1 = avt[1].toString()
                 G2 = avt[2].toString()
-
+                Log.d("gita", "$G2")
+                Log.d("gita", "$G2")
 
                 if (G1 != null){
                     val formattedText  = G1
                     runOnUiThread {
-
+                        Log.d("gita", "$G1")
                         binding.bannerVerse.text = formattedText
                         binding.bannerVerse.invalidate()
                     }
@@ -909,6 +965,84 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         return columnValues
     }
+
+
+    fun setupImageSlider(todayImage: List<Map<String, String>>) {
+        val sliderImageUrls = extractColumnValues(todayImage, "imageurl")
+        val bannerImageList = sliderImageUrls.map { SlideModel(it) }
+
+        binding.imageSlider.setImageList(bannerImageList)
+    }
+
+
+    fun setupAppBarBanner(todayimage: List<Map<String, String>>, viewModel: HomeViewModel
+    ) {
+
+        // Set up the app bar banner
+        lifecycleScope.launch {
+            val appbarbannerurls = viewModel.getappbarImagelist("appbar")
+            Log.d("appbar", "$appbarbannerurls")
+
+            val randomIndex = if (appbarbannerurls.isNotEmpty()) {
+                Random.nextInt(appbarbannerurls.size)
+            } else {
+                0
+            }
+
+            val appbarbannerurl = if (appbarbannerurls.isNotEmpty()) {
+                appbarbannerurls[randomIndex]
+            } else {
+                "empty"
+            }
+
+            Log.d("appbar", "$appbarbannerurl")
+
+
+                if (appbarbannerurl == "empty") {
+                    Log.d("appbar", "empty")
+                    if (todayimage.isNotEmpty()) {
+                        val random = Random.nextInt(todayimage.size)
+                        val randomImage = todayimage[random]
+                        Log.d("appbar", "$randomImage")
+                        Glide.with(binding.root.context).load(randomImage["imageurl"])
+                            .fitCenter()
+                            .into(binding.homeBanner)
+
+                        binding.homeBanner.requestLayout()
+                        binding.homeBanner.invalidate()
+                    } else {
+                        Log.d("appbar", "inelse")
+                    }
+                }
+
+
+            else {
+                Log.d("appbar", "notempty")
+                if (appbarbannerurls.isNotEmpty()) {
+                    val random = Random.nextInt(appbarbannerurls.size)
+                    Glide.with(binding.root.context).load(appbarbannerurls[random])
+                        .fitCenter()
+                        .into(binding.homeBanner)
+
+                    binding.homeBanner.requestLayout()
+                    binding.homeBanner.invalidate()
+                    Log.d("appbar", "$appbarbannerurls")
+                }
+            }
+
+            val homeBroadcast = viewModel.gethomeBroadcast()
+
+            if (homeBroadcast.isNullOrEmpty()) {
+                binding.floatingActionButton.visibility = View.GONE
+            } else {
+                binding.floatingActionButton.visibility = View.VISIBLE
+            }
+        }
+    }
+
+
+
+
 
 
 

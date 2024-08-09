@@ -1072,8 +1072,9 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                         // Add the global layout listener
                         imageView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
 
-                        Glide.with(binding.root.context).load(randomImage["imageurl"])
+                        Glide.with(binding.root.context).load(randomImage["imageurl"]).fitCenter()
                             .into(imageView)
+                        imageView.invalidate()
 
                     } else {
                         Log.d("appbar", "inelse")
@@ -1111,9 +1112,10 @@ class HomeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     imageView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
                     Log.d("appbar", "$appbarbannerurls")
 
-                    Glide.with(binding.root.context).load(appbarbannerurls[random])
-                        .fitCenter()
+                    Glide.with(binding.root.context).load(appbarbannerurls[random]).fitCenter()
                         .into(imageView)
+                    imageView.invalidate()
+
                 }
             }
 
